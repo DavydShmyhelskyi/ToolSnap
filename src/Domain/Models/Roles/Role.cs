@@ -1,0 +1,23 @@
+﻿namespace Domain.Models.Roles
+{
+    public class Role
+    {
+        public RoleId Id { get; }
+        public string Name { get; private set; }
+        public DateTimeOffset CreatedAt { get; }
+
+        private Role(RoleId id, string name, DateTimeOffset createdAt)
+        {
+            Id = id;
+            Name = name;
+            CreatedAt = createdAt;
+        }
+
+        public static Role New(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required.", nameof(name));
+
+            return new Role(RoleId.New(), name.Trim(), DateTimeOffset.UtcNow);
+        }
+    }
+}
