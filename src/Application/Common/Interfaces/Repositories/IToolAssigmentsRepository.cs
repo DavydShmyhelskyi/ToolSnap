@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using Domain.Models.ToolAssignments;
 
-namespace Application.Common.Interfaces.Queries
+
+namespace Application.Common.Interfaces.Repositories
 {
     public interface IToolAssigmentsRepository
     {
+        Task<ToolAssignment> Approve(CancellationToken cancellationToken);
     }
 }
