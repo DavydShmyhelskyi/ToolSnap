@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.Roles
+﻿using Domain.Models.Users;
+
+namespace Domain.Models.Roles
 {
     public class Role
     {
@@ -6,6 +8,9 @@
         public string Name { get; private set; }
         public DateTimeOffset CreatedAt { get; }
 
+        // navigation properties
+        public IReadOnlyCollection<User> Users => _users;
+        private readonly List<User> _users = new();
         private Role(RoleId id, string name, DateTimeOffset createdAt)
         {
             Id = id;

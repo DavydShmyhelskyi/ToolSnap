@@ -1,19 +1,26 @@
-﻿namespace Domain.Models.Locations
+﻿using Domain.Models.ToolAssignments;
+
+namespace Domain.Models.Locations
 {
     public class Location
     {
         public LocationId Id { get; }
         public string Name { get; private set; }
-        public LocationType LocationType { get; private set; }
+        public LocationTypeId LocationTypeId { get; private set; }
         public string? Address { get; private set; }
         public double? Latitude { get; set; }
         public double? Longitude { get; set; }
         public bool IsActive { get; private set; }
         public DateTimeOffset CreatedAt { get; }
 
+        // navigation properties
+        public LocationType? LocationType { get; private set; }
+
+        public IReadOnlyCollection<ToolAssignment> ToolAssignments => _assignments;
+        private readonly List<ToolAssignment> _assignments = new();
         private Location(LocationId id, 
             string name, 
-            LocationType locationType, 
+            LocationTypeId locationTypeId, 
             string? address, 
             double latitude, 
             double longitude, 
@@ -22,7 +29,7 @@
         {
             Id = id;
             Name = name;
-            LocationType = locationType;
+            LocationTypeId = locationTypeId;
             Address = address;
             Latitude = latitude;
             Longitude = longitude;
@@ -30,12 +37,12 @@
             CreatedAt = createdAt;
         }
 
-        public static Location New(string name, LocationType locationType, string? address, double latitude, double longitude)
+        public static Location New(string name, LocationTypeId locationTypeId, string? address, double latitude, double longitude)
         {
             return new Location(
                 LocationId.New(),
                 name.Trim(),
-                locationType,
+                locationTypeId,
                 string.IsNullOrWhiteSpace(address) ? null : address.Trim(),
                 latitude,
                 longitude,
