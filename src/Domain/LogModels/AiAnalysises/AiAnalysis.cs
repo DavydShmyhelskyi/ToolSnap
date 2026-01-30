@@ -8,16 +8,14 @@ namespace Domain.LogModels.AiAnalysises
         public AiAnalysisId Id { get; private set; }
         public PhotoSessionId PhotoSessionId { get; private set; }
         public IReadOnlyList<DetectedTool> DetectedTools { get; private set; }
-        public Confidence Confidence { get; private set; }
         public DateTimeOffset CreatedAt { get; private set; }
 
         private AiAnalysis() { }
 
-        public static AiAnalysis New(PhotoSessionId photoSessionId, IEnumerable<DetectedTool> detectedTools, Confidence confidence)
+        public static AiAnalysis New(PhotoSessionId photoSessionId, IEnumerable<DetectedTool> detectedTools)
         {
             if (photoSessionId is null) throw new ArgumentNullException(nameof(photoSessionId));
             if (detectedTools is null) throw new ArgumentNullException(nameof(detectedTools));
-            if (confidence is null) throw new ArgumentNullException(nameof(confidence));
 
             var list = new List<DetectedTool>(detectedTools);
 
@@ -26,7 +24,6 @@ namespace Domain.LogModels.AiAnalysises
                 Id = AiAnalysisId.New(),
                 PhotoSessionId = photoSessionId,
                 DetectedTools = list.AsReadOnly(),
-                Confidence = confidence,
                 CreatedAt = DateTimeOffset.UtcNow
             };
         }
