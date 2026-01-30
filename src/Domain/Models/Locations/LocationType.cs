@@ -1,9 +1,20 @@
 ﻿namespace Domain.Models.Locations
 {
-    public enum LocationType
+    public class LocationType
     {
-        Warehouse = 0,
-        Worksite = 1,
-        Office = 2
+        public LocationTypeId Id { get; }
+        public string Title { get; private set; }
+
+        private LocationType(LocationTypeId id, string title)
+        {
+            Id = id;
+            Title = title;
+        }
+
+        public static LocationType New(string title)
+            => new(LocationTypeId.New(), title);
+
+        public void ChangeTitle(string title)
+            => Title = title;
     }
 }

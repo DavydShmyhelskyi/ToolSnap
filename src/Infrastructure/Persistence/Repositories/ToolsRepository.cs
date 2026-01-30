@@ -4,7 +4,7 @@ using System.Text;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public interface ToolsRepository
+    public class ToolsRepository
     {
     }
 }

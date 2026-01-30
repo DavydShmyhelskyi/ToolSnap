@@ -1,9 +1,6 @@
 ﻿using Domain.Models.Locations;
 using LanguageExt;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics.Metrics;
-using System.Text;
+
 
 namespace Application.Common.Interfaces.Queries
 {

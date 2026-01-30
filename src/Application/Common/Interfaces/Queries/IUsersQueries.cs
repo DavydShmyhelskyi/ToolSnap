@@ -1,11 +1,6 @@
 ﻿using Domain.Models.Roles;
-using Domain.Models.ToolPhotos;
-using Domain.Models.Tools;
 using Domain.Models.Users;
 using LanguageExt;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Common.Interfaces.Queries
 {

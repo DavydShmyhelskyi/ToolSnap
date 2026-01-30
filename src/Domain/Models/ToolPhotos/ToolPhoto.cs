@@ -5,28 +5,43 @@ namespace Domain.Models.ToolPhotos
     public class ToolPhoto
     {
         public ToolPhotoId Id { get; }
-        public ToolId ToolId { get; private set; }
-        public string PhotoUrl { get; private set; }
-        public PhotoTypeId PhotoTypeId { get; private set; }
-        public DateTimeOffset CreatedAt { get; }
+        public string OriginalName { get; }
+        public ToolId ToolId { get; }
+        public PhotoTypeId PhotoTypeId { get; }
+        public DateTimeOffset UploadDate { get; }
 
-        private ToolPhoto(ToolPhotoId id, ToolId toolId, string photoUrl, PhotoTypeId photoTypeId, DateTimeOffset createdAt)
+        public Tool? Tool { get; private set; }
+
+        private ToolPhoto(
+            ToolPhotoId id,
+            string originalName,
+            ToolId toolId,
+            PhotoTypeId photoTypeId)
         {
             Id = id;
+            OriginalName = originalName;
             ToolId = toolId;
-            PhotoUrl = photoUrl;
             PhotoTypeId = photoTypeId;
-            CreatedAt = createdAt;
+            UploadDate = DateTimeOffset.UtcNow;
         }
 
-        public static ToolPhoto New(ToolId toolId, string photoUrl, PhotoTypeId photoTypeId)
+        public static ToolPhoto New(
+            ToolId toolId,
+            PhotoTypeId photoTypeId,
+            string originalName)
         {
-            return new ToolPhoto(ToolPhotoId.New(), toolId, photoUrl.Trim(), photoTypeId, DateTimeOffset.UtcNow);
+            if (string.IsNullOrWhiteSpace(originalName))
+                throw new ArgumentException("OriginalName is required.", nameof(originalName));
+
+            return new ToolPhoto(
+                ToolPhotoId.New(),
+                originalName,
+                toolId,
+                photoTypeId
+            );
         }
 
-        public void UpdatePhotoUrl(string photoUrl)
-        {
-            PhotoUrl = photoUrl.Trim();
-        }
+        public string GetFilePath()
+            => $"{ToolId}/{Id}{Path.GetExtension(OriginalName)}";
     }
 }

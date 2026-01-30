@@ -1,8 +1,5 @@
 ﻿using Domain.Models.Users;
 using LanguageExt;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Common.Interfaces.Repositories
 {
