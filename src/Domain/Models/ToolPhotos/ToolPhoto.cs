@@ -22,9 +22,6 @@ namespace Domain.Models.ToolPhotos
 
         public static ToolPhoto New(ToolId toolId, string photoUrl, PhotoType photoType)
         {
-            if (toolId is null) throw new ArgumentNullException(nameof(toolId));
-            if (string.IsNullOrWhiteSpace(photoUrl)) throw new ArgumentException("PhotoUrl is required.", nameof(photoUrl));
-
             return new ToolPhoto(ToolPhotoId.New(), toolId, photoUrl.Trim(), photoType, DateTimeOffset.UtcNow);
         }
     }

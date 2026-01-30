@@ -23,8 +23,6 @@ namespace Domain.Models.Locations
 
         public static Location New(string name, LocationType locationType, string? address = null)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required.", nameof(name));
-
             return new Location(
                 LocationId.New(),
                 name.Trim(),

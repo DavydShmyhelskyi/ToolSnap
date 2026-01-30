@@ -15,8 +15,6 @@
 
         public static Role New(string name)
         {
-            if (string.IsNullOrWhiteSpace(name)) throw new ArgumentException("Name is required.", nameof(name));
-
             return new Role(RoleId.New(), name.Trim(), DateTimeOffset.UtcNow);
         }
     }
