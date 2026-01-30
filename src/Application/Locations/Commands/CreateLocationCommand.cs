@@ -13,12 +13,10 @@ namespace Application.Locations.Commands
     public record CreateLocationCommand : IRequest<Either<LocationException, Location>>
     {
         public required string Name { get; init; }
-        public required LocationType LocationType { get; init; }
+        public required Guid LocationTypeId { get; init; }
         public required string? Address { get; init; }
         public required double? Latitude { get; init; }
         public required double? Longitude { get; init; }
-        public required bool IsActive { get; init; }
-        public required DateTimeOffset CreatedAt { get; init; }
     }
 
     public class CreateLocationCommandHandler(
@@ -42,12 +40,14 @@ namespace Application.Locations.Commands
         {
             try
             {
+                var locationTypeId = new LocationTypeId(request.LocationTypeId);
+                
                 var newLocation = Location.New(
-               request.Name,
-               request.LocationType,
-               request.Address,
-               request.Latitude ?? 0,
-               request.Longitude ?? 0);
+                    request.Name,
+                    locationTypeId,
+                    request.Address,
+                    request.Latitude,
+                    request.Longitude);
 
                 var result = await repository.AddAsync(newLocation, cancellationToken);
                 return result;
@@ -56,8 +56,6 @@ namespace Application.Locations.Commands
             {
                 return new UnhandledLocationException(LocationId.Empty(), ex);
             }
-
         }
-
     }
 }
