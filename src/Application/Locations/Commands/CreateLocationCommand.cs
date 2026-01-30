@@ -1,7 +1,6 @@
 ﻿using Application.Common.Interfaces;
 using Application.Common.Interfaces.Repositories;
 using Application.Locations.Exceptions;
-using Domain.Enums;
 using Domain.Models.Locations;
 using LanguageExt;
 using MediatR;

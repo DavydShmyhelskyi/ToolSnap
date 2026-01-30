@@ -10,8 +10,5 @@ namespace Application.Common.Interfaces.Repositories
         Task<Location> UpdateAsync(Location entity, CancellationToken cancellationToken);
         Task<Location> DeleteAsync(Location entity, CancellationToken cancellationToken);
          
-        Task<Option<Location>> GetByNameAsync(string name, CancellationToken cancellationToken);
-        Task<Option<Location>> GetByIdAsync(LocationId id, CancellationToken cancellationToken);
-
     }
 }
