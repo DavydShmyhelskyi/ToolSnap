@@ -1,4 +1,4 @@
-﻿namespace Domain.Enums
+﻿namespace Domain.Models.Locations
 {
     public enum LocationType
     {
