@@ -3,6 +3,7 @@ using Domain.Models.Locations;
 using LanguageExt;
 using MediatR;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Interfaces.Queries;
 
 
 namespace Application.Locations.Commands
@@ -14,6 +15,7 @@ namespace Application.Locations.Commands
 
 
     public class DeleteLocationCommandHandler(
+        ILocationsQueries queries,
         ILocationRepository repository)
         : IRequestHandler<DeleteLocationCommand, Either<LocationException, Location>>
     {
@@ -22,7 +24,7 @@ namespace Application.Locations.Commands
             CancellationToken cancellationToken)
         {
             var id = new LocationId(request.LocationId);
-            var entity = await repository.GetByIdAsync(id, cancellationToken);
+            var entity = await queries.GetByIdAsync(id, cancellationToken);
 
             return entity.Match<Either<LocationException, Location>>(
                 l => repository.DeleteAsync(l, cancellationToken).Result,

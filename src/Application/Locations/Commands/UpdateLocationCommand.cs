@@ -1,7 +1,7 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Locations.Exceptions;
-using Domain.Enums;
 using Domain.Models.Locations;
 using LanguageExt;
 using MediatR;
@@ -17,6 +17,7 @@ namespace Application.Locations.Commands
     }
 
     public class UpdateLocationCommandHandler(
+        ILocationsQueries queries,
         ILocationRepository repository)
         : IRequestHandler<UpdateLocationCommand, Either<LocationException, Location>>
     {
@@ -25,7 +26,7 @@ namespace Application.Locations.Commands
             CancellationToken cancellationToken)
         {
             var id = new LocationId(request.LocationId);
-            var entity = await repository.GetByIdAsync(id, cancellationToken);
+            var entity = await queries.GetByIdAsync(id, cancellationToken);
 
             return await entity.MatchAsync(
                 l => UpdateEntity(l, request, cancellationToken),

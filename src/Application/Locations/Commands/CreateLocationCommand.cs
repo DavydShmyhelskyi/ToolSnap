@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Locations.Exceptions;
 using Domain.Models.Locations;
@@ -21,14 +22,15 @@ namespace Application.Locations.Commands
     }
 
     public class CreateLocationCommandHandler(
-        ILocationRepository locationRepository)
+        ILocationsQueries queries,
+        ILocationRepository repository)
         : IRequestHandler<CreateLocationCommand, Either<LocationException, Location>>
     {
         public async Task<Either<LocationException, Location>> Handle(
             CreateLocationCommand request, 
             CancellationToken cancellationToken)
         {
-            var existing = await locationRepository.GetByNameAsync(request.Name, cancellationToken);
+            var existing = await queries.GetByTitleAsync(request.Name, cancellationToken);
 
             return await existing.MatchAsync(
                 l => new LocationAlreadyExistsException(l.Id),
@@ -47,7 +49,7 @@ namespace Application.Locations.Commands
                request.Latitude ?? 0,
                request.Longitude ?? 0);
 
-                var result = await locationRepository.AddAsync(newLocation, cancellationToken);
+                var result = await repository.AddAsync(newLocation, cancellationToken);
                 return result;
             }
             catch (Exception ex)
