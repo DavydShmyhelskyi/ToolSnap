@@ -1,6 +1,4 @@
-﻿using Domain.Enums;
-
-namespace Domain.Models.Locations
+﻿namespace Domain.Models.Locations
 {
     public class Location
     {
