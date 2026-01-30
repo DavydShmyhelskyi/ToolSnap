@@ -24,5 +24,10 @@ namespace Domain.Models.ToolPhotos
         {
             return new ToolPhoto(ToolPhotoId.New(), toolId, photoUrl.Trim(), photoType, DateTimeOffset.UtcNow);
         }
+
+        public void UpdatePhotoUrl(string photoUrl)
+        {
+            PhotoUrl = photoUrl.Trim();
+        }
     }
 }

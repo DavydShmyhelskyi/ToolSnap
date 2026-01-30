@@ -13,7 +13,7 @@ namespace Domain.Models.ToolAssignments
         public DateTime TakenAt { get; }
         public DateTime? ReturnedAt { get; private set; }
 
-        private ToolAssignment(ToolAssignmentId id, ToolId toolId, UserId userId, LocationId locationId, DateTime takenAt)
+        private ToolAssignment(ToolAssignmentId id, ToolId toolId, UserId userId, LocationId locationId)
         {
             Id = id;
             ToolId = toolId;
@@ -28,10 +28,9 @@ namespace Domain.Models.ToolAssignments
             return new ToolAssignment(ToolAssignmentId.New(), toolId, userId, locationId);
         }
 
-        public void Return(DateTime returnedAt)
+        public void Return()
         {
             if (ReturnedAt.HasValue) throw new InvalidOperationException("Tool already returned.");
-            if (returnedAt < TakenAt) throw new ArgumentException("ReturnedAt cannot be earlier than TakenAt.", nameof(returnedAt));
 
             ReturnedAt = DateTime.UtcNow;
         }

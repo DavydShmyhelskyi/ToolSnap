@@ -15,7 +15,11 @@
 
         public static Role New(string name)
         {
-            return new Role(RoleId.New(), name.Trim(), DateTimeOffset.UtcNow);
+            return new Role(RoleId.New(), name.Trim().ToLower(), DateTimeOffset.UtcNow);
+        }
+        public void Update(string name)
+        {
+            Name = name.Trim().ToLower();
         }
     }
 }

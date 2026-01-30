@@ -12,7 +12,7 @@ namespace Domain.Models.Users
         public string PasswordHash { get; private set; }
         public DateTime CreatedAt { get; }
 
-        private User(UserId id, string fullName, string email, RoleId roleId, string passwordHash bool isActive)
+        private User(UserId id, string fullName, string email, RoleId roleId, string passwordHash, bool isActive)
         {
             Id = id;
             FullName = fullName;

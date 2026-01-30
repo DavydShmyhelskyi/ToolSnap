@@ -34,10 +34,10 @@
         public static DetectedTool Custom(
             string name,
             float confidence,
+            bool redFlagged,
             string? brand = null,
             string? model = null,
-            string? serialNumber = null,
-            bool redFlagged)
+            string? serialNumber = null)
         {
             return new DetectedTool(name, confidence, brand, model, serialNumber, redFlagged);
         }
