@@ -1,0 +1,54 @@
+﻿using Application.Common.Interfaces;
+using Application.Common.Interfaces.Repositories;
+using Application.Locations.Exceptions;
+using Domain.Enums;
+using Domain.Models.Locations;
+using LanguageExt;
+using MediatR;
+using Unit = LanguageExt.Unit;
+
+
+namespace Application.Locations.Commands
+{
+    public record UpdateLocationCommand : IRequest<Either<LocationException, Location>>
+    {
+        public required Guid LocationId { get; init; }
+        public required string Name { get; init; }
+    }
+
+    public class UpdateLocationCommandHandler(
+        ILocationRepository repository)
+        : IRequestHandler<UpdateLocationCommand, Either<LocationException, Location>>
+    {
+        public async Task<Either<LocationException, Location>> Handle(
+            UpdateLocationCommand request,
+            CancellationToken cancellationToken)
+        {
+            var id = new LocationId(request.LocationId);
+            var entity = await repository.GetByIdAsync(id, cancellationToken);
+
+            return await entity.MatchAsync(
+                l => UpdateEntity(l, request, cancellationToken),
+                () => new LocationNotFoundException(id));
+        }
+
+
+        private async Task<Either<LocationException, Location>> UpdateEntity(
+            Location entity,
+            UpdateLocationCommand request, 
+            CancellationToken cancellationToken)
+        {
+            try
+            {
+               entity.UpdateName(request.Name);
+               return await repository.UpdateAsync(entity, cancellationToken);
+            }
+            catch (Exception ex)
+            {
+                return new UnhandledLocationException(entity.Id, ex);
+            }
+
+        }
+
+    }
+}
