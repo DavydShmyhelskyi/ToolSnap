@@ -2,12 +2,21 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Infrastructure.Persistence.Configurations
+namespace Infrastructure.Persistence.Configurations;
+
+public class RoleConfiguration : IEntityTypeConfiguration<Role>
 {
-    public class RoleConfigurations : IEntityTypeConfiguration<Role>
+    public void Configure(EntityTypeBuilder<Role> builder)
     {
-        public void Configure(EntityTypeBuilder<Role> builder)
-        {
-        }
+        builder.HasKey(x => x.Id);
+
+        builder.Property(x => x.Id)
+            .HasConversion(x => x.Value, x => new RoleId(x));
+
+        builder.Property(x => x.Name)
+            .HasColumnType("varchar(100)")
+            .IsRequired();
+
+        builder.HasIndex(x => x.Name).IsUnique();
     }
 }

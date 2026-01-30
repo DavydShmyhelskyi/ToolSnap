@@ -13,6 +13,10 @@ namespace Domain.Models.ToolAssignments
         public DateTime TakenAt { get; }
         public DateTime? ReturnedAt { get; private set; }
 
+        // navigation properties
+        public Tool? Tool { get; private set; }
+        public User? User { get; private set; }
+        public Location? Location { get; private set; }
         private ToolAssignment(ToolAssignmentId id, ToolId toolId, UserId userId, LocationId locationId)
         {
             Id = id;

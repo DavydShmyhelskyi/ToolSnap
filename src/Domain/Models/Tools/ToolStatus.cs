@@ -5,6 +5,9 @@
         public ToolStatusId Id { get; }
         public string Title { get; private set; }
 
+        // navigation properties
+        public IReadOnlyCollection<Tool> Tools => _tools;
+        private readonly List<Tool> _tools = new();
         private ToolStatus(ToolStatusId id, string title)
         {
             Id = id;

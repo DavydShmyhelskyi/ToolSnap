@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Roles;
+using Domain.Models.ToolAssignments;
 
 namespace Domain.Models.Users
 {
@@ -12,6 +13,10 @@ namespace Domain.Models.Users
         public string PasswordHash { get; private set; }
         public DateTime CreatedAt { get; }
 
+        // navigation properties
+        public Role? Role { get; private set; }
+        public IReadOnlyCollection<ToolAssignment> ToolAssignments => _toolAssignments;
+        private readonly List<ToolAssignment> _toolAssignments = new();
         private User(UserId id, string fullName, string email, RoleId roleId, string passwordHash, bool isActive)
         {
             Id = id;

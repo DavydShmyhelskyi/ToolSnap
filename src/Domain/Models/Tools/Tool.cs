@@ -1,4 +1,7 @@
-﻿namespace Domain.Models.Tools
+﻿using Domain.Models.ToolAssignments;
+using Domain.Models.ToolPhotos;
+
+namespace Domain.Models.Tools
 {
     public class Tool
     {
@@ -10,6 +13,14 @@
         public ToolStatusId ToolStatusId { get; private set; }
         public DateTimeOffset CreatedAt { get; }
 
+        // navigation properties
+        public ToolStatus? ToolStatus { get; private set; }
+
+        public IReadOnlyCollection<ToolPhoto> Photos => _photos;
+        private readonly List<ToolPhoto> _photos = new();
+
+        public IReadOnlyCollection<ToolAssignment> Assignments => _assignments;
+        private readonly List<ToolAssignment> _assignments = new();
         private Tool(
             ToolId id,
             string name,
