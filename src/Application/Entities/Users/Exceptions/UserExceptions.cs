@@ -14,6 +14,9 @@ namespace Application.Entities.Users.Exceptions
     public class UserAlreadyExistsException(UserId id)
         : UserException(id, $"User with id '{id}' already exists.");
 
+    public class InvalidUserPasswordException(UserId id)
+        : UserException(id, $"Invalid password for user with id '{id}'.");        
+
     public class UnhandledUserException(UserId id, Exception? innerException = null)
         : UserException(id, "Unexpected error occured", innerException);
 }
