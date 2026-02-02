@@ -1,23 +1,30 @@
 ﻿using Application.Common.Interfaces.Repositories;
 using Domain.Models.Roles;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class RolesRepository : IRolesRepository
+    public class RolesRepository(ApplicationDbContext context) : IRolesRepository
     {
-        public Task<Role> AddAsync(Role entity, CancellationToken cancellationToken)
+        public async Task<Role> AddAsync(Role entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await context.Roles.AddAsync(entity, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<Role> DeleteAsync(Role entity, CancellationToken cancellationToken)
+        public async Task<Role> DeleteAsync(Role entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Roles.Remove(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<Role> UpdateAsync(Role entity, CancellationToken cancellationToken)
+        public async Task<Role> UpdateAsync(Role entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Roles.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
     }
 }

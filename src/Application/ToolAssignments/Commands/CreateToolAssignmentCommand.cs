@@ -17,7 +17,7 @@ namespace Application.ToolAssignments.Commands
     }
 
     public class CreateToolAssignmentCommandHandler(
-        IToolAssigmentsRepository repository)
+        IToolAssignmentsRepository repository)
         : IRequestHandler<CreateToolAssignmentCommand, Either<ToolAssignmentException, ToolAssignment>>
     {
         public async Task<Either<ToolAssignmentException, ToolAssignment>> Handle(

@@ -1,23 +1,30 @@
 ﻿using Application.Common.Interfaces.Repositories;
 using Domain.Models.ToolPhotos;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class PhotoTypeRepository : IPhotoTypeRepository
+    public class PhotoTypeRepository(ApplicationDbContext context) : IPhotoTypeRepository
     {
-        public Task<PhotoType> AddAsync(PhotoType entity, CancellationToken cancellationToken)
+        public async Task<PhotoType> AddAsync(PhotoType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await context.Set<PhotoType>().AddAsync(entity, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<PhotoType> DeleteAsync(PhotoType entity, CancellationToken cancellationToken)
+        public async Task<PhotoType> DeleteAsync(PhotoType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<PhotoType>().Remove(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<PhotoType> UpdateAsync(PhotoType entity, CancellationToken cancellationToken)
+        public async Task<PhotoType> UpdateAsync(PhotoType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<PhotoType>().Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
     }
 }

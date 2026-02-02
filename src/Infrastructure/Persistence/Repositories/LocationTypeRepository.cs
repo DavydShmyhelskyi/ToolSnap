@@ -1,23 +1,30 @@
 ﻿using Application.Common.Interfaces.Repositories;
 using Domain.Models.Locations;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class LocationTypeRepository : ILocationTypeRepository
+    public class LocationTypeRepository(ApplicationDbContext context) : ILocationTypeRepository
     {
-        public Task<LocationType> AddAsync(LocationType entity, CancellationToken cancellationToken)
+        public async Task<LocationType> AddAsync(LocationType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await context.Set<LocationType>().AddAsync(entity, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<LocationType> DeleteAsync(LocationType entity, CancellationToken cancellationToken)
+        public async Task<LocationType> DeleteAsync(LocationType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<LocationType>().Remove(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<LocationType> UpdateAsync(LocationType entity, CancellationToken cancellationToken)
+        public async Task<LocationType> UpdateAsync(LocationType entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<LocationType>().Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
     }
 }

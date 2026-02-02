@@ -1,23 +1,30 @@
 ﻿using Application.Common.Interfaces.Repositories;
 using Domain.Models.Tools;
+using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class ToolStatusRepository : IToolStatusRepository
+    public class ToolStatusRepository(ApplicationDbContext context) : IToolStatusRepository
     {
-        public Task<ToolStatus> AddAsync(ToolStatus entity, CancellationToken cancellationToken)
+        public async Task<ToolStatus> AddAsync(ToolStatus entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            await context.Set<ToolStatus>().AddAsync(entity, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<ToolStatus> DeleteAsync(ToolStatus entity, CancellationToken cancellationToken)
+        public async Task<ToolStatus> DeleteAsync(ToolStatus entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<ToolStatus>().Remove(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
 
-        public Task<ToolStatus> UpdateAsync(ToolStatus entity, CancellationToken cancellationToken)
+        public async Task<ToolStatus> UpdateAsync(ToolStatus entity, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            context.Set<ToolStatus>().Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
         }
     }
 }

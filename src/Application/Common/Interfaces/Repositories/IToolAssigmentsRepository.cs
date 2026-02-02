@@ -3,7 +3,7 @@
 
 namespace Application.Common.Interfaces.Repositories
 {
-    public interface IToolAssigmentsRepository
+    public interface IToolAssignmentsRepository
     {
         Task<ToolAssignment> AddAsync(ToolAssignment entity, CancellationToken cancellationToken);
         Task<ToolAssignment> DeleteAsync(ToolAssignment entity, CancellationToken cancellationToken);
