@@ -1,4 +1,4 @@
-using Application.Common.Interfaces.Queries;
+/*using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.ToolAssignments.Exceptions;
 using Domain.Models.Locations;
@@ -16,7 +16,7 @@ namespace Application.ToolAssignments.Commands
 
     public class UpdateToolAssignmentCommandHandler(
         IToolAssignmentQueries queries,
-        IToolAssigmentsRepository repository)
+        IToolAssignmentsRepository repository)
         : IRequestHandler<UpdateToolAssignmentCommand, Either<ToolAssignmentException, ToolAssignment>>
     {
         public async Task<Either<ToolAssignmentException, ToolAssignment>> Handle(
@@ -40,7 +40,7 @@ namespace Application.ToolAssignments.Commands
             {
                 var locationId = new LocationId(request.LocationId);
                 entity.UpdateLocation(locationId);
-                return await repository.Approve(cancellationToken);
+                return await repository.Update(cancellationToken);
             }
             catch (InvalidOperationException ex)
             {
@@ -52,4 +52,4 @@ namespace Application.ToolAssignments.Commands
             }
         }
     }
-}
+}*/

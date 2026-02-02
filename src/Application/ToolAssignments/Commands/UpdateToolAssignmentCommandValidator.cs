@@ -1,4 +1,4 @@
-using FluentValidation;
+/*using FluentValidation;
 
 namespace Application.ToolAssignments.Commands
 {
@@ -13,4 +13,4 @@ namespace Application.ToolAssignments.Commands
                 .NotEmpty().WithMessage("Location ID must be provided.");
         }
     }
-}
+}*/

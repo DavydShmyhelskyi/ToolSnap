@@ -14,7 +14,7 @@ namespace Application.ToolAssignments.Commands
 
     public class DeleteToolAssignmentCommandHandler(
         IToolAssignmentQueries queries,
-        IToolAssigmentsRepository repository)
+        IToolAssignmentsRepository repository)
         : IRequestHandler<DeleteToolAssignmentCommand, Either<ToolAssignmentException, ToolAssignment>>
     {
         public async Task<Either<ToolAssignmentException, ToolAssignment>> Handle(
@@ -25,7 +25,7 @@ namespace Application.ToolAssignments.Commands
             var entity = await queries.GetByIdAsync(id, cancellationToken);
 
             return entity.Match<Either<ToolAssignmentException, ToolAssignment>>(
-                ta => repository.Approve(cancellationToken).Result,
+                ta => repository.DeleteAsync(ta, cancellationToken).Result,
                 () => new ToolAssignmentNotFoundException(id));
         }
     }

@@ -43,7 +43,7 @@ namespace Application.ToolAssignments.Commands
                     locationId,
                     DateTimeOffset.UtcNow);
 
-                var result = await repository.Approve(cancellationToken);
+                var result = await repository.AddAsync(newAssignment, cancellationToken);
                 return result;
             }
             catch (Exception ex)

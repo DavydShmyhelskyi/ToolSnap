@@ -1,6 +1,7 @@
 using Application.Common.Interfaces;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Infrastructure.Persistence.Queries;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -32,67 +33,58 @@ public static class ConfigurePersistenceServices
 
     private static void AddRepositories(this IServiceCollection services)
     {
-        // Cities
-        services.AddScoped<CityRepository>();
-        services.AddScoped<ICityRepository>(provider => provider.GetRequiredService<CityRepository>());
-        services.AddScoped<ICityQueries>(provider => provider.GetRequiredService<CityRepository>());
+        // Locations
+        services.AddScoped<LocationRepository>();
+        services.AddScoped<ILocationRepository>(provider => provider.GetRequiredService<LocationRepository>());
+        services.AddScoped<LocationsQueries>();
+        services.AddScoped<ILocationsQueries>(provider => provider.GetRequiredService<LocationsQueries>());
 
-        // Countries
-        services.AddScoped<CountryRepository>();
-        services.AddScoped<ICountryRepository>(provider => provider.GetRequiredService<CountryRepository>());
-        services.AddScoped<ICountryQueries>(provider => provider.GetRequiredService<CountryRepository>());
+        // LocationTypes
+        services.AddScoped<LocationTypeRepository>();
+        services.AddScoped<ILocationTypeRepository>(provider => provider.GetRequiredService<LocationTypeRepository>());
+        services.AddScoped<LocationTypeQueries>();
+        services.AddScoped<ILocationTypeQueries>(provider => provider.GetRequiredService<LocationTypeQueries>());
 
-        // Feedbacks
-        services.AddScoped<FeedbackRepository>();
-        services.AddScoped<IFeedbackRepository>(provider => provider.GetRequiredService<FeedbackRepository>());
-        services.AddScoped<IFeedbackQueries>(provider => provider.GetRequiredService<FeedbackRepository>());
+        // Tools
+        services.AddScoped<ToolsRepository>();
+        services.AddScoped<IToolsRepository>(provider => provider.GetRequiredService<ToolsRepository>());
+        services.AddScoped<ToolsQueries>();
+        services.AddScoped<IToolsQueries>(provider => provider.GetRequiredService<ToolsQueries>());
 
-        // Followers 
-        services.AddScoped<FollowerRepository>();
-        services.AddScoped<IFollowerRepository>(provider => provider.GetRequiredService<FollowerRepository>());
-        services.AddScoped<IFollowerQueries>(provider => provider.GetRequiredService<FollowerRepository>());
+        // ToolStatuses
+        services.AddScoped<ToolStatusRepository>();
+        services.AddScoped<IToolStatusRepository>(provider => provider.GetRequiredService<ToolStatusRepository>());
+        services.AddScoped<ToolStatusQueries>();
+        services.AddScoped<IToolStatusQueries>(provider => provider.GetRequiredService<ToolStatusQueries>());
 
-        // Places
-        services.AddScoped<PlaceRepository>();
-        services.AddScoped<IPlaceRepository>(provider => provider.GetRequiredService<PlaceRepository>());
-        services.AddScoped<IPlaceQueries>(provider => provider.GetRequiredService<PlaceRepository>());
+        // ToolPhotos
+        services.AddScoped<ToolPhotosRepository>();
+        services.AddScoped<IToolPhotosRepository>(provider => provider.GetRequiredService<ToolPhotosRepository>());
+        services.AddScoped<ToolPhotosQueries>();
+        services.AddScoped<IToolPhotosQueries>(provider => provider.GetRequiredService<ToolPhotosQueries>());
 
-        // PlacePhotos
-        services.AddScoped<PlacePhotoRepository>();
-        services.AddScoped<IPlacePhotoRepository>(provider => provider.GetRequiredService<PlacePhotoRepository>());
-        services.AddScoped<IPlacePhotoQueries>(provider => provider.GetRequiredService<PlacePhotoRepository>());
+        // PhotoTypes
+        services.AddScoped<PhotoTypeRepository>();
+        services.AddScoped<IPhotoTypeRepository>(provider => provider.GetRequiredService<PhotoTypeRepository>());
+        services.AddScoped<PhotoTypeQueries>();
+        services.AddScoped<IPhotoTypeQueries>(provider => provider.GetRequiredService<PhotoTypeQueries>());
 
-        // Roles
-        services.AddScoped<RoleRepository>();
-        services.AddScoped<IRoleRepository>(provider => provider.GetRequiredService<RoleRepository>());
-        services.AddScoped<IRoleQueries>(provider => provider.GetRequiredService<RoleRepository>());
-
-        // Travels
-        services.AddScoped<TravelRepository>();
-        services.AddScoped<ITravelRepository>(provider => provider.GetRequiredService<TravelRepository>());
-        services.AddScoped<ITravelQueries>(provider => provider.GetRequiredService<TravelRepository>());
+        // ToolAssignments
+        services.AddScoped<ToolAssignmentsRepository>();
+        services.AddScoped<IToolAssignmentsRepository>(provider => provider.GetRequiredService<ToolAssignmentsRepository>());
+        services.AddScoped<ToolAssignmentQueries>();
+        services.AddScoped<IToolAssignmentQueries>(provider => provider.GetRequiredService<ToolAssignmentQueries>());
 
         // Users
-        services.AddScoped<UserRepository>();
-        services.AddScoped<IUserRepository>(provider => provider.GetRequiredService<UserRepository>());
-        services.AddScoped<IUserQueries>(provider => provider.GetRequiredService<UserRepository>());
+        services.AddScoped<UsersRepository>();
+        services.AddScoped<IUsersRepository>(provider => provider.GetRequiredService<UsersRepository>());
+        services.AddScoped<UsersQueries>();
+        services.AddScoped<IUsersQueries>(provider => provider.GetRequiredService<UsersQueries>());
 
-        // UserTravels
-        services.AddScoped<UserTravelRepository>();
-        services.AddScoped<IUserTravelRepository>(provider => provider.GetRequiredService<UserTravelRepository>());
-        services.AddScoped<IUserTravelQueries>(provider => provider.GetRequiredService<UserTravelRepository>());
-
-        // TravelPlaces
-        services.AddScoped<TravelPlaceRepository>();
-        services.AddScoped<ITravelPlaceRepository>(provider => provider.GetRequiredService<TravelPlaceRepository>());
-        services.AddScoped<ITravelPlaceQueries>(provider => provider.GetRequiredService<TravelPlaceRepository>());
-        
-        //UserAvatars
-        services.AddScoped<UserAvatarRepository>();
-        services.AddScoped<IUserAvatarRepository>(provider => provider.GetRequiredService<UserAvatarRepository>());
-        
-        //TravelAvatars
-        services.AddScoped<TravelAvatarRepository>();
-        services.AddScoped<ITravelAvatarRepository>(provider => provider.GetRequiredService<TravelAvatarRepository>());
+        // Roles
+        services.AddScoped<RolesRepository>();
+        services.AddScoped<IRolesRepository>(provider => provider.GetRequiredService<RolesRepository>());
+        services.AddScoped<RolesQueries>();
+        services.AddScoped<IRolesQueries>(provider => provider.GetRequiredService<RolesQueries>());
     }
 }
