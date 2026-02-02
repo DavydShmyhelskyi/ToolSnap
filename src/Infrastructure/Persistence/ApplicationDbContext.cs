@@ -2,6 +2,7 @@ using Application.Common.Interfaces;
 using Domain.Models.Locations;
 using Domain.Models.Roles;
 using Domain.Models.ToolAssignments;
+using Domain.Models.ToolPhotos;
 using Domain.Models.Tools;
 using Domain.Models.Users;
 using Microsoft.EntityFrameworkCore;
@@ -16,8 +17,11 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<Role> Roles { get; set; }
     public DbSet<Location> Locations { get; set; }
+    public DbSet<LocationType> LocationTypes { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Tool> Tools { get; set; }
+    public DbSet<ToolStatus> ToolStatuses { get; set; }
+    public DbSet<ToolPhoto> ToolPhotos { get; set; }
     public DbSet<ToolAssignment> ToolAssignments { get; set; }
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
