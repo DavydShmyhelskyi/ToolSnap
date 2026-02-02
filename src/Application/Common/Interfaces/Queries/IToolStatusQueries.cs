@@ -1,12 +1,12 @@
-﻿using Domain.Models.Locations;
+﻿using Domain.Models.Tools;
 using LanguageExt;
 
 namespace Application.Common.Interfaces.Queries
 {
     public interface IToolStatusQueries
     {
-        Task<IReadOnlyList<LocationType>> GetAllAsync(CancellationToken cancellationToken);
-        Task<Option<LocationType>> GetByIdAsync(LocationTypeId locationTypeId, CancellationToken cancellationToken);
-        Task<Option<LocationType>> GetByTitleAsync(string name, CancellationToken cancellationToken);
+        Task<IReadOnlyList<ToolStatus>> GetAllAsync(CancellationToken cancellationToken);
+        Task<Option<ToolStatus>> GetByIdAsync(ToolStatusId toolStatusId, CancellationToken cancellationToken);
+        Task<Option<ToolStatus>> GetByTitleAsync(string title, CancellationToken cancellationToken);
     }
 }
