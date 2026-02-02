@@ -38,5 +38,16 @@ namespace Domain.Models.ToolAssignments
 
             ReturnedAt = DateTime.UtcNow;
         }
+
+        public void UpdateLocation(LocationId locationId)
+        {
+            if (ReturnedAt.HasValue)
+                throw new InvalidOperationException("Cannot update location for returned tool.");
+
+            if (locationId == null || locationId == LocationId.Empty())
+                throw new ArgumentException("LocationId is required.", nameof(locationId));
+
+            LocationId = locationId;
+        }
     }
 }
