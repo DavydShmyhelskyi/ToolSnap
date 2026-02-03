@@ -17,7 +17,6 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
 {
     public DbSet<Role> Roles { get; set; }
     public DbSet<Location> Locations { get; set; }
-    public DbSet<LocationType> LocationTypes { get; set; }
     public DbSet<User> Users { get; set; }
     public DbSet<Tool> Tools { get; set; }
     public DbSet<ToolStatus> ToolStatuses { get; set; }
