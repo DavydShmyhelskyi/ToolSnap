@@ -15,8 +15,8 @@ namespace Application.Entities.Locations.Commands
         public required string Name { get; init; }
         public required Guid LocationTypeId { get; init; }
         public required string? Address { get; init; }
-        public required double? Latitude { get; init; }
-        public required double? Longitude { get; init; }
+        public required double Latitude { get; init; }
+        public required double Longitude { get; init; }
     }
 
     public class CreateLocationCommandHandler(

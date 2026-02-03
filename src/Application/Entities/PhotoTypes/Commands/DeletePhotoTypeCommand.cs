@@ -6,7 +6,7 @@ using LanguageExt;
 using MediatR;
 
 namespace Application.Entities.PhotoTypes.Commands
-{
+{/*
     public record DeletePhotoTypeCommand : IRequest<Either<PhotoTypeException, PhotoType>>
     {
         public required Guid PhotoTypeId { get; init; }
@@ -28,5 +28,5 @@ namespace Application.Entities.PhotoTypes.Commands
                 pt => repository.DeleteAsync(pt, cancellationToken).Result,
                 () => new PhotoTypeNotFoundException(id));
         }
-    }
+    }*/
 }

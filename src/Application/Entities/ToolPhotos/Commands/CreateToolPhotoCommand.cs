@@ -32,11 +32,9 @@ namespace Application.Entities.ToolPhotos.Commands
             try
             {
                 var toolId = new ToolId(request.ToolId);
-                var photoTypeId = new PhotoTypeId(request.PhotoTypeId);
                 
                 var newToolPhoto = ToolPhoto.New(
                     toolId,
-                    photoTypeId,
                     request.OriginalName);
 
                 var result = await repository.AddAsync(newToolPhoto, cancellationToken);

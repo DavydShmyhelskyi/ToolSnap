@@ -1,7 +1,7 @@
 using FluentValidation;
 
 namespace Application.Entities.PhotoTypes.Commands
-{
+{/*
     public class DeletePhotoTypeCommandValidator : AbstractValidator<DeletePhotoTypeCommand>
     {
         public DeletePhotoTypeCommandValidator()
@@ -9,5 +9,5 @@ namespace Application.Entities.PhotoTypes.Commands
             RuleFor(x => x.PhotoTypeId)
                 .NotEmpty().WithMessage("Photo type ID must be provided.");
         }
-    }
+    }*/
 }

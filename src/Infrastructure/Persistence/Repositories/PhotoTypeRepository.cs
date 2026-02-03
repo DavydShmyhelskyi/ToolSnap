@@ -3,7 +3,7 @@ using Domain.Models.ToolPhotos;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
-{
+{/*
     public class PhotoTypeRepository(ApplicationDbContext context) : IPhotoTypeRepository
     {
         public async Task<PhotoType> AddAsync(PhotoType entity, CancellationToken cancellationToken)
@@ -26,5 +26,5 @@ namespace Infrastructure.Persistence.Repositories
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
-    }
+    }*/
 }

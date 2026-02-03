@@ -1,26 +1,25 @@
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 
 namespace Api.DTOs
 {
     public record ToolDto(
         Guid Id,
-        string Name,
-        string? Brand,
-        string? Model,
+        Guid ToolType,
+        Guid? BrandId,
+        Guid? ModelId,
         string? SerialNumber,
         Guid ToolStatusId,
-        string? ToolStatusTitle,
         DateTimeOffset CreatedAt)
     {
         public static ToolDto FromDomain(Tool tool) =>
             new(
                 tool.Id.Value,
-                tool.Name,
-                tool.Brand,
-                tool.Model,
+                tool.ToolTypeId.Value,
+                tool.BrandId?.Value,
+                tool.ModelId?.Value,
                 tool.SerialNumber,
                 tool.ToolStatusId.Value,
-                tool.ToolStatus?.Title,
                 tool.CreatedAt);
     }
 

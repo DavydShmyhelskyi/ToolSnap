@@ -1,6 +1,6 @@
-﻿namespace Domain.LogModels.PhotoSessions
+﻿namespace Domain.Models.PhotoSessions
 {
-    public sealed record PhotoSessionId(Guid Value)
+    public record PhotoSessionId(Guid Value)
     {
         public static PhotoSessionId Empty() => new(Guid.Empty);
         public static PhotoSessionId New() => new(Guid.NewGuid());

@@ -17,8 +17,6 @@ public class ToolPhotoConfiguration : IEntityTypeConfiguration<ToolPhoto>
         builder.Property(x => x.ToolId)
             .HasConversion(x => x.Value, x => new ToolId(x));
 
-        builder.Property(x => x.PhotoTypeId)
-            .HasConversion(x => x.Value, x => new PhotoTypeId(x));
 
         builder.Property(x => x.OriginalName)
             .HasColumnType("varchar(255)")
@@ -28,8 +26,5 @@ public class ToolPhotoConfiguration : IEntityTypeConfiguration<ToolPhoto>
             .WithMany(x => x.Photos)
             .HasForeignKey(x => x.ToolId);
 
-        builder.HasOne(x => x.PhotoType)
-            .WithMany(x => x.ToolPhotos)
-            .HasForeignKey(x => x.PhotoTypeId);
     }
 }

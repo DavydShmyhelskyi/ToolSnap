@@ -1,7 +1,7 @@
 using FluentValidation;
 
 namespace Application.Entities.PhotoTypes.Commands
-{
+{/*
     public class UpdatePhotoTypeCommandValidator : AbstractValidator<UpdatePhotoTypeCommand>
     {
         public UpdatePhotoTypeCommandValidator()
@@ -13,5 +13,5 @@ namespace Application.Entities.PhotoTypes.Commands
                 .NotEmpty().WithMessage("Photo type title is required.")
                 .MaximumLength(50).WithMessage("Photo type title must not exceed 50 characters.");
         }
-    }
+    }*/
 }

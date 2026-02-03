@@ -5,7 +5,6 @@ namespace Api.DTOs
     public record ToolAssignmentDto(
         Guid Id,
         Guid ToolId,
-        string? ToolName,
         Guid UserId,
         string? UserFullName,
         Guid LocationId,
@@ -18,7 +17,6 @@ namespace Api.DTOs
             new(
                 toolAssignment.Id.Value,
                 toolAssignment.ToolId.Value,
-                toolAssignment.Tool?.Name,
                 toolAssignment.UserId.Value,
                 toolAssignment.User?.FullName,
                 toolAssignment.LocationId.Value,

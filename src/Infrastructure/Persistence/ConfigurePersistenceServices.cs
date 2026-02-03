@@ -64,10 +64,11 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IToolPhotosQueries>(provider => provider.GetRequiredService<ToolPhotosQueries>());
 
         // PhotoTypes
+        /*
         services.AddScoped<PhotoTypeRepository>();
         services.AddScoped<IPhotoTypeRepository>(provider => provider.GetRequiredService<PhotoTypeRepository>());
         services.AddScoped<PhotoTypeQueries>();
-        services.AddScoped<IPhotoTypeQueries>(provider => provider.GetRequiredService<PhotoTypeQueries>());
+        services.AddScoped<IPhotoTypeQueries>(provider => provider.GetRequiredService<PhotoTypeQueries>());*/
 
         // ToolAssignments
         services.AddScoped<ToolAssignmentsRepository>();

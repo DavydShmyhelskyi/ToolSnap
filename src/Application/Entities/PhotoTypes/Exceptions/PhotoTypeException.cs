@@ -1,7 +1,7 @@
 ﻿using Domain.Models.ToolPhotos;
 
 namespace Application.Entities.PhotoTypes.Exceptions
-{
+{/*
     public abstract class PhotoTypeException(PhotoTypeId id, string message, Exception? innerException = null)
         : Exception(message, innerException)
     {
@@ -15,5 +15,5 @@ namespace Application.Entities.PhotoTypes.Exceptions
         : PhotoTypeException(id, $"Photo type with id '{id}' already exists.");
 
     public class UnhandledPhotoTypeException(PhotoTypeId id, Exception? innerException = null)
-        : PhotoTypeException(id, "Unexpected error occured", innerException);
+        : PhotoTypeException(id, "Unexpected error occured", innerException);*/
 }

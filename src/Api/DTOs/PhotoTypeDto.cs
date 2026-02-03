@@ -1,7 +1,7 @@
 using Domain.Models.ToolPhotos;
 
 namespace Api.DTOs
-{
+{/*
     public record PhotoTypeDto(Guid Id, string Title)
     {
         public static PhotoTypeDto FromDomain(PhotoType photoType) =>
@@ -12,5 +12,5 @@ namespace Api.DTOs
 
     public record CreatePhotoTypeDto(string Title);
 
-    public record UpdatePhotoTypeDto(string Title);
+    public record UpdatePhotoTypeDto(string Title);*/
 }

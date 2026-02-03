@@ -4,7 +4,7 @@ using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Queries
-{
+{/*
     public class PhotoTypeQueries(ApplicationDbContext context) : IPhotoTypeQueries
     {
         public async Task<IReadOnlyList<PhotoType>> GetAllAsync(CancellationToken cancellationToken)
@@ -29,5 +29,6 @@ namespace Infrastructure.Persistence.Queries
                 .FirstOrDefaultAsync(pt => pt.Title == name, cancellationToken);
             return photoType == null ? Option<PhotoType>.None : Option<PhotoType>.Some(photoType);
         }
-    }
+    }*/
 }
+    

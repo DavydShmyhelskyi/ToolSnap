@@ -1,6 +1,7 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.Tools.Exceptions;
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 using LanguageExt;
 using MediatR;
@@ -9,10 +10,10 @@ namespace Application.Entities.Tools.Commands
 {
     public record CreateToolCommand : IRequest<Either<ToolException, Tool>>
     {
-        public required string Name { get; init; }
+        public required Guid ToolTypeId { get; init; }
         public required Guid ToolStatusId { get; init; }
-        public string? Brand { get; init; }
-        public string? Model { get; init; }
+        public Guid? BrandId { get; init; }
+        public Guid? ModelId { get; init; }
         public string? SerialNumber { get; init; }
     }
 
@@ -25,7 +26,8 @@ namespace Application.Entities.Tools.Commands
             CreateToolCommand request,
             CancellationToken cancellationToken)
         {
-            var existing = await queries.GetByTitleAsync(request.Name, cancellationToken);
+            var toolTypeId = new ToolTypeId(request.ToolTypeId);
+            var existing = await queries.GetByToolTypeIdAsync(toolTypeId, cancellationToken);
 
             return await existing.MatchAsync(
                 t => new ToolAlreadyExistsException(t.Id),
@@ -33,26 +35,34 @@ namespace Application.Entities.Tools.Commands
         }
 
         private async Task<Either<ToolException, Tool>> CreateEntity(
-            CreateToolCommand request,
-            CancellationToken cancellationToken)
+    CreateToolCommand request,
+    CancellationToken cancellationToken)
         {
             try
             {
+                var toolTypeId = new ToolTypeId(request.ToolTypeId);
                 var toolStatusId = new ToolStatusId(request.ToolStatusId);
+
+                BrandId? brandId =
+                    request.BrandId is null ? null : new BrandId(request.BrandId.Value);
+
+                ModelId? modelId =
+                    request.ModelId is null ? null : new ModelId(request.ModelId.Value);
+
                 var newTool = Tool.New(
-                    request.Name,
+                    toolTypeId,
                     toolStatusId,
-                    request.Brand,
-                    request.Model,
+                    brandId,
+                    modelId,
                     request.SerialNumber);
 
-                var result = await repository.AddAsync(newTool, cancellationToken);
-                return result;
+                return await repository.AddAsync(newTool, cancellationToken);
             }
             catch (Exception ex)
             {
                 return new UnhandledToolException(ToolId.Empty(), ex);
             }
         }
+
     }
 }

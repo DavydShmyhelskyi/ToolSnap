@@ -1,4 +1,4 @@
-﻿namespace Domain.LogModels.PhotoSessions
+﻿namespace Domain.Models.PhotoSessions
 {
     public class ActionType
     {

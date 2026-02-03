@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Queries;
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
@@ -30,20 +31,30 @@ namespace Infrastructure.Persistence.Queries
                 .ToListAsync(cancellationToken);
         }
 
-        public async Task<Option<Tool>> GetByTitleAsync(string name, CancellationToken cancellationToken)
+        /*public async Task<Option<Tool>> GetByTitleAsync(ToolTypeId toolTypeId, CancellationToken cancellationToken)
         {
             var tool = await context.Tools
                 .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
+                .FirstOrDefaultAsync(t => t.ToolTypeId == toolTypeId, cancellationToken);
             return tool == null ? Option<Tool>.None : Option<Tool>.Some(tool);
         }
 
-        public async Task<Option<Tool>> GetByBrandAsync(string brand, CancellationToken cancellationToken)
+        public async Task<Option<Tool>> GetByBrandAsync(BrandId brandId, CancellationToken cancellationToken)
         {
             var tool = await context.Tools
                 .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Brand == brand, cancellationToken);
+                .FirstOrDefaultAsync(t => t.BrandId == brandId, cancellationToken);
             return tool == null ? Option<Tool>.None : Option<Tool>.Some(tool);
+        }*/
+
+        public Task<Option<Tool>> GetByToolTypeIdAsync(ToolTypeId toolTypeId, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<Option<Tool>> GetByBrandAsync(string brand, CancellationToken cancellationToken)
+        {
+            throw new NotImplementedException();
         }
     }
 }

@@ -6,8 +6,6 @@ namespace Api.DTOs
         Guid Id,
         string OriginalName,
         Guid ToolId,
-        Guid PhotoTypeId,
-        string? PhotoTypeTitle,
         DateTimeOffset UploadDate,
         string FilePath)
     {
@@ -16,8 +14,6 @@ namespace Api.DTOs
                 toolPhoto.Id.Value,
                 toolPhoto.OriginalName,
                 toolPhoto.ToolId.Value,
-                toolPhoto.PhotoTypeId.Value,
-                toolPhoto.PhotoType?.Title,
                 toolPhoto.UploadDate,
                 toolPhoto.GetFilePath());
     }

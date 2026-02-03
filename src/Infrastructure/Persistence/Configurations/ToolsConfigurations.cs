@@ -13,14 +13,14 @@ public class ToolConfiguration : IEntityTypeConfiguration<Tool>
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value, x => new ToolId(x));
 
-        builder.Property(x => x.Name)
+        builder.Property(x => x.ToolTypeId)
             .HasColumnType("varchar(255)")
             .IsRequired();
 
-        builder.Property(x => x.Brand)
+        builder.Property(x => x.BrandId)
             .HasColumnType("varchar(255)");
 
-        builder.Property(x => x.Model)
+        builder.Property(x => x.ModelId)
             .HasColumnType("varchar(255)");
 
         builder.Property(x => x.SerialNumber)

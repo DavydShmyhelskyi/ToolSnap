@@ -6,7 +6,7 @@ using LanguageExt;
 using MediatR;
 
 namespace Application.Entities.PhotoTypes.Commands
-{
+{/*
     public record CreatePhotoTypeCommand : IRequest<Either<PhotoTypeException, PhotoType>>
     {
         public required string Title { get; init; }
@@ -43,5 +43,5 @@ namespace Application.Entities.PhotoTypes.Commands
                 return new UnhandledPhotoTypeException(PhotoTypeId.Empty(), ex);
             }
         }
-    }
+    }*/
 }

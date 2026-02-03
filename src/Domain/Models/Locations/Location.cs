@@ -8,8 +8,8 @@ namespace Domain.Models.Locations
         public string Name { get; private set; }
         public LocationTypeId LocationTypeId { get; private set; }
         public string? Address { get; private set; }
-        public double? Latitude { get; private set; }
-        public double? Longitude { get; private set; }
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
         public bool IsActive { get; private set; } = false;
         public DateTimeOffset CreatedAt { get; }
 
@@ -23,8 +23,8 @@ namespace Domain.Models.Locations
             string name, 
             LocationTypeId locationTypeId, 
             string? address, 
-            double? latitude, 
-            double? longitude, 
+            double latitude, 
+            double longitude, 
             bool isActive, 
             DateTimeOffset createdAt)
         {
@@ -38,7 +38,7 @@ namespace Domain.Models.Locations
             CreatedAt = createdAt;
         }
 
-        public static Location New(string name, LocationTypeId locationTypeId, string? address, double? latitude, double? longitude)
+        public static Location New(string name, LocationTypeId locationTypeId, string? address, double latitude, double longitude)
         {
             return new Location(
                 LocationId.New(),
@@ -51,7 +51,7 @@ namespace Domain.Models.Locations
                 DateTimeOffset.UtcNow);
         }
         
-        public void Update(string name, LocationTypeId locationTypeId, string? address, double? latitude, double? longitude)
+        public void Update(string name, LocationTypeId locationTypeId, string? address, double latitude, double longitude)
         {
             Name = name.Trim();
             LocationTypeId = locationTypeId;

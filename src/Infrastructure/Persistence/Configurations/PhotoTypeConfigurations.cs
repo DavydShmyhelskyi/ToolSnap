@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Infrastructure.Persistence.Configurations;
-
+/*
 public class PhotoTypeConfiguration : IEntityTypeConfiguration<PhotoType>
 {
     public void Configure(EntityTypeBuilder<PhotoType> builder)
@@ -19,4 +19,4 @@ public class PhotoTypeConfiguration : IEntityTypeConfiguration<PhotoType>
 
         builder.HasIndex(x => x.Title).IsUnique();
     }
-}
+}*/
