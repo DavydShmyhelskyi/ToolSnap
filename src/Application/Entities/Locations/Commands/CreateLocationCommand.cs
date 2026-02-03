@@ -6,7 +6,6 @@ using Domain.Models.Locations;
 using LanguageExt;
 using MediatR;
 
-
 namespace Application.Entities.Locations.Commands
 {
     public record CreateLocationCommand : IRequest<Either<LocationException, Location>>
@@ -19,14 +18,23 @@ namespace Application.Entities.Locations.Commands
     }
 
     public class CreateLocationCommandHandler(
+        ILocationRepository repository,
         ILocationsQueries queries,
-        ILocationRepository repository)
+        ILocationTypeQueries locationTypeQueries)
         : IRequestHandler<CreateLocationCommand, Either<LocationException, Location>>
     {
         public async Task<Either<LocationException, Location>> Handle(
-            CreateLocationCommand request, 
+            CreateLocationCommand request,
             CancellationToken cancellationToken)
         {
+            var locationTypeId = new LocationTypeId(request.LocationTypeId);
+
+            // Перевірка існування LocationType
+            var locationType = await locationTypeQueries.GetByIdAsync(locationTypeId, cancellationToken);
+            if (locationType.IsNone)
+                return new LocationTypeNotFoundForLocationException(locationTypeId);
+
+            // Перевірка на існування Location з таким іменем
             var existing = await queries.GetByTitleAsync(request.Name, cancellationToken);
 
             return await existing.MatchAsync(
@@ -34,13 +42,14 @@ namespace Application.Entities.Locations.Commands
                 () => CreateEntity(request, cancellationToken));
         }
 
-
-        private async Task<Either<LocationException, Location>> CreateEntity(CreateLocationCommand request, CancellationToken cancellationToken)
+        private async Task<Either<LocationException, Location>> CreateEntity(
+            CreateLocationCommand request,
+            CancellationToken cancellationToken)
         {
             try
             {
                 var locationTypeId = new LocationTypeId(request.LocationTypeId);
-                
+
                 var newLocation = Location.New(
                     request.Name,
                     locationTypeId,

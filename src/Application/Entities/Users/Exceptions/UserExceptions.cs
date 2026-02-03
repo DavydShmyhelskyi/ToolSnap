@@ -1,4 +1,5 @@
-﻿using Domain.Models.Users;
+﻿using Domain.Models.Roles;
+using Domain.Models.Users;
 
 namespace Application.Entities.Users.Exceptions
 {
@@ -14,8 +15,14 @@ namespace Application.Entities.Users.Exceptions
     public class UserAlreadyExistsException(UserId id)
         : UserException(id, $"User with id '{id}' already exists.");
 
+    public class RoleNotFoundForUserException(RoleId roleId)
+        : UserException(UserId.Empty(), $"Role with id '{roleId}' was not found. Cannot create user.")
+    {
+        public RoleId RoleId { get; } = roleId;
+    }
+
     public class InvalidUserPasswordException(UserId id)
-        : UserException(id, $"Invalid password for user with id '{id}'.");        
+        : UserException(id, $"Invalid password for user with id '{id}'.");
 
     public class UnhandledUserException(UserId id, Exception? innerException = null)
         : UserException(id, "Unexpected error occured", innerException);

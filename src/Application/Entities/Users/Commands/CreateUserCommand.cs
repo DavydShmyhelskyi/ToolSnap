@@ -17,14 +17,23 @@ namespace Application.Entities.Users.Commands
     }
 
     public class CreateUserCommandHandler(
+        IUsersRepository repository,
         IUsersQueries queries,
-        IUsersRepository repository)
+        IRolesQueries rolesQueries)
         : IRequestHandler<CreateUserCommand, Either<UserException, User>>
     {
         public async Task<Either<UserException, User>> Handle(
             CreateUserCommand request,
             CancellationToken cancellationToken)
         {
+            var roleId = new RoleId(request.RoleId);
+
+            // Перевірка існування Role
+            var role = await rolesQueries.GetByIdAsync(roleId, cancellationToken);
+            if (role.IsNone)
+                return new RoleNotFoundForUserException(roleId);
+
+            // Перевірка на існування User з таким Email
             var existing = await queries.GetByNameAsync(request.FullName, cancellationToken);
 
             return await existing.MatchAsync(
