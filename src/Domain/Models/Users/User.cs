@@ -38,7 +38,7 @@ namespace Domain.Models.Users
                 BCrypt.Net.BCrypt.HashPassword(password),
                 isActive);
         }
-        public void Update(string fullName, string email, bool confirmedEmail, RoleId roleId)
+        public void Update(string fullName, string email, RoleId roleId)
         {
             FullName = fullName.Trim();
             Email = email.Trim();

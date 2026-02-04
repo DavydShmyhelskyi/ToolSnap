@@ -1,4 +1,4 @@
-using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 using Api.DTOs;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;

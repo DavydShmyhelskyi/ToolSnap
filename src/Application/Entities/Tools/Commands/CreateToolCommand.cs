@@ -2,6 +2,7 @@ using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.Tools.Exceptions;
 using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 using LanguageExt;
 using MediatR;
 
@@ -40,7 +41,7 @@ namespace Application.Entities.Tools.Commands
             {
                 var toolStatusId = new ToolStatusId(request.ToolStatusId);
                 var newTool = Tool.New(
-                    request.Name,
+                    request.ToolType,
                     toolStatusId,
                     request.Brand,
                     request.Model,

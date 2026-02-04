@@ -13,6 +13,14 @@ namespace Infrastructure.Persistence.Repositories
             return entity;
         }
 
+
+        public async Task<ToolAssignment> UpdateAsync(ToolAssignment entity, CancellationToken cancellationToken)
+        {
+            context.ToolAssignments.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
+        }
+
         public async Task<ToolAssignment> DeleteAsync(ToolAssignment entity, CancellationToken cancellationToken)
         {
             context.ToolAssignments.Remove(entity);

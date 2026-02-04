@@ -14,6 +14,7 @@ namespace Application.Entities.Users.Commands
         public required string Email { get; init; }
         public required Guid RoleId { get; init; }
         public required string Password { get; init; }
+        public required bool IsActive { get; init; } = true;
     }
 
     public class CreateUserCommandHandler(
@@ -52,7 +53,8 @@ namespace Application.Entities.Users.Commands
                     request.FullName,
                     request.Email,
                     roleId,
-                    request.Password);
+                    request.Password,
+                    request.IsActive);
 
                 var result = await repository.AddAsync(newUser, cancellationToken);
                 return result;

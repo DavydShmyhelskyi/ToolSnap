@@ -6,14 +6,17 @@ namespace Application.Entities.ToolAssignments.Commands
     {
         public CreateToolAssignmentCommandValidator()
         {
+            RuleFor(x => x.TakenDetectedToolId)
+                .NotEmpty().WithMessage("Taken detected tool ID must be provided.");
+
             RuleFor(x => x.ToolId)
-                .NotEmpty().WithMessage("Tool ID is required.");
+                .NotEmpty().WithMessage("Tool ID must be provided.");
 
             RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage("User ID is required.");
+                .NotEmpty().WithMessage("User ID must be provided.");
 
             RuleFor(x => x.LocationId)
-                .NotEmpty().WithMessage("Location ID is required.");
+                .NotEmpty().WithMessage("Location ID must be provided.");
         }
     }
 }

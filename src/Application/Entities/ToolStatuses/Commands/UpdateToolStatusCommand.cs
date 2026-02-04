@@ -38,7 +38,7 @@ namespace Application.Entities.ToolStatuses.Commands
         {
             try
             {
-                entity.ChangeTitle(request.Title);
+                entity.Update(request.Title);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)

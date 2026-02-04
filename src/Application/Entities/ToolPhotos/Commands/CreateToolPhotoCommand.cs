@@ -36,7 +36,6 @@ namespace Application.Entities.ToolPhotos.Commands
                 
                 var newToolPhoto = ToolPhoto.New(
                     toolId,
-                    photoTypeId,
                     request.OriginalName);
 
                 var result = await repository.AddAsync(newToolPhoto, cancellationToken);

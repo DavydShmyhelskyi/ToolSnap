@@ -36,13 +36,13 @@ namespace Application.Entities.Locations.Commands
 
         private async Task<Either<LocationException, Location>> UpdateEntity(
             Location entity,
-            UpdateLocationCommand request, 
+            UpdateLocationCommand request,
             CancellationToken cancellationToken)
         {
             try
             {
-               entity.UpdateName(request.Name);
-               return await repository.UpdateAsync(entity, cancellationToken);
+               // entity.UpdateName(request.Name);
+                return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)
             {

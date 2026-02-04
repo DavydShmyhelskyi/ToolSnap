@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 
 namespace Application.Entities.Tools.Exceptions
 {
@@ -16,4 +17,7 @@ namespace Application.Entities.Tools.Exceptions
 
     public class UnhandledToolException(ToolId id, Exception? innerException = null)
         : ToolException(id, "Unexpected error occured", innerException);
+
+    public class ToolStatusNotFoundForToolException(ToolStatusId toolStatusId)
+        : ToolException(ToolId.Empty(), $"Tool status with id '{toolStatusId}' was not found.");
 }

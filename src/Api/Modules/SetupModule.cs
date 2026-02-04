@@ -1,8 +1,8 @@
 ﻿using Api.Filters;
 using Application.Common.Settings;
 using FluentValidation;
-//using Api.Services.Abstract;
-//using Api.Services.Implementation;
+using Api.Services.Abstract;
+using Api.Services.Implementation;
 
 namespace Api.Modules
 {
@@ -51,7 +51,22 @@ namespace Api.Modules
 
         private static void AddControllerServices(this IServiceCollection services)
         {
-            // Add services 
+            services.AddScoped<IActionTypeControllerService, ActionTypeControllerService>();
+            services.AddScoped<IBrandControllerService, BrandControllerService>();          
+            services.AddScoped<IDetectedToolControllerService, DetectedToolControllerService>();
+            services.AddScoped<ILocationControllerService, LocationControllerService>();
+            services.AddScoped<ILocationTypeControllerService, LocationTypeControllerService>();
+            services.AddScoped<IModelControllerService, ModelControllerService>();
+            services.AddScoped<IPhotoForDetectionControllerService, PhotoForDetectionControllerService>();
+            services.AddScoped<IPhotoSessionControllerService, PhotoSessionControllerService>();
+            services.AddScoped<IPhotoTypeControllerService, PhotoTypeControllerService>();
+            services.AddScoped<IRoleControllerService, RoleControllerService>();
+            services.AddScoped<IToolAssignmentControllerService, ToolAssignmentControllerService>();
+            services.AddScoped<IToolControllerService, ToolControllerService>();
+            services.AddScoped<IToolPhotoControllerService, ToolPhotoControllerService>();
+            services.AddScoped<IToolStatusControllerService, ToolStatusControllerService>();
+            services.AddScoped<IToolTypeControllerService, ToolTypeControllerService>();
+            services.AddScoped<IUserControllerService, UserControllerService>();
         }
     }
 }

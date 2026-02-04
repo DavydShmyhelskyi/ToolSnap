@@ -1,6 +1,7 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.Users.Exceptions;
+using Domain.Models.Roles;
 using Domain.Models.Users;
 using LanguageExt;
 using MediatR;
@@ -12,11 +13,13 @@ namespace Application.Entities.Users.Commands
         public required Guid UserId { get; init; }
         public required string FullName { get; init; }
         public required string Email { get; init; }
+        public required Guid RoleId { get; init; }
     }
 
     public class UpdateUserCommandHandler(
         IUsersQueries queries,
-        IUsersRepository repository)
+        IUsersRepository repository,
+        IRolesQueries rolesQueries)
         : IRequestHandler<UpdateUserCommand, Either<UserException, User>>
     {
         public async Task<Either<UserException, User>> Handle(
@@ -24,6 +27,13 @@ namespace Application.Entities.Users.Commands
             CancellationToken cancellationToken)
         {
             var id = new UserId(request.UserId);
+            var roleId = new RoleId(request.RoleId);
+
+            // Перевірка існування Role
+            var role = await rolesQueries.GetByIdAsync(roleId, cancellationToken);
+            if (role.IsNone)
+                return new RoleNotFoundForUserException(roleId);
+
             var entity = await queries.GetByIdAsync(id, cancellationToken);
 
             return await entity.MatchAsync(
@@ -38,7 +48,8 @@ namespace Application.Entities.Users.Commands
         {
             try
             {
-                entity.Update(request.FullName, request.Email);
+                var roleId = new RoleId(request.RoleId);
+                entity.Update(request.FullName, request.Email, roleId);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)
