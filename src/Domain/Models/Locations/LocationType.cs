@@ -16,9 +16,9 @@
         }
 
         public static LocationType New(string title)
-            => new(LocationTypeId.New(), title);
+            => new(LocationTypeId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

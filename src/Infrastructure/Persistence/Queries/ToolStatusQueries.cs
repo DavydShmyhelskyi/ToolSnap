@@ -1,6 +1,6 @@
 ﻿using Application.Common.Interfaces.Queries;
 using Domain.Models.Locations;
-using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 

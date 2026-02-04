@@ -1,4 +1,4 @@
-using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 
 namespace Api.DTOs
 {

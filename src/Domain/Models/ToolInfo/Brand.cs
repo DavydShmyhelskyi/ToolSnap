@@ -11,9 +11,9 @@
             Title = title;
         }
         public static Brand New(string title)
-    => new(BrandId.New(), title);
+    => new(BrandId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

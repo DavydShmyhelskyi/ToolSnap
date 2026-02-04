@@ -1,4 +1,4 @@
-﻿namespace Domain.Models.Tools
+﻿namespace Domain.Models.ToolInfo
 {
     public record ToolStatusId(Guid Value)
     {

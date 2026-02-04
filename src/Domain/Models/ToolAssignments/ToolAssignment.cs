@@ -1,4 +1,5 @@
-﻿using Domain.Models.Locations;
+﻿using Domain.Models.DetectedTools;
+using Domain.Models.Locations;
 using Domain.Models.Tools;
 using Domain.Models.Users;
 
@@ -7,6 +8,8 @@ namespace Domain.Models.ToolAssignments
     public class ToolAssignment
     {
         public ToolAssignmentId Id { get; }
+        public DetectedToolId TakenDetectedToolId { get; set; }
+        public DetectedToolId? ReturnedDetectedToolId { get; set; }
         public ToolId ToolId { get; private set; }
         public UserId UserId { get; private set; }
         public LocationId LocationId { get; private set; }
@@ -14,24 +17,23 @@ namespace Domain.Models.ToolAssignments
         public DateTime? ReturnedAt { get; private set; }
 
         // navigation properties
-        public Tool? Tool { get; private set; }
-        public User? User { get; private set; }
-        public Location? Location { get; private set; }
-        private ToolAssignment(ToolAssignmentId id, ToolId toolId, UserId userId, LocationId locationId)
+        private ToolAssignment(ToolAssignmentId id, DetectedToolId takenDetectedToolId, DetectedToolId? returnedDetectedToolId, ToolId toolId, UserId userId, LocationId locationId, DateTime takenAt, DateTime? returnedAt)
         {
             Id = id;
+            TakenDetectedToolId = takenDetectedToolId;
+            ReturnedDetectedToolId = returnedDetectedToolId;
             ToolId = toolId;
             UserId = userId;
             LocationId = locationId;
-            TakenAt = DateTime.UtcNow;
-            ReturnedAt = null;
+            TakenAt = takenAt;
+            ReturnedAt = returnedAt;
         }
 
-        public static ToolAssignment New(ToolId toolId, UserId userId, LocationId locationId, DateTimeOffset takenAt)
+        public static ToolAssignment New(DetectedToolId takenDetectedToolId, ToolId toolId, UserId userId, LocationId locationId, DateTimeOffset takenAt)
         {
-            return new ToolAssignment(ToolAssignmentId.New(), toolId, userId, locationId);
+            return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, locationId, DateTime.UtcNow, null);
         }
-
+        //DateTime.UtcNow
         public void Return()
         {
             if (ReturnedAt.HasValue) throw new InvalidOperationException("Tool already returned.");

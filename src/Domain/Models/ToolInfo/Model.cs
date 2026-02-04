@@ -11,9 +11,9 @@
             Title = title;
         }
         public static Model New(string title)
-    => new(ModelId.New(), title);
+    => new(ModelId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

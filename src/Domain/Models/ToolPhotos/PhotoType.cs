@@ -6,9 +6,6 @@
         public string Title { get; private set; }
 
         // navigation properties
-        public IReadOnlyCollection<ToolPhoto> ToolPhotos => _photos;
-        private readonly List<ToolPhoto> _photos = new();
-
         private PhotoType(PhotoTypeId id, string title)
         {
             Id = id;
@@ -16,9 +13,9 @@
         }
 
         public static PhotoType New(string title)
-            => new(PhotoTypeId.New(), title);
+            => new(PhotoTypeId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

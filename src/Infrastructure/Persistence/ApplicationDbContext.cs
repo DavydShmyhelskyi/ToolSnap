@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Storage;
 using System.Data;
 using System.Reflection;
+using Domain.Models.ToolInfo;
 
 namespace Infrastructure.Persistence;
 

@@ -5,26 +5,22 @@ namespace Domain.Models.Roles
     public class Role
     {
         public RoleId Id { get; }
-        public string Name { get; private set; }
-        public DateTimeOffset CreatedAt { get; }
+        public string Title { get; private set; }
 
         // navigation properties
-        public IReadOnlyCollection<User> Users => _users;
-        private readonly List<User> _users = new();
-        private Role(RoleId id, string name, DateTimeOffset createdAt)
+        private Role(RoleId id, string title)
         {
             Id = id;
-            Name = name;
-            CreatedAt = createdAt;
+            Title = title;
         }
 
-        public static Role New(string name)
+        public static Role New(string title)
         {
-            return new Role(RoleId.New(), name.Trim().ToLower(), DateTimeOffset.UtcNow);
+            return new Role(RoleId.New(), title.Trim().ToLower());
         }
-        public void Update(string name)
+        public void Update(string title)
         {
-            Name = name.Trim().ToLower();
+            Title = title.Trim().ToLower();
         }
     }
 }
