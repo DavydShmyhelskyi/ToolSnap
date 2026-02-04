@@ -12,9 +12,9 @@
         }
 
         public static ActionType New(string title)
-            => new(ActionTypeId.New(), title);
+            => new(ActionTypeId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

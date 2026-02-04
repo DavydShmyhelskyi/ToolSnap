@@ -1,5 +1,5 @@
 ﻿using Application.Common.Interfaces.Repositories;
-using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories

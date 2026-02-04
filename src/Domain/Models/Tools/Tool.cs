@@ -1,4 +1,5 @@
 ﻿using Domain.Models.ToolAssignments;
+using Domain.Models.ToolInfo;
 using Domain.Models.ToolPhotos;
 
 namespace Domain.Models.Tools
@@ -6,9 +7,9 @@ namespace Domain.Models.Tools
     public class Tool
     {
         public ToolId Id { get; }
-        public string Name { get; private set; }
-        public string? Brand { get; private set; }
-        public string? Model { get; private set; }
+        public ToolTypeId ToolTypeId { get; init; }
+        public BrandId? BrandId { get; private set; }
+        public ModelId? ModelId { get; private set; }
         public string? SerialNumber { get; private set; }
         public ToolStatusId ToolStatusId { get; private set; }
         public DateTimeOffset CreatedAt { get; }
@@ -23,41 +24,35 @@ namespace Domain.Models.Tools
         private readonly List<ToolAssignment> _assignments = new();
         private Tool(
             ToolId id,
-            string name,
-            string? brand,
-            string? model,
+            ToolTypeId toolTypeId,
+            BrandId? brandId,
+            ModelId? modelId,
             string? serialNumber,
             ToolStatusId toolStatusId,
             DateTimeOffset createdAt)
         {
             Id = id;
-            Name = name;
-            Brand = brand;
-            Model = model;
+            ToolTypeId = toolTypeId;
+            BrandId = brandId;
+            ModelId = modelId;
             SerialNumber = serialNumber;
             ToolStatusId = toolStatusId;
             CreatedAt = createdAt;
         }
 
         public static Tool New(
-            string name,
+            ToolTypeId toolTypeId,
+            BrandId? brandId,
+            ModelId? modelId,
             ToolStatusId toolStatusId,
-            string? brand = null,
-            string? model = null,
             string? serialNumber = null)
         {
-            if (string.IsNullOrWhiteSpace(name))
-                throw new ArgumentException("Name is required.", nameof(name));
-
-            if (toolStatusId == null || toolStatusId == ToolStatusId.Empty())
-                throw new ArgumentException("ToolStatusId is required.", nameof(toolStatusId));
-
             return new Tool(
                 ToolId.New(),
-                name.Trim(),
-                string.IsNullOrWhiteSpace(brand) ? null : brand.Trim(),
-                string.IsNullOrWhiteSpace(model) ? null : model.Trim(),
-                string.IsNullOrWhiteSpace(serialNumber) ? null : serialNumber.Trim(),
+                toolTypeId,
+                brandId,
+                modelId,
+                serialNumber,
                 toolStatusId,
                 DateTimeOffset.UtcNow
             );
@@ -65,9 +60,6 @@ namespace Domain.Models.Tools
 
         public void ChangeStatus(ToolStatusId toolStatusId)
         {
-            if (toolStatusId == null || toolStatusId == ToolStatusId.Empty())
-                throw new ArgumentException("ToolStatusId is required.", nameof(toolStatusId));
-
             ToolStatusId = toolStatusId;
         }
     }

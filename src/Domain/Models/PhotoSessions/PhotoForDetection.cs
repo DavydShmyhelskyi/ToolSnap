@@ -7,20 +7,20 @@ namespace Domain.Models.PhotoSessions
         public PhotoForDetectionId Id { get; }
         public PhotoSessionId PhotoSessionId { get; }
         public string OriginalName { get; }
-        public DateTimeOffset UploadDate { get; }
+        public DateTime UploadDate { get; }
 
         // navigation properties
-        public PhotoSession? Tool { get; private set; }
 
         private PhotoForDetection(
             PhotoForDetectionId id,
             PhotoSessionId photoSessionId,
-            string originalName)
+            string originalName,
+            DateTime uploadDate)
         {
             Id = id;
             PhotoSessionId = photoSessionId;
             OriginalName = originalName;
-            UploadDate = DateTimeOffset.UtcNow;
+            UploadDate = uploadDate;
         }
 
         public static PhotoForDetection New(
@@ -31,7 +31,8 @@ namespace Domain.Models.PhotoSessions
             return new PhotoForDetection(
                 PhotoForDetectionId.New(),
                 photoSessionId,
-                originalName
+                originalName,
+                DateTime.UtcNow
             );
         }
 

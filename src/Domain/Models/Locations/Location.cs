@@ -8,25 +8,21 @@ namespace Domain.Models.Locations
         public string Name { get; private set; }
         public LocationTypeId LocationTypeId { get; private set; }
         public string? Address { get; private set; }
-        public double? Latitude { get; private set; }
-        public double? Longitude { get; private set; }
+        public double Latitude { get; private set; }
+        public double Longitude { get; private set; }
         public bool IsActive { get; private set; } = false;
-        public DateTimeOffset CreatedAt { get; }
+        public DateTime CreatedAt { get; }
 
         // navigation properties
-        public LocationType? LocationType { get; private set; }
-
-        public IReadOnlyCollection<ToolAssignment> ToolAssignments => _assignments;
-        private readonly List<ToolAssignment> _assignments = new();
         
         private Location(LocationId id, 
             string name, 
             LocationTypeId locationTypeId, 
             string? address, 
-            double? latitude, 
-            double? longitude, 
+            double latitude, 
+            double longitude, 
             bool isActive, 
-            DateTimeOffset createdAt)
+            DateTime createdAt)
         {
             Id = id;
             Name = name;
@@ -38,7 +34,7 @@ namespace Domain.Models.Locations
             CreatedAt = createdAt;
         }
 
-        public static Location New(string name, LocationTypeId locationTypeId, string? address, double? latitude, double? longitude)
+        public static Location New(string name, LocationTypeId locationTypeId, string? address, double latitude, double longitude, bool isActive)
         {
             return new Location(
                 LocationId.New(),
@@ -47,11 +43,11 @@ namespace Domain.Models.Locations
                 string.IsNullOrWhiteSpace(address) ? null : address.Trim(),
                 latitude,
                 longitude,
-                true,
-                DateTimeOffset.UtcNow);
+                isActive,
+                DateTime.UtcNow);
         }
         
-        public void Update(string name, LocationTypeId locationTypeId, string? address, double? latitude, double? longitude)
+        public void Update(string name, LocationTypeId locationTypeId, string? address, double latitude, double longitude)
         {
             Name = name.Trim();
             LocationTypeId = locationTypeId;
@@ -61,11 +57,6 @@ namespace Domain.Models.Locations
         }
         
         public void Activate() => IsActive = true;
-        public void Deactivate() => IsActive = false;
-
-        public void UpdateName(string name)
-        {
-            Name = name.Trim();
-        }
+        public void Deactivate() => IsActive = false;   
     }
 }

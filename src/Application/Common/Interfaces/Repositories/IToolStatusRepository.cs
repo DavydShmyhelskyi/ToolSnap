@@ -1,5 +1,5 @@
 ﻿using Domain.Models.Roles;
-using Domain.Models.Tools;
+using Domain.Models.ToolInfo;
 using LanguageExt;
 
 namespace Application.Common.Interfaces.Repositories

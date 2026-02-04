@@ -35,13 +35,13 @@ namespace Domain.Models.DetectedTools
         }
 
         public static DetectedTool New(
-    ToolTypeId toolTypeId,
-    PhotoSessionId photoSessionId,
-    BrandId? brandId,
-    ModelId? modelId,
-    string? serialNumber,
-    float confidence,
-    bool redFlagged)
+            ToolTypeId toolTypeId,
+         PhotoSessionId photoSessionId,
+         BrandId? brandId,
+         ModelId? modelId,
+         string? serialNumber,
+         float confidence,
+         bool redFlagged)
         {
             return new DetectedTool(
                 DetectedToolId.New(),

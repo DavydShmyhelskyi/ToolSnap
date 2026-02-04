@@ -1,4 +1,6 @@
-﻿namespace Domain.Models.Tools
+﻿using Domain.Models.Tools;
+
+namespace Domain.Models.ToolInfo
 {
     public class ToolStatus
     {
@@ -6,8 +8,6 @@
         public string Title { get; private set; }
 
         // navigation properties
-        public IReadOnlyCollection<Tool> Tools => _tools;
-        private readonly List<Tool> _tools = new();
         private ToolStatus(ToolStatusId id, string title)
         {
             Id = id;
@@ -15,9 +15,9 @@
         }
 
         public static ToolStatus New(string title)
-            => new(ToolStatusId.New(), title);
+            => new(ToolStatusId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

@@ -11,9 +11,9 @@
             Title = title;
         }
         public static ToolType New(string title)
-    => new(ToolTypeId.New(), title);
+    => new(ToolTypeId.New(), title.Trim().ToLower());
 
-        public void ChangeTitle(string title)
-            => Title = title;
+        public void Update(string title)
+            => Title = title.Trim().ToLower();
     }
 }

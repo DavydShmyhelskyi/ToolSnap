@@ -1,4 +1,5 @@
-﻿using Domain.Models.Tools;
+﻿using Domain.Models.ToolInfo;
+using Domain.Models.Tools;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 

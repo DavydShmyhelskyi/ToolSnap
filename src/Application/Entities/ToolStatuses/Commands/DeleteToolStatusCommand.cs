@@ -1,6 +1,7 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.ToolStatuses.Exceptions;
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 using LanguageExt;
 using MediatR;
