@@ -15,6 +15,9 @@ namespace Domain.Models.Users
         public DateTime CreatedAt { get; }
 
         // navigation properties
+        public Role? Role { get; private set; }
+        public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
+
         private User(UserId id, string fullName, string email, bool confirmedEmail, RoleId roleId, string passwordHash, bool isActive)
         {
             Id = id;

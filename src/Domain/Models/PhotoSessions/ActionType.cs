@@ -1,9 +1,14 @@
-﻿namespace Domain.Models.PhotoSessions
+﻿using Domain.Models.Users;
+
+namespace Domain.Models.PhotoSessions
 {
     public class ActionType
     {
         public ActionTypeId Id { get; }
         public string Title { get; private set; }
+
+        // navigation properties
+        public IEnumerable<PhotoSession> PhotoSessions { get; private set; } = new List<PhotoSession>();
 
         private ActionType(ActionTypeId id, string title)
         {

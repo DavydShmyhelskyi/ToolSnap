@@ -10,6 +10,8 @@ namespace Domain.Models.ToolPhotos
         public DateTime UploadDate { get; }
 
         // navigation properties
+        public PhotoType? PhotoType { get; private set; }
+        public Tool? Tool { get; private set; }
 
         private ToolPhoto(
             ToolPhotoId id,

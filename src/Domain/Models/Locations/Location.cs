@@ -14,7 +14,9 @@ namespace Domain.Models.Locations
         public DateTime CreatedAt { get; }
 
         // navigation properties
-        
+            public LocationType? LocationType { get; private set; }
+            public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
+
         private Location(LocationId id, 
             string name, 
             LocationTypeId locationTypeId, 

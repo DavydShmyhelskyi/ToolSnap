@@ -1,4 +1,5 @@
 ﻿using Domain.Models.PhotoSessions;
+using Domain.Models.ToolAssignments;
 using Domain.Models.ToolInfo;
 
 namespace Domain.Models.DetectedTools
@@ -13,6 +14,13 @@ namespace Domain.Models.DetectedTools
         public string? SerialNumber { get; init; }
         public float Confidence { get; init; }
         public bool RedFlagged { get; init; }
+
+        // navigation properties
+        public PhotoSession? PhotoSession { get; init; }
+        public ToolAssignment? ToolAssignment { get; init; }
+        public ToolType? ToolType { get; init; }
+        public Brand? Brand { get; init; }
+        public Model? Model { get; init; }  
 
         private DetectedTool(
             DetectedToolId id,

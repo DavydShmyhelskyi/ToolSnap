@@ -16,12 +16,11 @@ namespace Domain.Models.Tools
 
         // navigation properties
         public ToolStatus? ToolStatus { get; private set; }
-
-        public IReadOnlyCollection<ToolPhoto> Photos => _photos;
-        private readonly List<ToolPhoto> _photos = new();
-
-        public IReadOnlyCollection<ToolAssignment> Assignments => _assignments;
-        private readonly List<ToolAssignment> _assignments = new();
+        public IEnumerable<ToolPhoto> ToolPhotos { get; private set; } = new List<ToolPhoto>();
+        public ToolType? ToolType { get; private set; }
+        public Brand? Brand { get; private set; }
+        public Model? Model { get; private set; }
+        public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
         private Tool(
             ToolId id,
             ToolTypeId toolTypeId,
