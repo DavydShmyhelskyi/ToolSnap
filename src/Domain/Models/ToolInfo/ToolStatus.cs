@@ -8,6 +8,8 @@ namespace Domain.Models.ToolInfo
         public string Title { get; private set; }
 
         // navigation properties
+        public IEnumerable<Tool> Tools { get; private set; } = new List<Tool>();
+
         private ToolStatus(ToolStatusId id, string title)
         {
             Id = id;

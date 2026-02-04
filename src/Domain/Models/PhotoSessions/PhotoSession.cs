@@ -1,4 +1,5 @@
-﻿using Domain.Models.Locations;
+﻿using Domain.Models.DetectedTools;
+using Domain.Models.Locations;
 using Domain.Models.Users;
 
 namespace Domain.Models.PhotoSessions
@@ -11,6 +12,11 @@ namespace Domain.Models.PhotoSessions
         public double Longitude { get; private set; }
         public ActionTypeId ActionTypeId { get; private set; }
         public DateTimeOffset CreatedAt { get; private set; }
+
+        // navigation properties
+        public IEnumerable<PhotoForDetection> PhotosForDetection { get; private set; } = new List<PhotoForDetection>();
+        public ActionType? ActionType { get; private set; }
+        public IEnumerable<DetectedTool> DetectedTools { get; private set; } = new List<DetectedTool>();
 
         private PhotoSession(PhotoSessionId photoSessionId, double latitude, double longitude, ActionTypeId actionTypeId) 
         {

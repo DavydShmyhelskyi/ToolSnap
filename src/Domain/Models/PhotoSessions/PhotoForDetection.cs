@@ -10,6 +10,7 @@ namespace Domain.Models.PhotoSessions
         public DateTime UploadDate { get; }
 
         // navigation properties
+        public PhotoSession? PhotoSession { get; }
 
         private PhotoForDetection(
             PhotoForDetectionId id,

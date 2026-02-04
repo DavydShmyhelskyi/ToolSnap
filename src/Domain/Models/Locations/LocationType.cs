@@ -6,8 +6,7 @@
         public string Title { get; private set; }
 
         // navigation properties
-        public IReadOnlyCollection<Location> Locations => _locations;
-        private readonly List<Location> _locations = new();
+        public IEnumerable<Location> Locations { get; private set; } = new List<Location>();
 
         private LocationType(LocationTypeId id, string title)
         {

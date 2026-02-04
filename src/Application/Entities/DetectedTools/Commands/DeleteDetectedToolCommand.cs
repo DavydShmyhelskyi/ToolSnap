@@ -30,3 +30,5 @@ namespace Application.Entities.DetectedTools.Commands
         }
     }
 }
+
+// треба додати перевірку, що якщо це останній детектед тул в фотосесії, то треба видалити і фотосесію

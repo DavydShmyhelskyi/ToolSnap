@@ -12,44 +12,41 @@ namespace Domain.Models.ToolAssignments
         public DetectedToolId? ReturnedDetectedToolId { get; set; }
         public ToolId ToolId { get; private set; }
         public UserId UserId { get; private set; }
-        public LocationId LocationId { get; private set; }
+        public LocationId TakenLocationId { get; private set; }
+        public LocationId? ReturnedLocationId { get; private set; }
         public DateTime TakenAt { get; }
         public DateTime? ReturnedAt { get; private set; }
 
         // navigation properties
-        private ToolAssignment(ToolAssignmentId id, DetectedToolId takenDetectedToolId, DetectedToolId? returnedDetectedToolId, ToolId toolId, UserId userId, LocationId locationId, DateTime takenAt, DateTime? returnedAt)
+        public Tool? Tool { get; private set; }
+        public User? User { get; private set; }
+        public DetectedTool? TakenDetectedTool { get; private set; }
+        public DetectedTool? ReturnedDetectedTool { get; private set; }
+        public Location? TakenLocation { get; private set; }
+        public Location? ReturnedLocation { get; private set; }
+
+        private ToolAssignment(ToolAssignmentId id, DetectedToolId takenDetectedToolId, DetectedToolId? returnedDetectedToolId, ToolId toolId, UserId userId, LocationId takenLocationId, LocationId? returnedLocationId, DateTime takenAt, DateTime? returnedAt)
         {
             Id = id;
             TakenDetectedToolId = takenDetectedToolId;
             ReturnedDetectedToolId = returnedDetectedToolId;
             ToolId = toolId;
             UserId = userId;
-            LocationId = locationId;
+            TakenLocationId = takenLocationId;
+            ReturnedLocationId = returnedLocationId;
             TakenAt = takenAt;
             ReturnedAt = returnedAt;
         }
 
-        public static ToolAssignment New(DetectedToolId takenDetectedToolId, ToolId toolId, UserId userId, LocationId locationId, DateTimeOffset takenAt)
+        public static ToolAssignment New(DetectedToolId takenDetectedToolId, ToolId toolId, UserId userId, LocationId takenLocationId, DateTimeOffset takenAt)
         {
-            return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, locationId, DateTime.UtcNow, null);
+            return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, takenLocationId, null, DateTime.UtcNow, null);
         }
-        //DateTime.UtcNow
-        public void Return()
-        {
-            if (ReturnedAt.HasValue) throw new InvalidOperationException("Tool already returned.");
 
+        public void Return(LocationId returnedLocationId)
+        {
+            ReturnedLocationId = returnedLocationId;
             ReturnedAt = DateTime.UtcNow;
-        }
-
-        public void UpdateLocation(LocationId locationId)
-        {
-            if (ReturnedAt.HasValue)
-                throw new InvalidOperationException("Cannot update location for returned tool.");
-
-            if (locationId == null || locationId == LocationId.Empty())
-                throw new ArgumentException("LocationId is required.", nameof(locationId));
-
-            LocationId = locationId;
         }
     }
 }

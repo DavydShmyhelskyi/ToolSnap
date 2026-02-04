@@ -8,6 +8,8 @@ namespace Domain.Models.Roles
         public string Title { get; private set; }
 
         // navigation properties
+        public IEnumerable<User> Users { get; private set; } = new List<User>();
+
         private Role(RoleId id, string title)
         {
             Id = id;
