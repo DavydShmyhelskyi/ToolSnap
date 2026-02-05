@@ -1,10 +1,7 @@
-﻿using Domain.Models.Locations;
-using Domain.Models.ToolPhotos;
+﻿using Domain.Models.ToolAssignments;
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 using LanguageExt;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace Application.Common.Interfaces.Queries
 {
@@ -12,8 +9,10 @@ namespace Application.Common.Interfaces.Queries
     {
         Task<IReadOnlyList<Tool>> GetAllAsync(CancellationToken cancellationToken);
         Task<Option<Tool>> GetByIdAsync(ToolId toolPhotoId, CancellationToken cancellationToken);
-        Task<IReadOnlyList<Tool>> GetAllByToolAsync(ToolId toolId, CancellationToken cancellationToken);
-        Task<Option<Tool>> GetByTitleAsync(string name, CancellationToken cancellationToken);
-        Task<Option<Tool>> GetByBrandAsync(string brand, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Tool>> GetAllByStatusIdAsync(ToolStatusId toolStatusId, CancellationToken cancellationToken);
+        Task<Option<Tool>> GetByTypeAsync(ToolTypeId toolTypeId, CancellationToken cancellationToken);
+        Task<Option<Tool>> GetByBrandAsync(BrandId brandId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Tool>> GetAllByTypeAndModelAsync(ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Tool>> GetAllAvailableToolsByTypeAndModelAsync(ToolAssignmentId lastToolAssignmentId, ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken);
     }
 }

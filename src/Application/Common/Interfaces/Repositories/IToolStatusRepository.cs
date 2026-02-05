@@ -1,6 +1,4 @@
-﻿using Domain.Models.Roles;
-using Domain.Models.ToolInfo;
-using LanguageExt;
+﻿using Domain.Models.ToolInfo;
 
 namespace Application.Common.Interfaces.Repositories
 {
@@ -9,7 +7,5 @@ namespace Application.Common.Interfaces.Repositories
         Task<ToolStatus> AddAsync(ToolStatus entity, CancellationToken cancellationToken);
         Task<ToolStatus> UpdateAsync(ToolStatus entity, CancellationToken cancellationToken);
         Task<ToolStatus> DeleteAsync(ToolStatus entity, CancellationToken cancellationToken);
-
-
     }
 }

@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infrastructure.Persistence.Repositories
 {
-    public class LocationRepository(ApplicationDbContext context) : ILocationRepository
+    public class LocationsRepository(ApplicationDbContext context) : ILocationRepository
     {
         public async Task<Location> AddAsync(Location entity, CancellationToken cancellationToken)
         {
@@ -13,16 +13,16 @@ namespace Infrastructure.Persistence.Repositories
             return entity;
         }
 
-        public async Task<Location> DeleteAsync(Location entity, CancellationToken cancellationToken)
+        public async Task<Location> UpdateAsync(Location entity, CancellationToken cancellationToken)
         {
-            context.Locations.Remove(entity);
+            context.Locations.Update(entity);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
-        public async Task<Location> UpdateAsync(Location entity, CancellationToken cancellationToken)
+        public async Task<Location> DeleteAsync(Location entity, CancellationToken cancellationToken)
         {
-            context.Locations.Update(entity);
+            context.Locations.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }

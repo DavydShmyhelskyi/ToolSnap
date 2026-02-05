@@ -34,8 +34,8 @@ public static class ConfigurePersistenceServices
     private static void AddRepositories(this IServiceCollection services)
     {
         // Locations
-        services.AddScoped<LocationRepository>();
-        services.AddScoped<ILocationRepository>(provider => provider.GetRequiredService<LocationRepository>());
+        services.AddScoped<LocationsRepository>();
+        services.AddScoped<ILocationRepository>(provider => provider.GetRequiredService<LocationsRepository>());
         services.AddScoped<LocationsQueries>();
         services.AddScoped<ILocationsQueries>(provider => provider.GetRequiredService<LocationsQueries>());
 
@@ -86,5 +86,47 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IRolesRepository>(provider => provider.GetRequiredService<RolesRepository>());
         services.AddScoped<RolesQueries>();
         services.AddScoped<IRolesQueries>(provider => provider.GetRequiredService<RolesQueries>());
+
+        // ActionTypes
+        services.AddScoped<ActionTypeRepository>();
+        services.AddScoped<IActionTypeRepository>(provider => provider.GetRequiredService<ActionTypeRepository>());
+        services.AddScoped<ActionTypeQueries>();
+        services.AddScoped<IActionTypeQueries>(provider => provider.GetRequiredService<ActionTypeQueries>());
+
+        // Brands
+        services.AddScoped<BrandRepository>();
+        services.AddScoped<IBrandRepository>(provider => provider.GetRequiredService<BrandRepository>());
+        services.AddScoped<BrandQueries>();
+        services.AddScoped<IBrandQueries>(provider => provider.GetRequiredService<BrandQueries>());
+
+        // Models
+        services.AddScoped<ModelRepository>();
+        services.AddScoped<IModelRepository>(provider => provider.GetRequiredService<ModelRepository>());
+        services.AddScoped<ModelQueries>();
+        services.AddScoped<IModelQueries>(provider => provider.GetRequiredService<ModelQueries>());
+
+        // ToolTypes
+        services.AddScoped<ToolTypeRepository>();
+        services.AddScoped<IToolTypeRepository>(provider => provider.GetRequiredService<ToolTypeRepository>());
+        services.AddScoped<ToolTypeQueries>();
+        services.AddScoped<IToolTypeQueries>(provider => provider.GetRequiredService<ToolTypeQueries>());
+
+        // PhotoSessions
+        services.AddScoped<PhotoSessionsRepository>();
+        services.AddScoped<IPhotoSessionsRepository>(provider => provider.GetRequiredService<PhotoSessionsRepository>());
+        services.AddScoped<PhotoSessionsQueries>();
+        services.AddScoped<IPhotoSessionsQueries>(provider => provider.GetRequiredService<PhotoSessionsQueries>());
+
+        // PhotosForDetection
+        services.AddScoped<PhotoForDetectionRepository>();
+        services.AddScoped<IPhotoForDetectionRepository>(provider => provider.GetRequiredService<PhotoForDetectionRepository>());
+        services.AddScoped<PhotoForDetectionQueries>();
+        services.AddScoped<IPhotoForDetectionQueries>(provider => provider.GetRequiredService<PhotoForDetectionQueries>());
+
+        // DetectedTools
+        services.AddScoped<DetectedToolRepository>();
+        services.AddScoped<IDetectedToolRepository>(provider => provider.GetRequiredService<DetectedToolRepository>());
+        services.AddScoped<DetectedToolQueries>();
+        services.AddScoped<IDetectedToolQueries>(provider => provider.GetRequiredService<DetectedToolQueries>());
     }
 }

@@ -1,5 +1,4 @@
 ﻿using Application.Common.Interfaces.Queries;
-using Domain.Models.Locations;
 using Domain.Models.ToolInfo;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
@@ -10,40 +9,19 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<ToolStatus>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Set<ToolStatus>()
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.ToolStatuses.ToListAsync(cancellationToken);
         }
 
         public async Task<Option<ToolStatus>> GetByIdAsync(ToolStatusId toolStatusId, CancellationToken cancellationToken)
         {
-            var toolStatus = await context.Set<ToolStatus>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(ts => ts.Id == toolStatusId, cancellationToken);
-            return toolStatus == null ? Option<ToolStatus>.None : Option<ToolStatus>.Some(toolStatus);
+            var toolStatus = await context.ToolStatuses.FirstOrDefaultAsync(ts => ts.Id == toolStatusId, cancellationToken);
+            return toolStatus != null ? Option<ToolStatus>.Some(toolStatus) : Option<ToolStatus>.None;
         }
 
-        public Task<Option<LocationType>> GetByIdAsync(LocationTypeId locationTypeId, CancellationToken cancellationToken)
+        public async Task<Option<ToolStatus>> GetByTitleAsync(string title, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Option<ToolStatus>> GetByTitleAsync(string name, CancellationToken cancellationToken)
-        {
-            var toolStatus = await context.Set<ToolStatus>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(ts => ts.Title == name, cancellationToken);
-            return toolStatus == null ? Option<ToolStatus>.None : Option<ToolStatus>.Some(toolStatus);
-        }
-
-        Task<IReadOnlyList<LocationType>> IToolStatusQueries.GetAllAsync(CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
-        }
-
-        Task<Option<LocationType>> IToolStatusQueries.GetByTitleAsync(string name, CancellationToken cancellationToken)
-        {
-            throw new NotImplementedException();
+            var toolStatus = await context.ToolStatuses.FirstOrDefaultAsync(ts => ts.Title == title, cancellationToken);
+            return toolStatus != null ? Option<ToolStatus>.Some(toolStatus) : Option<ToolStatus>.None;
         }
     }
 }

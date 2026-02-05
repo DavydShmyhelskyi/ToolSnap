@@ -8,6 +8,5 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<Model>> GetAllAsync(CancellationToken cancellationToken);
         Task<Option<Model>> GetByIdAsync(ModelId modelId, CancellationToken cancellationToken);
         Task<Option<Model>> GetByTitleAsync(string title, CancellationToken cancellationToken);
-        Task<IReadOnlyList<Model>> GetByBrandIdAsync(BrandId brandId, CancellationToken cancellationToken);
     }
 }

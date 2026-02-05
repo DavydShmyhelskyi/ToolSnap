@@ -1,6 +1,5 @@
 ﻿using Domain.Models.ToolAssignments;
 
-
 namespace Application.Common.Interfaces.Repositories
 {
     public interface IToolAssignmentsRepository

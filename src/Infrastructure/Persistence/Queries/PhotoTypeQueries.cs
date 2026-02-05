@@ -9,25 +9,19 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<PhotoType>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Set<PhotoType>()
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.PhotoTypes.ToListAsync(cancellationToken);
         }
 
         public async Task<Option<PhotoType>> GetByIdAsync(PhotoTypeId photoTypeId, CancellationToken cancellationToken)
         {
-            var photoType = await context.Set<PhotoType>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(pt => pt.Id == photoTypeId, cancellationToken);
-            return photoType == null ? Option<PhotoType>.None : Option<PhotoType>.Some(photoType);
+            var photoType = await context.PhotoTypes.FirstOrDefaultAsync(pt => pt.Id == photoTypeId, cancellationToken);
+            return photoType != null ? Option<PhotoType>.Some(photoType) : Option<PhotoType>.None;
         }
 
         public async Task<Option<PhotoType>> GetByTitleAsync(string name, CancellationToken cancellationToken)
         {
-            var photoType = await context.Set<PhotoType>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(pt => pt.Title == name, cancellationToken);
-            return photoType == null ? Option<PhotoType>.None : Option<PhotoType>.Some(photoType);
+            var photoType = await context.PhotoTypes.FirstOrDefaultAsync(pt => pt.Title == name, cancellationToken);
+            return photoType != null ? Option<PhotoType>.Some(photoType) : Option<PhotoType>.None;
         }
     }
 }

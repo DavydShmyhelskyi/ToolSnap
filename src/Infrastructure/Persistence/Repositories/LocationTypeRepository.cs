@@ -8,21 +8,21 @@ namespace Infrastructure.Persistence.Repositories
     {
         public async Task<LocationType> AddAsync(LocationType entity, CancellationToken cancellationToken)
         {
-            await context.Set<LocationType>().AddAsync(entity, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            return entity;
-        }
-
-        public async Task<LocationType> DeleteAsync(LocationType entity, CancellationToken cancellationToken)
-        {
-            context.Set<LocationType>().Remove(entity);
+            await context.LocationTypes.AddAsync(entity, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
         public async Task<LocationType> UpdateAsync(LocationType entity, CancellationToken cancellationToken)
         {
-            context.Set<LocationType>().Update(entity);
+            context.LocationTypes.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
+        }
+
+        public async Task<LocationType> DeleteAsync(LocationType entity, CancellationToken cancellationToken)
+        {
+            context.LocationTypes.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
