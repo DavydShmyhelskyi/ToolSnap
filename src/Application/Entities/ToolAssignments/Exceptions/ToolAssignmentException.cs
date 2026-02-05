@@ -24,9 +24,6 @@ namespace Application.Entities.ToolAssignments.Exceptions
     public class ToolAssignmentAlreadyReturnedException(ToolAssignmentId id)
         : ToolAssignmentException(id, $"Tool assignment with id '{id}' is already returned.");
 
-    public class CannotUpdateReturnedToolAssignmentException(ToolAssignmentId id)
-        : ToolAssignmentException(id, $"Cannot update location for returned tool assignment with id '{id}'.");
-
     public class LocationNotFoundForToolAssignmentException(LocationId locationId)
         : ToolAssignmentException(ToolAssignmentId.Empty(), $"Location with id '{locationId}' was not found.");
 

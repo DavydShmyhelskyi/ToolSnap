@@ -1,46 +1,56 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.ToolAssignments.Exceptions;
+using Domain.Models.Locations;
 using Domain.Models.ToolAssignments;
 using LanguageExt;
 using MediatR;
 
 namespace Application.Entities.ToolAssignments.Commands
 {
-    public record ReturnToolAssignmentCommand : IRequest<Either<ToolAssignmentException, ToolAssignment>>
+    public record ReturnToolAssignmentLocationCommand : IRequest<Either<ToolAssignmentException, ToolAssignment>>
     {
         public required Guid ToolAssignmentId { get; init; }
+        public required Guid LocationId { get; init; }
     }
 
-    public class ReturnToolAssignmentCommandHandler(
-        IToolAssignmentQueries queries,
+    public class ReturnToolAssignmentLocationCommandHandler(
+        IToolAssignmentQueries toolAssignmentQueries,
+        ILocationsQueries locationsQueries,
         IToolAssignmentsRepository repository)
-        : IRequestHandler<ReturnToolAssignmentCommand, Either<ToolAssignmentException, ToolAssignment>>
+        : IRequestHandler<ReturnToolAssignmentLocationCommand, Either<ToolAssignmentException, ToolAssignment>>
     {
         public async Task<Either<ToolAssignmentException, ToolAssignment>> Handle(
-            ReturnToolAssignmentCommand request,
+            ReturnToolAssignmentLocationCommand request,
             CancellationToken cancellationToken)
         {
-            var id = new ToolAssignmentId(request.ToolAssignmentId);
-            var entity = await queries.GetByIdAsync(id, cancellationToken);
+            var toolAssignmentId = new ToolAssignmentId(request.ToolAssignmentId);
+            var locationId = new LocationId(request.LocationId);
 
-            return await entity.MatchAsync(
-                ta => ReturnToolAssignment(ta, cancellationToken),
-                () => new ToolAssignmentNotFoundException(id));
+            // Перевірка існування ToolAssignment
+            var toolAssignment = await toolAssignmentQueries.GetByIdAsync(toolAssignmentId, cancellationToken);
+            if (toolAssignment.IsNone)
+                return new ToolAssignmentNotFoundException(toolAssignmentId);
+
+            // Перевірка існування Location
+            var location = await locationsQueries.GetByIdAsync(locationId, cancellationToken);
+            if (location.IsNone)
+                return new LocationNotFoundForToolAssignmentException(locationId);
+
+            return await toolAssignment.MatchAsync(
+                ta => SetReturnedLocation(ta, locationId, cancellationToken),
+                () => new ToolAssignmentNotFoundException(toolAssignmentId));
         }
 
-        private async Task<Either<ToolAssignmentException, ToolAssignment>> ReturnToolAssignment(
+        private async Task<Either<ToolAssignmentException, ToolAssignment>> SetReturnedLocation(
             ToolAssignment entity,
+            LocationId returnedLocationId,
             CancellationToken cancellationToken)
         {
             try
             {
-                entity.Return();
+                entity.Return(returnedLocationId);
                 return await repository.UpdateAsync(entity, cancellationToken);
-            }
-            catch (InvalidOperationException ex)
-            {
-                return new ToolAssignmentAlreadyReturnedException(entity.Id);
             }
             catch (Exception ex)
             {

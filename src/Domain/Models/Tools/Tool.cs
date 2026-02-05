@@ -57,6 +57,16 @@ namespace Domain.Models.Tools
             );
         }
 
+        public void Update(
+            BrandId? brandId,
+            ModelId? modelId,
+            string? serialNumber)
+        {
+            BrandId = brandId;
+            ModelId = modelId;
+            SerialNumber = serialNumber;
+        }
+
         public void ChangeStatus(ToolStatusId toolStatusId)
         {
             ToolStatusId = toolStatusId;

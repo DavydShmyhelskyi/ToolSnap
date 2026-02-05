@@ -9,8 +9,9 @@ namespace Application.Entities.Tools.Commands
             RuleFor(x => x.ToolId)
                 .NotEmpty().WithMessage("Tool ID must be provided.");
 
-            RuleFor(x => x.ToolStatusId)
-                .NotEmpty().WithMessage("Tool status ID must be provided.");
+            RuleFor(x => x.SerialNumber)
+                .MaximumLength(100).WithMessage("Serial number must not exceed 100 characters.")
+                .When(x => !string.IsNullOrWhiteSpace(x.SerialNumber));
         }
     }
 }

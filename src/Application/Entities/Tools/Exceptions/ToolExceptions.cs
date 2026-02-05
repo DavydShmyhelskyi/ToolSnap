@@ -20,4 +20,13 @@ namespace Application.Entities.Tools.Exceptions
 
     public class ToolStatusNotFoundForToolException(ToolStatusId toolStatusId)
         : ToolException(ToolId.Empty(), $"Tool status with id '{toolStatusId}' was not found.");
+
+    public class ToolTypeNotFoundForToolException(ToolTypeId toolTypeId)
+        : ToolException(ToolId.Empty(), $"Tool type with id '{toolTypeId}' was not found.");
+
+    public class BrandNotFoundForToolException(BrandId brandId)
+        : ToolException(ToolId.Empty(), $"Brand with id '{brandId}' was not found.");
+
+    public class ModelNotFoundForToolException(ModelId modelId)
+        : ToolException(ToolId.Empty(), $"Model with id '{modelId}' was not found.");
 }

@@ -11,11 +11,15 @@ namespace Application.Entities.Tools.Commands
     public record UpdateToolCommand : IRequest<Either<ToolException, Tool>>
     {
         public required Guid ToolId { get; init; }
-        public required Guid ToolStatusId { get; init; }
+        public Guid? BrandId { get; init; }
+        public Guid? ModelId { get; init; }
+        public string? SerialNumber { get; init; }
     }
 
     public class UpdateToolCommandHandler(
-        IToolsQueries queries,
+        IToolsQueries toolsQueries,
+        IBrandQueries brandQueries,
+        IModelQueries modelQueries,
         IToolsRepository repository)
         : IRequestHandler<UpdateToolCommand, Either<ToolException, Tool>>
     {
@@ -23,12 +27,34 @@ namespace Application.Entities.Tools.Commands
             UpdateToolCommand request,
             CancellationToken cancellationToken)
         {
-            var id = new ToolId(request.ToolId);
-            var entity = await queries.GetByIdAsync(id, cancellationToken);
+            var toolId = new ToolId(request.ToolId);
 
-            return await entity.MatchAsync(
+            // Перевірка існування Tool
+            var tool = await toolsQueries.GetByIdAsync(toolId, cancellationToken);
+            if (tool.IsNone)
+                return new ToolNotFoundException(toolId);
+
+            // Перевірка існування Brand (якщо вказано)
+            if (request.BrandId.HasValue)
+            {
+                var brandId = new BrandId(request.BrandId.Value);
+                var brand = await brandQueries.GetByIdAsync(brandId, cancellationToken);
+                if (brand.IsNone)
+                    return new BrandNotFoundForToolException(brandId);
+            }
+
+            // Перевірка існування Model (якщо вказано)
+            if (request.ModelId.HasValue)
+            {
+                var modelId = new ModelId(request.ModelId.Value);
+                var model = await modelQueries.GetByIdAsync(modelId, cancellationToken);
+                if (model.IsNone)
+                    return new ModelNotFoundForToolException(modelId);
+            }
+
+            return await tool.MatchAsync(
                 t => UpdateEntity(t, request, cancellationToken),
-                () => new ToolNotFoundException(id));
+                () => new ToolNotFoundException(toolId));
         }
 
         private async Task<Either<ToolException, Tool>> UpdateEntity(
@@ -38,8 +64,10 @@ namespace Application.Entities.Tools.Commands
         {
             try
             {
-                var toolStatusId = new ToolStatusId(request.ToolStatusId);
-                entity.ChangeStatus(toolStatusId);
+                var brandId = request.BrandId.HasValue ? new BrandId(request.BrandId.Value) : null;
+                var modelId = request.ModelId.HasValue ? new ModelId(request.ModelId.Value) : null;
+
+                entity.Update(brandId, modelId, request.SerialNumber);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)

@@ -10,27 +10,57 @@ namespace Application.Entities.Tools.Commands
 {
     public record CreateToolCommand : IRequest<Either<ToolException, Tool>>
     {
-        public required string Name { get; init; }
+        public required Guid ToolTypeId { get; init; }
+        public Guid? BrandId { get; init; }
+        public Guid? ModelId { get; init; }
         public required Guid ToolStatusId { get; init; }
-        public string? Brand { get; init; }
-        public string? Model { get; init; }
         public string? SerialNumber { get; init; }
     }
 
     public class CreateToolCommandHandler(
-        IToolsQueries queries,
-        IToolsRepository repository)
+        IToolsRepository repository,
+        IToolTypeQueries toolTypeQueries,
+        IBrandQueries brandQueries,
+        IModelQueries modelQueries,
+        IToolStatusQueries toolStatusQueries)
         : IRequestHandler<CreateToolCommand, Either<ToolException, Tool>>
     {
         public async Task<Either<ToolException, Tool>> Handle(
             CreateToolCommand request,
             CancellationToken cancellationToken)
         {
-            var existing = await queries.GetByTitleAsync(request.Name, cancellationToken);
+            var toolTypeId = new ToolTypeId(request.ToolTypeId);
+            var toolStatusId = new ToolStatusId(request.ToolStatusId);
 
-            return await existing.MatchAsync(
-                t => new ToolAlreadyExistsException(t.Id),
-                () => CreateEntity(request, cancellationToken));
+            // Перевірка існування ToolType
+            var toolType = await toolTypeQueries.GetByIdAsync(toolTypeId, cancellationToken);
+            if (toolType.IsNone)
+                return new ToolTypeNotFoundForToolException(toolTypeId);
+
+            // Перевірка існування ToolStatus
+            var toolStatus = await toolStatusQueries.GetByIdAsync(toolStatusId, cancellationToken);
+            if (toolStatus.IsNone)
+                return new ToolStatusNotFoundForToolException(toolStatusId);
+
+            // Перевірка існування Brand (якщо вказано)
+            if (request.BrandId.HasValue)
+            {
+                var brandId = new BrandId(request.BrandId.Value);
+                var brand = await brandQueries.GetByIdAsync(brandId, cancellationToken);
+                if (brand.IsNone)
+                    return new BrandNotFoundForToolException(brandId);
+            }
+
+            // Перевірка існування Model (якщо вказано)
+            if (request.ModelId.HasValue)
+            {
+                var modelId = new ModelId(request.ModelId.Value);
+                var model = await modelQueries.GetByIdAsync(modelId, cancellationToken);
+                if (model.IsNone)
+                    return new ModelNotFoundForToolException(modelId);
+            }
+
+            return await CreateEntity(request, cancellationToken);
         }
 
         private async Task<Either<ToolException, Tool>> CreateEntity(
@@ -39,12 +69,16 @@ namespace Application.Entities.Tools.Commands
         {
             try
             {
+                var toolTypeId = new ToolTypeId(request.ToolTypeId);
+                var brandId = request.BrandId.HasValue ? new BrandId(request.BrandId.Value) : null;
+                var modelId = request.ModelId.HasValue ? new ModelId(request.ModelId.Value) : null;
                 var toolStatusId = new ToolStatusId(request.ToolStatusId);
+
                 var newTool = Tool.New(
-                    request.ToolType,
+                    toolTypeId,
+                    brandId,
+                    modelId,
                     toolStatusId,
-                    request.Brand,
-                    request.Model,
                     request.SerialNumber);
 
                 var result = await repository.AddAsync(newTool, cancellationToken);
