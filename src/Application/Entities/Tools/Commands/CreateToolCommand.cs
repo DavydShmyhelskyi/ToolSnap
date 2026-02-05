@@ -10,10 +10,10 @@ namespace Application.Entities.Tools.Commands
 {
     public record CreateToolCommand : IRequest<Either<ToolException, Tool>>
     {
-        public required string Name { get; init; }
+        public required string Name { get; init; } // Guid ToolTypeId
         public required Guid ToolStatusId { get; init; }
-        public string? Brand { get; init; }
-        public string? Model { get; init; }
+        public string? Brand { get; init; } //Guid BrandId
+        public string? Model { get; init; } //Guid ModelId
         public string? SerialNumber { get; init; }
     }
 

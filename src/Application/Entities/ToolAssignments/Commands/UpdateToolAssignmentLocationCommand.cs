@@ -49,12 +49,11 @@ namespace Application.Entities.ToolAssignments.Commands
         {
             try
             {
-                entity.UpdateLocation(locationId);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (InvalidOperationException ex)
             {
-                return new CannotUpdateReturnedToolAssignmentException(entity.Id);
+                return new CannotUpdateReturnedToolAssignmentException(entity.Id); //?
             }
             catch (Exception ex)
             {

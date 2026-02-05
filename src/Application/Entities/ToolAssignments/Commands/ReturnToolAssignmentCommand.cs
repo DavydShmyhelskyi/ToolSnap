@@ -35,12 +35,17 @@ namespace Application.Entities.ToolAssignments.Commands
         {
             try
             {
-                entity.Return();
+                entity.Return(); // location Id
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
+            /*
+             if(entity.IsReturned)
+                 throw new InvalidOperationException("Tool assignment has already been returned.");
+             
+             */
             catch (InvalidOperationException ex)
             {
-                return new ToolAssignmentAlreadyReturnedException(entity.Id);
+                return new ToolAssignmentAlreadyReturnedException(entity.Id); // ?
             }
             catch (Exception ex)
             {
