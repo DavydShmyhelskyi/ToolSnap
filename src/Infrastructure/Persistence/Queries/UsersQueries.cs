@@ -10,33 +10,24 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<User>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Users
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.Users.ToListAsync(cancellationToken);
         }
 
         public async Task<Option<User>> GetByIdAsync(UserId userId, CancellationToken cancellationToken)
         {
-            var user = await context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
-            return user == null ? Option<User>.None : Option<User>.Some(user);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Id == userId, cancellationToken);
+            return user != null ? Option<User>.Some(user) : Option<User>.None;
         }
 
         public async Task<IReadOnlyList<User>> GetAllByRoleAsync(RoleId roleId, CancellationToken cancellationToken)
         {
-            return await context.Users
-                .AsNoTracking()
-                .Where(u => u.RoleId == roleId)
-                .ToListAsync(cancellationToken);
+            return await context.Users.Where(u => u.RoleId == roleId).ToListAsync(cancellationToken);
         }
 
         public async Task<Option<User>> GetByNameAsync(string name, CancellationToken cancellationToken)
         {
-            var user = await context.Users
-                .AsNoTracking()
-                .FirstOrDefaultAsync(u => u.FullName == name, cancellationToken);
-            return user == null ? Option<User>.None : Option<User>.Some(user);
+            var user = await context.Users.FirstOrDefaultAsync(u => u.FullName == name, cancellationToken);
+            return user != null ? Option<User>.Some(user) : Option<User>.None;
         }
     }
 }

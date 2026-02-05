@@ -9,25 +9,24 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<Location>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Locations
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.Locations.ToListAsync(cancellationToken);
         }
 
         public async Task<Option<Location>> GetByIdAsync(LocationId locationId, CancellationToken cancellationToken)
         {
-            var location = await context.Locations
-                .AsNoTracking()
-                .FirstOrDefaultAsync(l => l.Id == locationId, cancellationToken);
-            return location == null ? Option<Location>.None : Option<Location>.Some(location);
+            var location = await context.Locations.FirstOrDefaultAsync(l => l.Id == locationId, cancellationToken);
+            return location != null ? Option<Location>.Some(location) : Option<Location>.None;
         }
 
         public async Task<Option<Location>> GetByTitleAsync(string name, CancellationToken cancellationToken)
         {
-            var location = await context.Locations
-                .AsNoTracking()
-                .FirstOrDefaultAsync(l => l.Name == name, cancellationToken);
-            return location == null ? Option<Location>.None : Option<Location>.Some(location);
+            var location = await context.Locations.FirstOrDefaultAsync(l => l.Name == name, cancellationToken);
+            return location != null ? Option<Location>.Some(location) : Option<Location>.None;
+        }
+
+        public async Task<IReadOnlyList<Location>> GetByTypeAsync(LocationTypeId locationTypeId, CancellationToken cancellationToken)
+        {
+            return await context.Locations.Where(l => l.LocationTypeId == locationTypeId).ToListAsync(cancellationToken);
         }
     }
 }

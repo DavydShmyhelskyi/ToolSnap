@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Roles;
-using LanguageExt;
 
 namespace Application.Common.Interfaces.Repositories
 {

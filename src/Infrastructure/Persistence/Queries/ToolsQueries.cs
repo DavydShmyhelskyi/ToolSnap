@@ -1,4 +1,6 @@
 ﻿using Application.Common.Interfaces.Queries;
+using Domain.Models.ToolAssignments;
+using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
@@ -9,41 +11,40 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<Tool>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Tools
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.Tools.ToListAsync(cancellationToken);
         }
 
-        public async Task<Option<Tool>> GetByIdAsync(ToolId toolId, CancellationToken cancellationToken)
+        public async Task<Option<Tool>> GetByIdAsync(ToolId toolPhotoId, CancellationToken cancellationToken)
         {
-            var tool = await context.Tools
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Id == toolId, cancellationToken);
-            return tool == null ? Option<Tool>.None : Option<Tool>.Some(tool);
+            var tool = await context.Tools.FirstOrDefaultAsync(t => t.Id == toolPhotoId, cancellationToken);
+            return tool != null ? Option<Tool>.Some(tool) : Option<Tool>.None;
         }
 
-        public async Task<IReadOnlyList<Tool>> GetAllByToolAsync(ToolId toolId, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<Tool>> GetAllByStatusIdAsync(ToolStatusId toolStatusId, CancellationToken cancellationToken)
         {
-            return await context.Tools
-                .AsNoTracking()
-                .Where(t => t.Id == toolId)
-                .ToListAsync(cancellationToken);
+            return await context.Tools.Where(t => t.ToolStatusId == toolStatusId).ToListAsync(cancellationToken);
         }
 
-        public async Task<Option<Tool>> GetByTitleAsync(string name, CancellationToken cancellationToken)
+        public async Task<Option<Tool>> GetByTypeAsync(ToolTypeId toolTypeId, CancellationToken cancellationToken)
         {
-            var tool = await context.Tools
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Name == name, cancellationToken);
-            return tool == null ? Option<Tool>.None : Option<Tool>.Some(tool);
+            var tool = await context.Tools.FirstOrDefaultAsync(t => t.ToolTypeId == toolTypeId, cancellationToken);
+            return tool != null ? Option<Tool>.Some(tool) : Option<Tool>.None;
         }
 
-        public async Task<Option<Tool>> GetByBrandAsync(string brand, CancellationToken cancellationToken)
+        public async Task<Option<Tool>> GetByBrandAsync(BrandId brandId, CancellationToken cancellationToken)
         {
-            var tool = await context.Tools
-                .AsNoTracking()
-                .FirstOrDefaultAsync(t => t.Brand == brand, cancellationToken);
-            return tool == null ? Option<Tool>.None : Option<Tool>.Some(tool);
+            var tool = await context.Tools.FirstOrDefaultAsync(t => t.BrandId == brandId, cancellationToken);
+            return tool != null ? Option<Tool>.Some(tool) : Option<Tool>.None;
+        }
+
+        public async Task<IReadOnlyList<Tool>> GetAllByTypeAndModelAsync(ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken)
+        {
+            return await context.Tools.Where(t => t.ToolTypeId == toolTypeId && t.ModelId == modelId).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Tool>> GetAllAvailableToolsByTypeAndModelAsync(ToolAssignmentId lastToolAssignmentId, ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken)
+        {
+            return await context.Tools.Where(t => t.ToolTypeId == toolTypeId && t.ModelId == modelId).ToListAsync(cancellationToken);
         }
     }
 }

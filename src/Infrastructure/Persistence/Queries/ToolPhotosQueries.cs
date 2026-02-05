@@ -10,25 +10,18 @@ namespace Infrastructure.Persistence.Queries
     {
         public async Task<IReadOnlyList<ToolPhoto>> GetAllAsync(CancellationToken cancellationToken)
         {
-            return await context.Set<ToolPhoto>()
-                .AsNoTracking()
-                .ToListAsync(cancellationToken);
+            return await context.ToolPhotos.ToListAsync(cancellationToken);
         }
 
         public async Task<Option<ToolPhoto>> GetByIdAsync(ToolPhotoId toolPhotoId, CancellationToken cancellationToken)
         {
-            var toolPhoto = await context.Set<ToolPhoto>()
-                .AsNoTracking()
-                .FirstOrDefaultAsync(tp => tp.Id == toolPhotoId, cancellationToken);
-            return toolPhoto == null ? Option<ToolPhoto>.None : Option<ToolPhoto>.Some(toolPhoto);
+            var toolPhoto = await context.ToolPhotos.FirstOrDefaultAsync(tp => tp.Id == toolPhotoId, cancellationToken);
+            return toolPhoto != null ? Option<ToolPhoto>.Some(toolPhoto) : Option<ToolPhoto>.None;
         }
 
         public async Task<IReadOnlyList<ToolPhoto>> GetAllByToolAsync(ToolId toolId, CancellationToken cancellationToken)
         {
-            return await context.Set<ToolPhoto>()
-                .AsNoTracking()
-                .Where(tp => tp.ToolId == toolId)
-                .ToListAsync(cancellationToken);
+            return await context.ToolPhotos.Where(tp => tp.ToolId == toolId).ToListAsync(cancellationToken);
         }
     }
 }

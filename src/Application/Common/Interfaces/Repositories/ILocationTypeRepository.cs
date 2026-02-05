@@ -6,5 +6,4 @@ namespace Application.Common.Interfaces.Repositories;
     Task<LocationType> AddAsync(LocationType entity, CancellationToken cancellationToken);
     Task<LocationType> UpdateAsync(LocationType entity, CancellationToken cancellationToken);
     Task<LocationType> DeleteAsync(LocationType entity, CancellationToken cancellationToken);
-
 }

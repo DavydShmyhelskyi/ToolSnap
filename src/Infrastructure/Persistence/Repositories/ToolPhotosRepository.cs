@@ -8,21 +8,21 @@ namespace Infrastructure.Persistence.Repositories
     {
         public async Task<ToolPhoto> AddAsync(ToolPhoto entity, CancellationToken cancellationToken)
         {
-            await context.Set<ToolPhoto>().AddAsync(entity, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            return entity;
-        }
-
-        public async Task<ToolPhoto> DeleteAsync(ToolPhoto entity, CancellationToken cancellationToken)
-        {
-            context.Set<ToolPhoto>().Remove(entity);
+            await context.ToolPhotos.AddAsync(entity, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
         public async Task<ToolPhoto> UpdateAsync(ToolPhoto entity, CancellationToken cancellationToken)
         {
-            context.Set<ToolPhoto>().Update(entity);
+            context.ToolPhotos.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
+        }
+
+        public async Task<ToolPhoto> DeleteAsync(ToolPhoto entity, CancellationToken cancellationToken)
+        {
+            context.ToolPhotos.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }

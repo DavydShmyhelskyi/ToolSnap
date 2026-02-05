@@ -8,21 +8,21 @@ namespace Infrastructure.Persistence.Repositories
     {
         public async Task<PhotoType> AddAsync(PhotoType entity, CancellationToken cancellationToken)
         {
-            await context.Set<PhotoType>().AddAsync(entity, cancellationToken);
-            await context.SaveChangesAsync(cancellationToken);
-            return entity;
-        }
-
-        public async Task<PhotoType> DeleteAsync(PhotoType entity, CancellationToken cancellationToken)
-        {
-            context.Set<PhotoType>().Remove(entity);
+            await context.PhotoTypes.AddAsync(entity, cancellationToken);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
 
         public async Task<PhotoType> UpdateAsync(PhotoType entity, CancellationToken cancellationToken)
         {
-            context.Set<PhotoType>().Update(entity);
+            context.PhotoTypes.Update(entity);
+            await context.SaveChangesAsync(cancellationToken);
+            return entity;
+        }
+
+        public async Task<PhotoType> DeleteAsync(PhotoType entity, CancellationToken cancellationToken)
+        {
+            context.PhotoTypes.Remove(entity);
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
