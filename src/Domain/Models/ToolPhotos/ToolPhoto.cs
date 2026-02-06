@@ -8,7 +8,6 @@ namespace Domain.Models.ToolPhotos
         public string OriginalName { get; }
         public ToolId ToolId { get; }
         public DateTime UploadDate { get; }
-
         public PhotoTypeId PhotoTypeId { get; }
 
         // navigation properties

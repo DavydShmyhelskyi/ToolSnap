@@ -27,5 +27,13 @@ public class ToolPhotoConfiguration : IEntityTypeConfiguration<ToolPhoto>
             .WithMany(x => x.ToolPhotos)
             .HasForeignKey(x => x.ToolId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        builder.Property(x => x.PhotoTypeId)
+            .HasConversion(x => x.Value, x => new PhotoTypeId(x))
+            .IsRequired();
+        builder.HasOne(x => x.PhotoType)
+            .WithMany(x => x.ToolPhotos)
+            .HasForeignKey(x => x.PhotoTypeId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

@@ -6,9 +6,6 @@ namespace Application.Entities.PhotoSessions.Commands
     {
         public CreatePhotoSessionCommandValidator()
         {
-            RuleFor(x => x.UserId)
-                .NotEmpty().WithMessage("User ID is required.");
-
             RuleFor(x => x.ActionTypeId)
                 .NotEmpty().WithMessage("Action type ID is required.");
 

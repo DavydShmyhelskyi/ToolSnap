@@ -6,7 +6,7 @@ namespace Domain.Models.DetectedTools
 {
     public class DetectedTool
     {
-        public DetectedToolId Id { get; init; }
+        public DetectedToolId Id { get;}
         public PhotoSessionId PhotoSessionId { get; init; }
         public ToolTypeId ToolTypeId { get; init; }
         public BrandId? BrandId { get; private set; }

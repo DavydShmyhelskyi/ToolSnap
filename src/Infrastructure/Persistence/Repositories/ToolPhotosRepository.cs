@@ -13,13 +13,6 @@ namespace Infrastructure.Persistence.Repositories
             return entity;
         }
 
-        public async Task<ToolPhoto> UpdateAsync(ToolPhoto entity, CancellationToken cancellationToken)
-        {
-            context.ToolPhotos.Update(entity);
-            await context.SaveChangesAsync(cancellationToken);
-            return entity;
-        }
-
         public async Task<ToolPhoto> DeleteAsync(ToolPhoto entity, CancellationToken cancellationToken)
         {
             context.ToolPhotos.Remove(entity);

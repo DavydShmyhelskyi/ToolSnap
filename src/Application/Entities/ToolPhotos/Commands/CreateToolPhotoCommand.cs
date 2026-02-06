@@ -1,6 +1,5 @@
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
-using Application.Entities.ToolAssignments.Exceptions;
 using Application.Entities.ToolPhotos.Exceptions;
 using Domain.Models.ToolPhotos;
 using Domain.Models.Tools;
@@ -26,6 +25,7 @@ namespace Application.Entities.ToolPhotos.Commands
             CancellationToken cancellationToken)
         {
             var toolId = new ToolId(request.ToolId);
+
             // Перевірка існування Tool
             var tool = await toolsQueries.GetByIdAsync(toolId, cancellationToken);
             if (tool.IsNone)
@@ -46,6 +46,7 @@ namespace Application.Entities.ToolPhotos.Commands
 
                 var newToolPhoto = ToolPhoto.New(
                     toolId,
+                    photoTypeId,
                     request.OriginalName);
 
                 var result = await repository.AddAsync(newToolPhoto, cancellationToken);

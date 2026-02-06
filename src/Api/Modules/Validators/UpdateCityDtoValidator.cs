@@ -7,9 +7,7 @@ namespace Api.Modules.Validators
     {
         public UpdateRoleDtoValidator()
         {
-            RuleFor(x => x.Id)
-                .NotEmpty();
-            RuleFor(x => x.Name)
+            RuleFor(x => x.Title)
                 .NotEmpty()
                 .MinimumLength(3)
                 .MaximumLength(100);

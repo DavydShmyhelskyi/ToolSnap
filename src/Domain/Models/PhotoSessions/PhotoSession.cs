@@ -5,7 +5,7 @@ namespace Domain.Models.PhotoSessions
 {
     public class PhotoSession
     {
-        public PhotoSessionId Id { get; private set; }
+        public PhotoSessionId Id { get; init; }
         public double Latitude { get; private set; }
         public double Longitude { get; private set; }
         public ActionTypeId ActionTypeId { get; private set; }

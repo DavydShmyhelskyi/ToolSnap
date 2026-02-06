@@ -7,7 +7,7 @@ public class CreateRoleDtoValidator : AbstractValidator<CreateRoleDto>
 {
     public CreateRoleDtoValidator()
     {
-        RuleFor(x => x.Name)
+        RuleFor(x => x.Title)
             .NotEmpty()
             .MinimumLength(3)
             .MaximumLength(100);

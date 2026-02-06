@@ -1,4 +1,5 @@
 using Domain.Models.PhotoSessions;
+using Domain.Models.Tools;
 using Domain.Models.Users;
 
 namespace Application.Entities.PhotoSessions.Exceptions
@@ -26,4 +27,5 @@ namespace Application.Entities.PhotoSessions.Exceptions
 
     public class UnhandledPhotoSessionException(PhotoSessionId id, Exception? innerException = null)
         : PhotoSessionException(id, "Unexpected error occured", innerException);
-}
+
+    }
