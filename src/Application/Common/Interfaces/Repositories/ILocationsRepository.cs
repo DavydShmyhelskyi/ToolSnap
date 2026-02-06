@@ -1,4 +1,4 @@
-﻿using Domain.Models.Locations;#
+﻿using Domain.Models.Locations;
 
 namespace Application.Common.Interfaces.Repositories
 {

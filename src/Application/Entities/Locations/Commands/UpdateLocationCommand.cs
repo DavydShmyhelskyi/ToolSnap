@@ -5,6 +5,7 @@ using Application.Entities.Locations.Exceptions;
 using Domain.Models.Locations;
 using LanguageExt;
 using MediatR;
+using System.Net;
 using Unit = LanguageExt.Unit;
 
 
@@ -14,6 +15,10 @@ namespace Application.Entities.Locations.Commands
     {
         public required Guid LocationId { get; init; }
         public required string Name { get; init; }
+        public required Guid LocationTypeId { get; init; }
+        public string? Address { get; init; }
+        public required double Latitude { get; init; }
+        public required double Longitude { get; init; }
     }
 
     public class UpdateLocationCommandHandler(
@@ -41,7 +46,8 @@ namespace Application.Entities.Locations.Commands
         {
             try
             {
-               // entity.UpdateName(request.Name);
+                var locationTypeId = new LocationTypeId(request.LocationTypeId);
+                entity.Update(request.Name, locationTypeId, request.Address, request.Latitude, request.Longitude);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)

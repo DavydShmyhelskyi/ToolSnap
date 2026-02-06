@@ -43,9 +43,10 @@ namespace Domain.Models.ToolAssignments
             return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, takenLocationId, null, DateTime.UtcNow, null);
         }
 
-        public void Return(LocationId returnedLocationId)
+        public void Return(LocationId returnedLocationId, DetectedToolId returnedDetectedToolId)
         {
             ReturnedLocationId = returnedLocationId;
+            ReturnedDetectedToolId = returnedDetectedToolId;
             ReturnedAt = DateTime.UtcNow;
         }
     }
