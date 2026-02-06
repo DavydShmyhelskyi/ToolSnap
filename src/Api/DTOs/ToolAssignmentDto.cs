@@ -4,36 +4,31 @@ namespace Api.DTOs
 {
     public record ToolAssignmentDto(
         Guid Id,
+        Guid TakenDetectedToolId,
+        Guid? ReturnedDetectedToolId,
         Guid ToolId,
-        string? ToolName,
         Guid UserId,
-        string? UserFullName,
-        Guid LocationId,
-        string? LocationName,
+        Guid TakenLocationId,
+        Guid? ReturnedLocationId,
         DateTime TakenAt,
-        DateTime? ReturnedAt,
-        bool IsActive)
+        DateTime? ReturnedAt)
     {
         public static ToolAssignmentDto FromDomain(ToolAssignment toolAssignment) =>
             new(
                 toolAssignment.Id.Value,
+                toolAssignment.TakenDetectedToolId.Value,
+                toolAssignment.ReturnedDetectedToolId?.Value,
                 toolAssignment.ToolId.Value,
-                toolAssignment.Tool?.Name,
                 toolAssignment.UserId.Value,
-                toolAssignment.User?.FullName,
-                toolAssignment.LocationId.Value,
-                toolAssignment.Location?.Name,
+                toolAssignment.TakenLocationId.Value,
+                toolAssignment.ReturnedLocationId?.Value,
                 toolAssignment.TakenAt,
-                toolAssignment.ReturnedAt,
-                !toolAssignment.ReturnedAt.HasValue);
+                toolAssignment.ReturnedAt);
     }
 
     public record CreateToolAssignmentDto(
+        Guid TakenDetectedToolId,
         Guid ToolId,
         Guid UserId,
-        Guid LocationId);
-
-    public record UpdateToolAssignmentDto(Guid LocationId);
-
-    public record ReturnToolAssignmentDto();
+        Guid TakenLocationId);
 }

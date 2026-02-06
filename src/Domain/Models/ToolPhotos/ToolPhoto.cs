@@ -9,6 +9,8 @@ namespace Domain.Models.ToolPhotos
         public ToolId ToolId { get; }
         public DateTime UploadDate { get; }
 
+        public PhotoTypeId PhotoTypeId { get; }
+
         // navigation properties
         public PhotoType? PhotoType { get; private set; }
         public Tool? Tool { get; private set; }
@@ -17,16 +19,20 @@ namespace Domain.Models.ToolPhotos
             ToolPhotoId id,
             string originalName,
             ToolId toolId,
+            PhotoTypeId photoTypeId,
             DateTime uploadDate)
+            
         {
             Id = id;
             OriginalName = originalName;
             ToolId = toolId;
+            PhotoTypeId = photoTypeId;
             UploadDate = uploadDate;
         }
 
         public static ToolPhoto New(
             ToolId toolId,
+            PhotoTypeId photoTypeId,
             string originalName)
         {
             if (string.IsNullOrWhiteSpace(originalName))
@@ -36,6 +42,7 @@ namespace Domain.Models.ToolPhotos
                 ToolPhotoId.New(),
                 originalName,
                 toolId,
+                photoTypeId,
                 DateTime.UtcNow
             );
         }

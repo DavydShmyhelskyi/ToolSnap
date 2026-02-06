@@ -2,16 +2,19 @@
 
 namespace Api.DTOs
 {
-    public record RoleDto(Guid Id, string Name, DateTimeOffset CreatedAt)
+    public record RoleDto(
+        Guid Id,
+        string Title)
     {
         public static RoleDto FromDomain(Role role) =>
             new(
                 role.Id.Value,
-                role.Name,
-                role.CreatedAt);
+                role.Title);
     }
 
-    public record CreateRoleDto(string Name);
+    public record CreateRoleDto(
+        string Title);
 
-    public record UpdateRoleDto(Guid Id, string Name);
+    public record UpdateRoleDto(
+        string Title);
 }

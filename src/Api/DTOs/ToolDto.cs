@@ -4,32 +4,33 @@ namespace Api.DTOs
 {
     public record ToolDto(
         Guid Id,
-        string Name,
-        string? Brand,
-        string? Model,
+        Guid ToolTypeId,
+        Guid? BrandId,
+        Guid? ModelId,
         string? SerialNumber,
         Guid ToolStatusId,
-        string? ToolStatusTitle,
         DateTimeOffset CreatedAt)
     {
         public static ToolDto FromDomain(Tool tool) =>
             new(
                 tool.Id.Value,
-                tool.Name,
-                tool.Brand,
-                tool.Model,
+                tool.ToolTypeId.Value,
+                tool.BrandId?.Value,
+                tool.ModelId?.Value,
                 tool.SerialNumber,
                 tool.ToolStatusId.Value,
-                tool.ToolStatus?.Title,
                 tool.CreatedAt);
     }
 
     public record CreateToolDto(
-        string Name,
+        Guid ToolTypeId,
+        Guid? BrandId,
+        Guid? ModelId,
         Guid ToolStatusId,
-        string? Brand,
-        string? Model,
         string? SerialNumber);
 
-    public record UpdateToolDto(Guid ToolStatusId);
+    public record UpdateToolDto(
+        Guid? BrandId,
+        Guid? ModelId,
+        string? SerialNumber);
 }

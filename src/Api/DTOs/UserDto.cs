@@ -6,8 +6,8 @@ namespace Api.DTOs
         Guid Id,
         string FullName,
         string Email,
+        bool ConfirmedEmail,
         Guid RoleId,
-        string? RoleName,
         bool IsActive,
         DateTime CreatedAt)
     {
@@ -16,8 +16,8 @@ namespace Api.DTOs
                 user.Id.Value,
                 user.FullName,
                 user.Email,
+                user.ConfirmedEmail,
                 user.RoleId.Value,
-                user.Role?.Name,
                 user.IsActive,
                 user.CreatedAt);
     }
@@ -26,11 +26,11 @@ namespace Api.DTOs
         string FullName,
         string Email,
         Guid RoleId,
-        string Password);
+        string Password,
+        bool IsActive = true);
 
     public record UpdateUserDto(
         string FullName,
-        string Email);
-
-    public record ChangePasswordDto(string NewPassword);
+        string Email,
+        Guid RoleId);
 }

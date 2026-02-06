@@ -6,26 +6,18 @@ namespace Api.DTOs
         Guid Id,
         string OriginalName,
         Guid ToolId,
-        Guid PhotoTypeId,
-        string? PhotoTypeTitle,
-        DateTimeOffset UploadDate,
-        string FilePath)
+        Guid PhotoTypeId)
     {
         public static ToolPhotoDto FromDomain(ToolPhoto toolPhoto) =>
             new(
                 toolPhoto.Id.Value,
                 toolPhoto.OriginalName,
                 toolPhoto.ToolId.Value,
-                toolPhoto.PhotoTypeId.Value,
-                toolPhoto.PhotoType?.Title,
-                toolPhoto.UploadDate,
-                toolPhoto.GetFilePath());
+                toolPhoto.PhotoTypeId.Value);
     }
 
     public record CreateToolPhotoDto(
         Guid ToolId,
         Guid PhotoTypeId,
         string OriginalName);
-
-    public record UpdateToolPhotoDto(Guid PhotoTypeId);
 }
