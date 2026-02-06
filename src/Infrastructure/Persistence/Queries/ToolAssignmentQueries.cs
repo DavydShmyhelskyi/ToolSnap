@@ -42,10 +42,17 @@ namespace Infrastructure.Persistence.Queries
             return toolAssignment != null ? Option<ToolAssignment>.Some(toolAssignment) : Option<ToolAssignment>.None;
         }
 
-        public async Task<IReadOnlyList<ToolAssignment>> GetAllByPhotoSessionAsync(PhotoSessionId locationId, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<ToolAssignment>> GetAllByPhotoSessionAsync(PhotoSessionId photoSessionId, CancellationToken cancellationToken)
         {
-            return await context.ToolAssignments.Where(ta => ta.PhotoSessionId == locationId).ToListAsync(cancellationToken);
+            return await context.ToolAssignments
+                .Where(ta =>
+                    context.DetectedTools.Any(dt =>
+                        dt.PhotoSessionId == photoSessionId &&
+                        (dt.Id == ta.TakenDetectedToolId ||
+                         dt.Id == ta.ReturnedDetectedToolId)))
+                .ToListAsync(cancellationToken);
         }
+
 
         public async Task<IReadOnlyList<ToolAssignment>> GetByRedFlaggedTakenDetectedToolAsync(DetectedToolId takenDetectedToolId, CancellationToken cancellationToken)
         {

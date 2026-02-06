@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Application.Entities.ToolAssignments.Commands
 {
-    public class ReturnToolAssignmentCommandValidator : AbstractValidator<ReturnToolAssignmentLocationCommand>
+    public class ReturnToolAssignmentCommandValidator : AbstractValidator<ReturnToolAssignmentCommand>
     {
         public ReturnToolAssignmentCommandValidator()
         {
@@ -12,6 +12,9 @@ namespace Application.Entities.ToolAssignments.Commands
 
             RuleFor(x => x.LocationId)
                 .NotEmpty().WithMessage("Location ID must be provided.");
+
+            RuleFor(x => x.ReturnedDetectedToolId)
+                .NotEmpty().WithMessage("Returned detected tool ID must be provided.");
         }
     }
 }

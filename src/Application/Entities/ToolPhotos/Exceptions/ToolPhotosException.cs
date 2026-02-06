@@ -16,4 +16,7 @@ namespace Application.Entities.ToolPhotos.Exceptions
 
     public class UnhandledToolPhotoException(ToolPhotoId id, Exception? innerException = null)
         : ToolPhotoException(id, "Unexpected error occured", innerException);
+
+    public class ToolPhotoNotFoundForToolException(ToolPhotoId id)
+        : ToolPhotoException(id, $"Tool photo with id '{id}' was not found for tool with this id.");
 }

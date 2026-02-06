@@ -21,7 +21,14 @@ namespace Infrastructure.Persistence.Queries
 
         public async Task<IReadOnlyList<PhotoSession>> GetByUserIdAsync(UserId userId, CancellationToken cancellationToken)
         {
-            return await context.PhotoSessions.Where(ps => ps.UserId == userId).ToListAsync(cancellationToken);
+            return await context.PhotoSessions
+                .Where(ps =>
+                    ps.DetectedTools.Any(dt =>
+                        dt.ToolAssignment != null &&
+                        dt.ToolAssignment.UserId == userId))
+                .Distinct()
+                .ToListAsync(cancellationToken);
         }
+
     }
 }

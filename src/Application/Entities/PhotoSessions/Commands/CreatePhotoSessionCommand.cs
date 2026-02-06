@@ -2,7 +2,6 @@ using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.PhotoSessions.Exceptions;
 using Domain.Models.PhotoSessions;
-using Domain.Models.Users;
 using LanguageExt;
 using MediatR;
 
@@ -10,7 +9,6 @@ namespace Application.Entities.PhotoSessions.Commands
 {
     public record CreatePhotoSessionCommand : IRequest<Either<PhotoSessionException, PhotoSession>>
     {
-        public required Guid UserId { get; init; }
         public required double Latitude { get; init; }
         public required double Longitude { get; init; }
         public required Guid ActionTypeId { get; init; }
@@ -18,7 +16,6 @@ namespace Application.Entities.PhotoSessions.Commands
 
     public class CreatePhotoSessionCommandHandler(
         IPhotoSessionsRepository repository,
-        IUsersQueries usersQueries,
         IActionTypeQueries actionTypeQueries)
         : IRequestHandler<CreatePhotoSessionCommand, Either<PhotoSessionException, PhotoSession>>
     {
@@ -26,13 +23,7 @@ namespace Application.Entities.PhotoSessions.Commands
             CreatePhotoSessionCommand request,
             CancellationToken cancellationToken)
         {
-            var userId = new UserId(request.UserId);
             var actionTypeId = new ActionTypeId(request.ActionTypeId);
-
-            // Перевірка існування User
-            var user = await usersQueries.GetByIdAsync(userId, cancellationToken);
-            if (user.IsNone)
-                return new UserNotFoundForPhotoSessionException(userId);
 
             // Перевірка існування ActionType
             var actionType = await actionTypeQueries.GetByIdAsync(actionTypeId, cancellationToken);
@@ -48,11 +39,9 @@ namespace Application.Entities.PhotoSessions.Commands
         {
             try
             {
-                var userId = new UserId(request.UserId);
                 var actionTypeId = new ActionTypeId(request.ActionTypeId);
 
                 var newPhotoSession = PhotoSession.New(
-                    userId,
                     request.Latitude,
                     request.Longitude,
                     actionTypeId);

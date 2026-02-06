@@ -1,10 +1,8 @@
 ﻿using Domain.Models.DetectedTools;
 using Domain.Models.Locations;
-using Domain.Models.Users;
 
 namespace Domain.Models.PhotoSessions
 {
-
     public class PhotoSession
     {
         public PhotoSessionId Id { get; private set; }
@@ -27,7 +25,7 @@ namespace Domain.Models.PhotoSessions
             CreatedAt = DateTimeOffset.UtcNow;
         }
 
-        public static PhotoSession New(UserId userId, double latitude, double longitude, ActionTypeId actionTypeId)
+        public static PhotoSession New(double latitude, double longitude, ActionTypeId actionTypeId)
         {
             return new PhotoSession(PhotoSessionId.New(), latitude, longitude, actionTypeId);
         }
