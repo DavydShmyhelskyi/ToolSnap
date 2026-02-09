@@ -18,7 +18,7 @@ namespace Domain.Models.Users
         public Role? Role { get; private set; }
         public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
 
-        private User(UserId id, string fullName, string email, bool confirmedEmail, RoleId roleId, string passwordHash, bool isActive)
+        private User(UserId id, string fullName, string email, bool confirmedEmail, RoleId roleId, string passwordHash, bool isActive, DateTime createdAt)
         {
             Id = id;
             FullName = fullName;
@@ -27,7 +27,7 @@ namespace Domain.Models.Users
             RoleId = roleId;
             PasswordHash = passwordHash;
             IsActive = isActive;
-            CreatedAt = DateTime.UtcNow;
+            CreatedAt = createdAt;
         }
 
         public static User New(string fullName, string email, RoleId roleId, string password, bool isActive)
@@ -39,7 +39,8 @@ namespace Domain.Models.Users
                 false,
                 roleId,
                 BCrypt.Net.BCrypt.HashPassword(password),
-                isActive);
+                isActive,
+                DateTime.UtcNow);
         }
         public void Update(string fullName, string email, RoleId roleId)
         {

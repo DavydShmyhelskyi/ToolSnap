@@ -3,6 +3,7 @@ using Domain.Models.Locations;
 using Domain.Models.ToolAssignments;
 using Domain.Models.Tools;
 using Domain.Models.Users;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -62,7 +63,12 @@ public class ToolAssignmentConfiguration : IEntityTypeConfiguration<ToolAssignme
             .HasForeignKey(x => x.ReturnedLocationId)
             .OnDelete(DeleteBehavior.SetNull);
 
-        builder.Property(x => x.TakenAt).IsRequired();
-        builder.Property(x => x.ReturnedAt);
+        builder.Property(x => x.TakenAt)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
+            .IsRequired();
+        builder.Property(x => x.ReturnedAt)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())");
     }
 }

@@ -1,9 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using Domain.Models.PhotoSessions;
+﻿using Domain.Models.PhotoSessions;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace Infrastructure.Persistence.Configurations;
 
@@ -20,6 +21,8 @@ public class PhotoForDetectionConfiguration : IEntityTypeConfiguration<PhotoForD
             .IsRequired();
 
         builder.Property(x => x.UploadDate)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
 
         builder.Property(x => x.PhotoSessionId)

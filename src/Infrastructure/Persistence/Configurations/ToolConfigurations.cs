@@ -1,5 +1,6 @@
 ﻿using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -47,6 +48,8 @@ public class ToolConfiguration : IEntityTypeConfiguration<Tool>
             .OnDelete(DeleteBehavior.Restrict);
 
         builder.Property(x => x.CreatedAt)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
     }
 }
