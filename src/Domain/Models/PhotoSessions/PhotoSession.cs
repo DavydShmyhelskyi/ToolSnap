@@ -16,14 +16,20 @@ namespace Domain.Models.PhotoSessions
         public ActionType? ActionType { get; private set; }
         public IEnumerable<DetectedTool> DetectedTools { get; private set; } = new List<DetectedTool>();
 
-        private PhotoSession(PhotoSessionId photoSessionId, double latitude, double longitude, ActionTypeId actionTypeId, DateTime createdAt) 
+        private PhotoSession(
+              PhotoSessionId id,
+              double latitude,
+              double longitude,
+              ActionTypeId actionTypeId,
+              DateTime createdAt)
         {
-            Id = photoSessionId;
+            Id = id;
             Latitude = latitude;
             Longitude = longitude;
             ActionTypeId = actionTypeId;
             CreatedAt = createdAt;
         }
+
 
         public static PhotoSession New(double latitude, double longitude, ActionTypeId actionTypeId)
         {
