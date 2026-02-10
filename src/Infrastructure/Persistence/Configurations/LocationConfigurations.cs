@@ -1,4 +1,5 @@
 ﻿using Domain.Models.Locations;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -29,6 +30,8 @@ public class LocationConfiguration : IEntityTypeConfiguration<Location>
             .IsRequired();
 
         builder.Property(x => x.CreatedAt)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
 
         builder.Property(x => x.LocationTypeId)

@@ -12,7 +12,7 @@ namespace Domain.Models.Tools
         public ModelId? ModelId { get; private set; }
         public string? SerialNumber { get; private set; }
         public ToolStatusId ToolStatusId { get; private set; }
-        public DateTimeOffset CreatedAt { get; }
+        public DateTime CreatedAt { get; }
 
         // navigation properties
         public ToolStatus? ToolStatus { get; private set; }
@@ -28,7 +28,7 @@ namespace Domain.Models.Tools
             ModelId? modelId,
             string? serialNumber,
             ToolStatusId toolStatusId,
-            DateTimeOffset createdAt)
+            DateTime createdAt)
         {
             Id = id;
             ToolTypeId = toolTypeId;
@@ -53,7 +53,7 @@ namespace Domain.Models.Tools
                 modelId,
                 serialNumber,
                 toolStatusId,
-                DateTimeOffset.UtcNow
+                DateTime.UtcNow
             );
         }
 

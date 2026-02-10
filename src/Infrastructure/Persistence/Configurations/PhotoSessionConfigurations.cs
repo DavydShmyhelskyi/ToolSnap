@@ -1,4 +1,5 @@
 ﻿using Domain.Models.PhotoSessions;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -19,6 +20,8 @@ public class PhotoSessionConfiguration : IEntityTypeConfiguration<PhotoSession>
             .IsRequired();
 
         builder.Property(x => x.CreatedAt)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
 
         builder.Property(x => x.ActionTypeId)

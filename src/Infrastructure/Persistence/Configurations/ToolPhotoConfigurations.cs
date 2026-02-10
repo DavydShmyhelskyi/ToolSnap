@@ -1,5 +1,6 @@
 ﻿using Domain.Models.ToolPhotos;
 using Domain.Models.Tools;
+using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
@@ -18,6 +19,8 @@ public class ToolPhotoConfiguration : IEntityTypeConfiguration<ToolPhoto>
             .IsRequired();
 
         builder.Property(x => x.UploadDate)
+            .HasConversion(new DateTimeUtcConverter())
+            .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
 
         builder.Property(x => x.ToolId)
