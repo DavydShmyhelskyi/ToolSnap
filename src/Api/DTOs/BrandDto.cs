@@ -16,5 +16,6 @@ namespace Api.DTOs
         string Title);
 
     public record UpdateBrandDto(
+        Guid Id,
         string Title);
 }

@@ -1,19 +1,19 @@
-﻿using Microsoft.AspNetCore.Mvc;
+using Application.Entities.LocationTypes.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Errors;
 
 public static class LocationTypeErrorFactory
 {
-   /* public static ObjectResult ToObjectResult(this CityException error)
+    public static ObjectResult ToObjectResult(this LocationTypeException error)
         => new(error.Message)
         {
             StatusCode = error switch
             {
-                CityAlreadyExistException => StatusCodes.Status409Conflict,
-                CityNotFoundException => StatusCodes.Status404NotFound,
-                CountryNotFoundForCityException => StatusCodes.Status404NotFound,
-                UnhandledCityException => StatusCodes.Status500InternalServerError,
-                _ => throw new NotImplementedException("City error handler not implemented")
+                LocationTypeAlreadyExistsException => StatusCodes.Status409Conflict,
+                LocationTypeNotFoundException => StatusCodes.Status404NotFound,
+                UnhandledLocationTypeException => StatusCodes.Status500InternalServerError,
+                _ => throw new NotImplementedException("LocationType error handler not implemented")
             }
-        };*/
+        };
 }

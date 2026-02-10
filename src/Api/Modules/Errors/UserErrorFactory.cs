@@ -1,19 +1,20 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Application.Entities.Users.Exceptions;
+using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Modules.Errors;
 
 public static class UserErrorFactory
 {
-   /* public static ObjectResult ToObjectResult(this CityException error)
+    public static ObjectResult ToObjectResult(this UserException error)
         => new(error.Message)
         {
             StatusCode = error switch
             {
-                CityAlreadyExistException => StatusCodes.Status409Conflict,
-                CityNotFoundException => StatusCodes.Status404NotFound,
-                CountryNotFoundForCityException => StatusCodes.Status404NotFound,
-                UnhandledCityException => StatusCodes.Status500InternalServerError,
-                _ => throw new NotImplementedException("City error handler not implemented")
+                UserAlreadyExistsException => StatusCodes.Status409Conflict,
+                UserNotFoundException => StatusCodes.Status404NotFound,
+                RoleNotFoundForUserException => StatusCodes.Status404NotFound,
+                UnhandledUserException => StatusCodes.Status500InternalServerError,
+                _ => throw new NotImplementedException("User error handler not implemented")
             }
-        };*/
+        };
 }

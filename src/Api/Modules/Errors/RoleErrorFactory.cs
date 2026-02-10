@@ -13,7 +13,7 @@ public static class RoleErrorFactory
                 RoleAlreadyExistsException => StatusCodes.Status409Conflict,
                 RoleNotFoundException => StatusCodes.Status404NotFound,
                 UnhandledRoleException => StatusCodes.Status500InternalServerError,
-                _ => throw new NotImplementedException("City error handler not implemented")
+                _ => throw new NotImplementedException("Role error handler not implemented")
             }
         };
 }
