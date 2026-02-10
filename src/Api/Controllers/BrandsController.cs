@@ -9,6 +9,8 @@ using Api.Modules.Errors;
 
 namespace Api.Controllers
 {
+    [ApiController]
+    [Route("brands")]
     public class BrandsController(
         IBrandQueries queries,
         IBrandControllerService service,
