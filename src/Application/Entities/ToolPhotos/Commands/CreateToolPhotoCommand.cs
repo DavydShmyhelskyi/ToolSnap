@@ -17,7 +17,8 @@ namespace Application.Entities.ToolPhotos.Commands
 
     public class CreateToolPhotoCommandHandler(
         IToolPhotosRepository repository,
-        IToolsQueries toolsQueries)
+        IToolsQueries toolsQueries,
+        IPhotoTypeQueries photoTypeQueries)
         : IRequestHandler<CreateToolPhotoCommand, Either<ToolPhotoException, ToolPhoto>>
     {
         public async Task<Either<ToolPhotoException, ToolPhoto>> Handle(
@@ -25,11 +26,17 @@ namespace Application.Entities.ToolPhotos.Commands
             CancellationToken cancellationToken)
         {
             var toolId = new ToolId(request.ToolId);
-
+            var photoTypeId = new PhotoTypeId(request.PhotoTypeId);
+            
             // Перевірка існування Tool
             var tool = await toolsQueries.GetByIdAsync(toolId, cancellationToken);
             if (tool.IsNone)
                 return new ToolNotFoundForToolPhotoException(toolId);
+
+            // Перевірка існування PhotoType
+            var photoType = await photoTypeQueries.GetByIdAsync(photoTypeId, cancellationToken);
+            if (photoType.IsNone)
+                return new PhotoTypeNotFoundForToolPhotoException(photoTypeId);
 
             return await CreateEntity(request, cancellationToken);
         }
@@ -42,7 +49,6 @@ namespace Application.Entities.ToolPhotos.Commands
             {
                 var toolId = new ToolId(request.ToolId);
                 var photoTypeId = new PhotoTypeId(request.PhotoTypeId);
-
 
                 var newToolPhoto = ToolPhoto.New(
                     toolId,

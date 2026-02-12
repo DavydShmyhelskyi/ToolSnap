@@ -1,7 +1,7 @@
-﻿using Api.DTOs;
+using Api.DTOs;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
-using Application.Entities.Brands.Commands;
+using Application.Entities.ToolTypes.Commands;
 using Api.Modules.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,83 +9,81 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("brands")]
-    public class BrandsController(
-        IBrandQueries queries,
-        IBrandControllerService service,
+    [Route("tool-types")]
+    public class ToolTypesController(
+        IToolTypeQueries queries,
+        IToolTypeControllerService service,
         ISender sender) : ControllerBase
     {
-
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<BrandDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetBrands(
+        [ProducesResponseType(typeof(IReadOnlyList<ToolTypeDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolTypeDto>>> GetToolTypes(
             CancellationToken cancellationToken)
         {
-            var brands = await queries.GetAllAsync(cancellationToken);
+            var toolTypes = await queries.GetAllAsync(cancellationToken);
 
-            // inline мапінг на DTO
-            var result = brands
-                .Select(b => new BrandDto(b.Id.Value, b.Title))
+            var result = toolTypes
+                .Select(t => new ToolTypeDto(t.Id.Value, t.Title))
                 .ToList();
 
             return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ToolTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> GetById(
+        public async Task<ActionResult<ToolTypeDto>> GetById(
             Guid id,
             CancellationToken cancellationToken)
         {
             var entity = await service.Get(id, cancellationToken);
 
-            return entity.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id, brand.Title)),
+            return entity.Match<ActionResult<ToolTypeDto>>(
+                toolType => Ok(new ToolTypeDto(toolType.Id, toolType.Title)),
                 () => NotFound());
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ToolTypeDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BrandDto>> Create(
-            [FromBody] CreateBrandDto request,
+        public async Task<ActionResult<ToolTypeDto>> Create(
+            [FromBody] CreateToolTypeDto request,
             CancellationToken cancellationToken)
         {
-            var command = new CreateBrandCommand
+            var command = new CreateToolTypeCommand
             {
                 Title = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => CreatedAtAction(
+            return result.Match<ActionResult<ToolTypeDto>>(
+                toolType => CreatedAtAction(
                     nameof(GetById),
-                    new { id = brand.Id.Value },
-                    new BrandDto(brand.Id.Value, brand.Title)),
+                    new { id = toolType.Id.Value },
+                    new ToolTypeDto(toolType.Id.Value, toolType.Title)),
                 error => error.ToObjectResult());
         }
 
         [HttpPut("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ToolTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> Update(
+        public async Task<ActionResult<ToolTypeDto>> Update(
             Guid id,
-            [FromBody] UpdateBrandDto request,
+            [FromBody] UpdateToolTypeDto request,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateBrandCommand
+            var command = new UpdateToolTypeCommand
             {
-                BrandId = id,
+                ToolTypeId = id,
                 Title = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id.Value, brand.Title)),
+            return result.Match<ActionResult<ToolTypeDto>>(
+                toolType => Ok(new ToolTypeDto(toolType.Id.Value, toolType.Title)),
                 error => error.ToObjectResult());
         }
 
@@ -96,9 +94,9 @@ namespace Api.Controllers
             Guid id,
             CancellationToken cancellationToken)
         {
-            var command = new DeleteBrandCommand
+            var command = new DeleteToolTypeCommand
             {
-                BrandId = id
+                ToolTypeId = id
             };
 
             var result = await sender.Send(command, cancellationToken);

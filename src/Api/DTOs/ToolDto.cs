@@ -33,4 +33,7 @@ namespace Api.DTOs
         Guid? BrandId,
         Guid? ModelId,
         string? SerialNumber);
+
+    public record ChangeToolStatusDto(
+        Guid ToolStatusId);
 }

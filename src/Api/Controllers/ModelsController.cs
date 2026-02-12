@@ -1,7 +1,7 @@
-﻿using Api.DTOs;
+using Api.DTOs;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
-using Application.Entities.Brands.Commands;
+using Application.Entities.Models.Commands;
 using Api.Modules.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,83 +9,81 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("brands")]
-    public class BrandsController(
-        IBrandQueries queries,
-        IBrandControllerService service,
+    [Route("models")]
+    public class ModelsController(
+        IModelQueries queries,
+        IModelControllerService service,
         ISender sender) : ControllerBase
     {
-
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<BrandDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetBrands(
+        [ProducesResponseType(typeof(IReadOnlyList<ModelDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ModelDto>>> GetModels(
             CancellationToken cancellationToken)
         {
-            var brands = await queries.GetAllAsync(cancellationToken);
+            var models = await queries.GetAllAsync(cancellationToken);
 
-            // inline мапінг на DTO
-            var result = brands
-                .Select(b => new BrandDto(b.Id.Value, b.Title))
+            var result = models
+                .Select(m => new ModelDto(m.Id.Value, m.Title))
                 .ToList();
 
             return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> GetById(
+        public async Task<ActionResult<ModelDto>> GetById(
             Guid id,
             CancellationToken cancellationToken)
         {
             var entity = await service.Get(id, cancellationToken);
 
-            return entity.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id, brand.Title)),
+            return entity.Match<ActionResult<ModelDto>>(
+                model => Ok(new ModelDto(model.Id, model.Title)),
                 () => NotFound());
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(ModelDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BrandDto>> Create(
-            [FromBody] CreateBrandDto request,
+        public async Task<ActionResult<ModelDto>> Create(
+            [FromBody] CreateModelDto request,
             CancellationToken cancellationToken)
         {
-            var command = new CreateBrandCommand
+            var command = new CreateModelCommand
             {
                 Title = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => CreatedAtAction(
+            return result.Match<ActionResult<ModelDto>>(
+                model => CreatedAtAction(
                     nameof(GetById),
-                    new { id = brand.Id.Value },
-                    new BrandDto(brand.Id.Value, brand.Title)),
+                    new { id = model.Id.Value },
+                    new ModelDto(model.Id.Value, model.Title)),
                 error => error.ToObjectResult());
         }
 
         [HttpPut("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ModelDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> Update(
+        public async Task<ActionResult<ModelDto>> Update(
             Guid id,
-            [FromBody] UpdateBrandDto request,
+            [FromBody] UpdateModelDto request,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateBrandCommand
+            var command = new UpdateModelCommand
             {
-                BrandId = id,
+                ModelId = id,
                 Title = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id.Value, brand.Title)),
+            return result.Match<ActionResult<ModelDto>>(
+                model => Ok(new ModelDto(model.Id.Value, model.Title)),
                 error => error.ToObjectResult());
         }
 
@@ -96,9 +94,9 @@ namespace Api.Controllers
             Guid id,
             CancellationToken cancellationToken)
         {
-            var command = new DeleteBrandCommand
+            var command = new DeleteModelCommand
             {
-                BrandId = id
+                ModelId = id
             };
 
             var result = await sender.Send(command, cancellationToken);

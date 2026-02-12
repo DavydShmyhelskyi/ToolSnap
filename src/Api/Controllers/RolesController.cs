@@ -1,7 +1,7 @@
-﻿using Api.DTOs;
+using Api.DTOs;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
-using Application.Entities.Brands.Commands;
+using Application.Entities.Roles.Commands;
 using Api.Modules.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -9,83 +9,81 @@ using Microsoft.AspNetCore.Mvc;
 namespace Api.Controllers
 {
     [ApiController]
-    [Route("brands")]
-    public class BrandsController(
-        IBrandQueries queries,
-        IBrandControllerService service,
+    [Route("roles")]
+    public class RolesController(
+        IRolesQueries queries,
+        IRoleControllerService service,
         ISender sender) : ControllerBase
     {
-
         [HttpGet]
-        [ProducesResponseType(typeof(IReadOnlyList<BrandDto>), StatusCodes.Status200OK)]
-        public async Task<ActionResult<IReadOnlyList<BrandDto>>> GetBrands(
+        [ProducesResponseType(typeof(IReadOnlyList<RoleDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<RoleDto>>> GetRoles(
             CancellationToken cancellationToken)
         {
-            var brands = await queries.GetAllAsync(cancellationToken);
+            var roles = await queries.GetAllAsync(cancellationToken);
 
-            // inline мапінг на DTO
-            var result = brands
-                .Select(b => new BrandDto(b.Id.Value, b.Title))
+            var result = roles
+                .Select(r => new RoleDto(r.Id.Value, r.Title))
                 .ToList();
 
             return Ok(result);
         }
 
         [HttpGet("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> GetById(
+        public async Task<ActionResult<RoleDto>> GetById(
             Guid id,
             CancellationToken cancellationToken)
         {
             var entity = await service.Get(id, cancellationToken);
 
-            return entity.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id, brand.Title)),
+            return entity.Match<ActionResult<RoleDto>>(
+                role => Ok(new RoleDto(role.Id, role.Title)),
                 () => NotFound());
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        public async Task<ActionResult<BrandDto>> Create(
-            [FromBody] CreateBrandDto request,
+        public async Task<ActionResult<RoleDto>> Create(
+            [FromBody] CreateRoleDto request,
             CancellationToken cancellationToken)
         {
-            var command = new CreateBrandCommand
+            var command = new CreateRoleCommand
             {
-                Title = request.Title
+                Name = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => CreatedAtAction(
+            return result.Match<ActionResult<RoleDto>>(
+                role => CreatedAtAction(
                     nameof(GetById),
-                    new { id = brand.Id.Value },
-                    new BrandDto(brand.Id.Value, brand.Title)),
+                    new { id = role.Id.Value },
+                    new RoleDto(role.Id.Value, role.Title)),
                 error => error.ToObjectResult());
         }
 
         [HttpPut("{id:guid}")]
-        [ProducesResponseType(typeof(BrandDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(RoleDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<BrandDto>> Update(
+        public async Task<ActionResult<RoleDto>> Update(
             Guid id,
-            [FromBody] UpdateBrandDto request,
+            [FromBody] UpdateRoleDto request,
             CancellationToken cancellationToken)
         {
-            var command = new UpdateBrandCommand
+            var command = new UpdateRoleCommand
             {
-                BrandId = id,
-                Title = request.Title
+                RoleId = id,
+                Name = request.Title
             };
 
             var result = await sender.Send(command, cancellationToken);
 
-            return result.Match<ActionResult<BrandDto>>(
-                brand => Ok(new BrandDto(brand.Id.Value, brand.Title)),
+            return result.Match<ActionResult<RoleDto>>(
+                role => Ok(new RoleDto(role.Id.Value, role.Title)),
                 error => error.ToObjectResult());
         }
 
@@ -96,9 +94,9 @@ namespace Api.Controllers
             Guid id,
             CancellationToken cancellationToken)
         {
-            var command = new DeleteBrandCommand
+            var command = new DeleteRoleCommand
             {
-                BrandId = id
+                RoleId = id
             };
 
             var result = await sender.Send(command, cancellationToken);

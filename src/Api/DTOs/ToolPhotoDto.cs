@@ -6,14 +6,14 @@ namespace Api.DTOs
         Guid Id,
         string OriginalName,
         Guid ToolId,
-        Guid PhotoTypeId)
+        DateTime UploadDate)
     {
         public static ToolPhotoDto FromDomain(ToolPhoto toolPhoto) =>
             new(
                 toolPhoto.Id.Value,
                 toolPhoto.OriginalName,
                 toolPhoto.ToolId.Value,
-                toolPhoto.PhotoTypeId.Value);
+                toolPhoto.UploadDate);
     }
 
     public record CreateToolPhotoDto(

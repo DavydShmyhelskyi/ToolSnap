@@ -31,4 +31,8 @@ namespace Api.DTOs
         Guid ToolId,
         Guid UserId,
         Guid TakenLocationId);
+
+    public record ReturnToolAssignmentDto(
+        Guid ReturnedLocationId,
+        Guid ReturnedDetectedToolId);
 }

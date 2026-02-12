@@ -33,4 +33,8 @@ namespace Api.DTOs
         string FullName,
         string Email,
         Guid RoleId);
+
+    public record ChangePasswordDto(
+        string CurrentPassword,
+        string NewPassword);
 }
