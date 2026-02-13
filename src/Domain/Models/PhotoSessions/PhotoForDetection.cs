@@ -25,7 +25,6 @@ namespace Domain.Models.PhotoSessions
         }
 
         public static PhotoForDetection New(
-            PhotoForDetectionId id,
             PhotoSessionId photoSessionId,
             string originalName)
         {

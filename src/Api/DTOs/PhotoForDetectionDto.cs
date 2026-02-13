@@ -17,6 +17,6 @@ namespace Api.DTOs
     }
 
     public record CreatePhotoForDetectionDto(
-        Guid PhotoSessionId,
-        string OriginalName);
+    Guid PhotoSessionId,
+    IFormFile File);
 }
