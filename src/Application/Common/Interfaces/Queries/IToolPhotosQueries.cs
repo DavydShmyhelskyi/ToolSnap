@@ -13,5 +13,6 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<ToolPhoto>> GetAllAsync(CancellationToken cancellationToken);
         Task<Option<ToolPhoto>> GetByIdAsync(ToolPhotoId toolPhotoId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolPhoto>> GetAllByToolAsync(ToolId toolId, CancellationToken cancellationToken);
+        Task<Option<ToolPhoto>> GetByToolIdAndPhotoTypeIdAsync(ToolId toolId, PhotoTypeId photoTypeId, CancellationToken cancellationToken);
     }
 }

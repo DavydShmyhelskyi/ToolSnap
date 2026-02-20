@@ -38,7 +38,7 @@ namespace Application.Entities.Users.Commands
 
             return await entity.MatchAsync(
                 u => UpdateEntity(u, request, cancellationToken),
-                () => new UserNotFoundException(id));
+                () => new UserNotFoundException());
         }
 
         private async Task<Either<UserException, User>> UpdateEntity(

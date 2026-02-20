@@ -1,3 +1,4 @@
+using Application.Common.Interfaces;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Entities.ToolPhotos.Exceptions;
@@ -14,7 +15,8 @@ namespace Application.Entities.ToolPhotos.Commands
 
     public class DeleteToolPhotoCommandHandler(
         IToolPhotosQueries queries,
-        IToolPhotosRepository repository)
+        IToolPhotosRepository repository,
+        IFileStorage fileStorage)
         : IRequestHandler<DeleteToolPhotoCommand, Either<ToolPhotoException, ToolPhoto>>
     {
         public async Task<Either<ToolPhotoException, ToolPhoto>> Handle(
@@ -22,11 +24,31 @@ namespace Application.Entities.ToolPhotos.Commands
             CancellationToken cancellationToken)
         {
             var id = new ToolPhotoId(request.ToolPhotoId);
-            var entity = await queries.GetByIdAsync(id, cancellationToken);
+            var entityOption = await queries.GetByIdAsync(id, cancellationToken);
 
-            return entity.Match<Either<ToolPhotoException, ToolPhoto>>(
-                tp => repository.DeleteAsync(tp, cancellationToken).Result,
-                () => new ToolPhotoNotFoundException(id));
+            return await entityOption.MatchAsync(
+                async tp =>
+                {
+                    try
+                    {
+                        // 1️⃣ Видаляємо файл
+                        await fileStorage.DeleteAsync(
+                            tp.GetFilePath(),
+                            cancellationToken);
+
+                        // 2️⃣ Потім видаляємо запис з БД
+                        await repository.DeleteAsync(tp, cancellationToken);
+
+                        return tp;
+                    }
+                    catch (Exception ex)
+                    {
+                        return new UnhandledToolPhotoException(id, ex);
+                    }
+                },
+                () => Task.FromResult<Either<ToolPhotoException, ToolPhoto>>(
+                    new ToolPhotoNotFoundException(id))
+            );
         }
     }
 }

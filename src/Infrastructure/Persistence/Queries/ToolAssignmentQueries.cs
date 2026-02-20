@@ -81,5 +81,10 @@ namespace Infrastructure.Persistence.Queries
                 .FirstOrDefaultAsync(cancellationToken);
             return toolAssignment != null ? Option<ToolAssignment>.Some(toolAssignment) : Option<ToolAssignment>.None;
         }
+
+        public async Task<IReadOnlyList<ToolAssignment>> GetNotReturnedByUserAsync(UserId userId, CancellationToken cancellationToken)
+        {
+            return await context.ToolAssignments.Where(ta => ta.UserId == userId && ta.ReturnedAt == null && ta.ReturnedLocationId == null).ToListAsync(cancellationToken);
+        }
     }
 }

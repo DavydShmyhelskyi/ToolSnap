@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Innitial : Migration
+    public partial class Initial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -163,7 +163,9 @@ namespace Infrastructure.Persistence.Migrations
                     role_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
                     password_hash = table.Column<string>(type: "text", nullable: false),
-                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())")
+                    created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
+                    latitude = table.Column<double>(type: "double precision", nullable: true),
+                    longitude = table.Column<double>(type: "double precision", nullable: true)
                 },
                 constraints: table =>
                 {

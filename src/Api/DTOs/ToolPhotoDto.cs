@@ -16,8 +16,15 @@ namespace Api.DTOs
                 toolPhoto.UploadDate);
     }
 
-    public record CreateToolPhotoDto(
-        Guid ToolId,
-        Guid PhotoTypeId,
-        string OriginalName);
+    public class CreateToolPhotoDto
+    {
+        public Guid ToolId { get; set; }
+        public Guid PhotoTypeId { get; set; }
+        public IFormFile File { get; set; } = default!;
+    }
+
+    public record ToolPhotoFileDto(
+        string FileName,
+        byte[] Content 
+    );
 }

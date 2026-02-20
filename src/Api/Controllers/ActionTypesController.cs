@@ -29,6 +29,23 @@ namespace Api.Controllers
             return Ok(result);
         }
 
+
+        [HttpGet("by-title/{title}")]
+        [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ActionTypeDto>> GetByTitle(
+    string title,
+    CancellationToken cancellationToken)
+        {
+            title = title.ToLower();
+            var result = await queries.GetByTitleAsync(title, cancellationToken);
+
+            return result.Match<ActionResult<ActionTypeDto>>(
+                actionType => Ok(new ActionTypeDto(actionType.Id.Value, actionType.Title)),
+                () => NotFound());
+        }
+
+
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

@@ -2,6 +2,7 @@
 using Domain.Models.ToolAssignments;
 using Domain.Models.ToolInfo;
 using Domain.Models.Tools;
+using Domain.Models.Users;
 using LanguageExt;
 using Microsoft.EntityFrameworkCore;
 
@@ -45,6 +46,20 @@ namespace Infrastructure.Persistence.Queries
         public async Task<IReadOnlyList<Tool>> GetAllAvailableToolsByTypeAndModelAsync(ToolAssignmentId lastToolAssignmentId, ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken)
         {
             return await context.Tools.Where(t => t.ToolTypeId == toolTypeId && t.ModelId == modelId).ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Tool>> GetNotReturnedToolsByUserAsync(
+            UserId userId,
+            CancellationToken cancellationToken)
+        {
+            return await context.ToolAssignments
+                .Where(ta => ta.UserId == userId
+                          && ta.ReturnedAt == null
+                          && ta.ReturnedLocationId == null)
+                .Include(ta => ta.Tool)
+                .Select(ta => ta.Tool!)
+                .Distinct()
+                .ToListAsync(cancellationToken);
         }
     }
 }

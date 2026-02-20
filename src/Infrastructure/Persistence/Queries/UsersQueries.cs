@@ -29,5 +29,11 @@ namespace Infrastructure.Persistence.Queries
             var user = await context.Users.FirstOrDefaultAsync(u => u.FullName == name, cancellationToken);
             return user != null ? Option<User>.Some(user) : Option<User>.None;
         }
+        public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
+        {
+            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
+            return user != null ? Option<User>.Some(user) : Option<User>.None;
+        }
+
     }
 }

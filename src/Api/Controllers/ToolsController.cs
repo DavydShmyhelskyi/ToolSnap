@@ -1,8 +1,9 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.Tools.Commands;
-using Api.Modules.Errors;
+using Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +29,22 @@ namespace Api.Controllers
 
             return Ok(result);
         }
+        [HttpGet("not-returned/user/{userId:guid}")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetNotReturnedByUser(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
 
+            var tools = await queries.GetNotReturnedToolsByUserAsync(domainUserId, cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
+        }
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

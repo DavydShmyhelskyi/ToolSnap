@@ -47,6 +47,9 @@ namespace Domain.Models.ToolPhotos
         }
 
         public string GetFilePath()
-            => $"{ToolId}/{Id}{Path.GetExtension(OriginalName)}";
+    => Path.Combine(
+        "tools",
+        ToolId.Value.ToString(),
+        $"{Id.Value}{Path.GetExtension(OriginalName)}");
     }
 }

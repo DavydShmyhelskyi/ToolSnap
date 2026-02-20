@@ -28,7 +28,7 @@ namespace Application.Entities.Users.Commands
 
             return await entity.MatchAsync(
                 u => VerifyAndChange(u, request, cancellationToken),
-                () => new UserNotFoundException(userId));
+                () => new UserNotFoundException());
         }
 
         private async Task<Either<UserException, User>> VerifyAndChange(

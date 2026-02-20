@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Roles;
-using Domain.Models.Roles;
 using Domain.Models.Users;
 using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;
@@ -36,6 +35,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasConversion(new DateTimeUtcConverter())
             .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
+
+        builder.Property(x => x.Latitude);
+
+        builder.Property(x => x.Longitude);
 
         builder.Property(x => x.RoleId)
             .HasConversion(x => x.Value, x => new RoleId(x))

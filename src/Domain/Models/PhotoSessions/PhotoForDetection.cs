@@ -37,6 +37,9 @@ namespace Domain.Models.PhotoSessions
         }
 
         public string GetFilePath()
-            => $"{PhotoSessionId}/{Id}{Path.GetExtension(OriginalName)}";
+    => Path.Combine(
+        "detections",
+        PhotoSessionId.Value.ToString(),
+        $"{Id.Value}{Path.GetExtension(OriginalName)}");
     }
 }
