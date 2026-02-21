@@ -68,7 +68,6 @@ public class ToolAssignmentConfiguration : IEntityTypeConfiguration<ToolAssignme
             .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
         builder.Property(x => x.ReturnedAt)
-            .HasConversion(new DateTimeUtcConverter())
-            .HasDefaultValueSql("timezone('utc', now())");
+            .HasConversion(new DateTimeUtcConverter());
     }
 }

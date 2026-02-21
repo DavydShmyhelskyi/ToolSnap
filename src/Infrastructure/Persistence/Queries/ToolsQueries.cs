@@ -38,14 +38,23 @@ namespace Infrastructure.Persistence.Queries
             return tool != null ? Option<Tool>.Some(tool) : Option<Tool>.None;
         }
 
-        public async Task<IReadOnlyList<Tool>> GetAllByTypeAndModelAsync(ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken)
+        public async Task<IReadOnlyList<Tool>> GetAllByTypeAndModelAsync(ToolTypeId toolTypeId, BrandId? brandId, ModelId? modelId, CancellationToken cancellationToken)
         {
-            return await context.Tools.Where(t => t.ToolTypeId == toolTypeId && t.ModelId == modelId).ToListAsync(cancellationToken);
-        }
+            var query = context.Tools
+        .AsQueryable()
+        .Where(t => t.ToolTypeId == toolTypeId);
 
-        public async Task<IReadOnlyList<Tool>> GetAllAvailableToolsByTypeAndModelAsync(ToolAssignmentId lastToolAssignmentId, ToolTypeId toolTypeId, ModelId modelId, CancellationToken cancellationToken)
-        {
-            return await context.Tools.Where(t => t.ToolTypeId == toolTypeId && t.ModelId == modelId).ToListAsync(cancellationToken);
+            if (brandId is not null)
+            {
+                query = query.Where(t => t.BrandId == brandId);
+            }
+
+            if (modelId is not null)
+            {
+                query = query.Where(t => t.ModelId == modelId);
+            }
+
+            return await query.ToListAsync(cancellationToken);
         }
 
         public async Task<IReadOnlyList<Tool>> GetNotReturnedToolsByUserAsync(
@@ -54,8 +63,9 @@ namespace Infrastructure.Persistence.Queries
         {
             return await context.ToolAssignments
                 .Where(ta => ta.UserId == userId
-                          && ta.ReturnedAt == null
-                          && ta.ReturnedLocationId == null)
+                          || ta.ReturnedAt == null
+                          || ta.ReturnedLocationId == null
+                          || ta.ReturnedDetectedToolId == null)
                 .Include(ta => ta.Tool)
                 .Select(ta => ta.Tool!)
                 .Distinct()

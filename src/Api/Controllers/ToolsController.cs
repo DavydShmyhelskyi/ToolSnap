@@ -3,6 +3,7 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.Tools.Commands;
+using Domain.Models.ToolInfo;
 using Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -57,6 +58,33 @@ namespace Api.Controllers
             return entity.Match<ActionResult<ToolDto>>(
                 toolDto => Ok(toolDto),
                 () => NotFound());
+        }
+
+        // НОВИЙ ЕНДПОІНТ
+        // GET /tools/search?toolTypeId=...&brandId=...&modelId=...
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetByTypeBrandModel(
+            [FromQuery] Guid toolTypeId,
+            [FromQuery] Guid? brandId,
+            [FromQuery] Guid? modelId,
+            CancellationToken cancellationToken)
+        {
+            var typeId = new ToolTypeId(toolTypeId);
+            BrandId? brand = brandId.HasValue ? new BrandId(brandId.Value) : null;
+            ModelId? model = modelId.HasValue ? new ModelId(modelId.Value) : null;
+
+            var tools = await queries.GetAllByTypeAndModelAsync(
+                typeId,
+                brand,
+                model,
+                cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpPost]

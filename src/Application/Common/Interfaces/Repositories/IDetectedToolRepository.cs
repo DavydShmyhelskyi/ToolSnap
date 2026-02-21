@@ -6,5 +6,6 @@ namespace Application.Common.Interfaces.Repositories
     {
         Task<DetectedTool> AddAsync(DetectedTool entity, CancellationToken cancellationToken);
         Task<DetectedTool> DeleteAsync(DetectedTool entity, CancellationToken cancellationToken);
+        Task<IReadOnlyList<DetectedTool>> AddRangeAsync(IEnumerable<DetectedTool> entities, CancellationToken cancellationToken);
     }
 }

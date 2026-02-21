@@ -1,4 +1,5 @@
 ﻿using Application.Common.Interfaces.Queries;
+using Application.Common.Interfaces.Repositories;
 using Application.Entities.Users.Exceptions;
 using Domain.Models.Users;
 using LanguageExt;
@@ -14,34 +15,34 @@ namespace Application.Entities.Users.Commands
         public required double Longitude { get; init; }
 
         public class LoginUserCommandHandler(
-            IUsersQueries queries)
+            IUsersQueries queries,
+            IUsersRepository usersRepository)   
             : IRequestHandler<LoginUserCommand, Either<UserException, User>>
         {
             public async Task<Either<UserException, User>> Handle(
                 LoginUserCommand request,
                 CancellationToken cancellationToken)
             {
-                // Знаходимо користувача по email
-                var userOption = await queries.GetByEmailAsync(request.Email, cancellationToken);
+                Option<User> userOption = await queries.GetByEmailAsync(request.Email, cancellationToken);
 
-                return await userOption.MatchAsync(
-                    user =>
-                    {
-                        // Перевірка паролю
-                        if (!user.VerifyPassword(request.Password))
-                            return Task.FromResult<Either<UserException, User>>(
-                                new InvalidPasswordException(user.Id)
-                            );
+                if (userOption.IsNone)
+                {
+                    return new UserNotFoundException();
+                }
 
-                        if (!user.IsActive)
-                            return Task.FromResult<Either<UserException, User>>(
-                                new InactiveUserException(user.Id)
-                            );
-                        user.UpdateLocation(request.Longitude, request.Latitude);
-                        return Task.FromResult<Either<UserException, User>>(user);
-                    },
-                    () => Task.FromResult<Either<UserException, User>>(new UserNotFoundException())
-                );
+                var user = userOption.Match(
+                    some => some,
+                    () => null!);
+
+                if (!user.VerifyPassword(request.Password))
+                    return new InvalidPasswordException(user.Id);
+
+                if (!user.IsActive)
+                    return new InactiveUserException(user.Id);
+                user.UpdateLocation(request.Longitude, request.Latitude);
+                await usersRepository.UpdateLocationAsync(user, cancellationToken);
+
+                return user;
             }
         }
     }

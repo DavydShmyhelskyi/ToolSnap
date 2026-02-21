@@ -32,4 +32,16 @@ namespace Api.DTOs
         string? SerialNumber,
         float Confidence,
         bool RedFlagged);
+
+    public record CreateDetectedToolBatchItemDto(
+        Guid PhotoSessionId,
+        Guid ToolTypeId,
+        Guid? BrandId,
+        Guid? ModelId,
+        string? SerialNumber,
+        float Confidence,
+        bool RedFlagged);
+
+    public record CreateDetectedToolsBatchDto(
+        IReadOnlyList<CreateDetectedToolBatchItemDto> Items);
 }

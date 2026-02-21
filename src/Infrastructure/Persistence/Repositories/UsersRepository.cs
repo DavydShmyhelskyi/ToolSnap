@@ -26,5 +26,14 @@ namespace Infrastructure.Persistence.Repositories
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
+        public async Task UpdateLocationAsync(User user, CancellationToken cancellationToken)
+        {
+            context.Users.Attach(user);
+
+            context.Entry(user).Property(x => x.Latitude).IsModified = true;
+            context.Entry(user).Property(x => x.Longitude).IsModified = true;
+
+            await context.SaveChangesAsync(cancellationToken);
+        }
     }
 }

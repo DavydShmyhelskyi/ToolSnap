@@ -75,7 +75,7 @@ namespace Application.Entities.ToolAssignments.Commands
                     toolId,
                     userId,
                     locationId,
-                    DateTimeOffset.UtcNow);
+                    DateTime.UtcNow);
 
                 var result = await repository.AddAsync(newAssignment, cancellationToken);
                 return result;

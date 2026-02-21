@@ -109,5 +109,82 @@ namespace Api.Controllers
                 toolAssignment => Ok(ToolAssignmentDto.FromDomain(toolAssignment)),
                 error => error.ToObjectResult());
         }
+
+
+        // --- 🔥 батч create ---
+        [HttpPost("batch")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> CreateBatch(
+            [FromBody] CreateToolAssignmentsBatchDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Items is null || request.Items.Count == 0)
+                return BadRequest("Items collection must not be empty.");
+
+            var command = new CreateToolAssignmentsCommand
+            {
+                Items = request.Items
+                    .Select(item => new CreateToolAssignmentsCommandItem
+                    {
+                        TakenDetectedToolId = item.TakenDetectedToolId,
+                        ToolId = item.ToolId,
+                        UserId = item.UserId,
+                        LocationId = item.LocationId
+                    })
+                    .ToList()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<IReadOnlyList<ToolAssignmentDto>>>(
+                assignments =>
+                {
+                    var dtos = assignments
+                        .Select(ToolAssignmentDto.FromDomain)
+                        .ToList();
+
+                    return StatusCode(StatusCodes.Status201Created, (IReadOnlyList<ToolAssignmentDto>)dtos);
+                },
+                error => error.ToObjectResult());
+        }
+
+        // --- 🔁 батч return ---
+        [HttpPost("batch/return")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> ReturnBatch(
+            [FromBody] ReturnToolAssignmentsBatchDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Items is null || request.Items.Count == 0)
+                return BadRequest("Items collection must not be empty.");
+
+            var command = new ReturnToolAssignmentsCommand
+            {
+                Items = request.Items
+                    .Select(item => new ReturnToolAssignmentsCommandItem
+                    {
+                        ToolAssignmentId = item.ToolAssignmentId,
+                        LocationId = item.LocationId,
+                        ReturnedDetectedToolId = item.ReturnedDetectedToolId
+                    })
+                    .ToList()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<IReadOnlyList<ToolAssignmentDto>>>(
+                assignments =>
+                {
+                    var dtos = assignments
+                        .Select(ToolAssignmentDto.FromDomain)
+                        .ToList();
+
+                    return Ok((IReadOnlyList<ToolAssignmentDto>)dtos);
+                },
+                error => error.ToObjectResult());
+        }
     }
 }

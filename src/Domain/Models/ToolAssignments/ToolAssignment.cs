@@ -38,9 +38,9 @@ namespace Domain.Models.ToolAssignments
             ReturnedAt = returnedAt;
         }
 
-        public static ToolAssignment New(DetectedToolId takenDetectedToolId, ToolId toolId, UserId userId, LocationId takenLocationId, DateTimeOffset takenAt)
+        public static ToolAssignment New(DetectedToolId takenDetectedToolId, ToolId toolId, UserId userId, LocationId takenLocationId, DateTime takenAt)
         {
-            return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, takenLocationId, null, DateTime.UtcNow, null);
+            return new ToolAssignment(ToolAssignmentId.New(), takenDetectedToolId, null, toolId, userId, takenLocationId, null, takenAt, null);
         }
 
         public void Return(LocationId returnedLocationId, DetectedToolId returnedDetectedToolId)
