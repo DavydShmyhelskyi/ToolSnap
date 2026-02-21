@@ -13,12 +13,15 @@ namespace Domain.Models.Users
         public bool IsActive { get; private set; }
         public string PasswordHash { get; private set; }
         public DateTime CreatedAt { get; }
+        public double? Latitude { get; private set; }
+        public double? Longitude { get; private set; }
 
         // navigation properties
         public Role? Role { get; private set; }
         public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
 
-        private User(UserId id, string fullName, string email, bool confirmedEmail, RoleId roleId, string passwordHash, bool isActive, DateTime createdAt)
+        private User(UserId id, string fullName, string email, bool confirmedEmail, RoleId roleId, string passwordHash, bool isActive, DateTime createdAt, double? latitude,
+            double? longitude)
         {
             Id = id;
             FullName = fullName;
@@ -28,6 +31,8 @@ namespace Domain.Models.Users
             PasswordHash = passwordHash;
             IsActive = isActive;
             CreatedAt = createdAt;
+            Latitude = latitude;
+            Longitude = longitude;
         }
 
         public static User New(string fullName, string email, RoleId roleId, string password, bool isActive)
@@ -40,7 +45,9 @@ namespace Domain.Models.Users
                 roleId,
                 BCrypt.Net.BCrypt.HashPassword(password),
                 isActive,
-                DateTime.UtcNow);
+                DateTime.UtcNow,
+                null,
+                null);
         }
         public void Update(string fullName, string email, RoleId roleId)
         {
@@ -49,6 +56,13 @@ namespace Domain.Models.Users
             ConfirmedEmail = false;
             RoleId = roleId;
         }
+
+        public void UpdateLocation(double? longitude, double? latitude)
+        {
+            Longitude = longitude;
+            Latitude = latitude;
+        }
+
         public void ConfirmEmail() => ConfirmedEmail = true;
         public void ChangePassword(string newPassword)
             => PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);

@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260209202853_Innitial")]
-    partial class Innitial
+    [Migration("20260220163134_fixReturnedAtInToolAssignmentConfig")]
+    partial class fixReturnedAtInToolAssignmentConfig
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -251,10 +251,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime?>("ReturnedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("returned_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("returned_at");
 
                     b.Property<Guid?>("ReturnedDetectedToolId")
                         .HasColumnType("uuid")
@@ -511,6 +509,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("latitude");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("longitude");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

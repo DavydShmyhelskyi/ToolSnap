@@ -20,7 +20,7 @@ public static class ConfigureInfrastructureServices
 
     private static void AddFileStorageServices(this IServiceCollection services)
     {
-        services.AddScoped<IFileStorage, BlobStorageService>();
+        services.AddScoped<IFileStorage, LocalFileStorage>();
     }
 
     private static void AddAuthenticationServices(this IServiceCollection services, IConfiguration configuration)

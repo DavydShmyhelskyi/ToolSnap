@@ -12,7 +12,19 @@ namespace Infrastructure.Persistence.Repositories
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
+        public async Task<IReadOnlyList<DetectedTool>> AddRangeAsync(
+            IEnumerable<DetectedTool> entities,
+            CancellationToken cancellationToken)
+        {
+            var list = entities.ToList();
+            if (list.Count == 0)
+                return Array.Empty<DetectedTool>();
 
+            await context.DetectedTools.AddRangeAsync(list, cancellationToken);
+            await context.SaveChangesAsync(cancellationToken);
+
+            return list;
+        }
         public async Task<DetectedTool> DeleteAsync(DetectedTool entity, CancellationToken cancellationToken)
         {
             context.DetectedTools.Remove(entity);

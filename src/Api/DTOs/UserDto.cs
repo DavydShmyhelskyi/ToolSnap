@@ -9,7 +9,9 @@ namespace Api.DTOs
         bool ConfirmedEmail,
         Guid RoleId,
         bool IsActive,
-        DateTime CreatedAt)
+        DateTime CreatedAt,
+        double? Longitude,
+        double? Latitude)
     {
         public static UserDto FromDomain(User user) =>
             new(
@@ -19,7 +21,9 @@ namespace Api.DTOs
                 user.ConfirmedEmail,
                 user.RoleId.Value,
                 user.IsActive,
-                user.CreatedAt);
+                user.CreatedAt,
+                user.Longitude,
+                user.Latitude);
     }
 
     public record CreateUserDto(

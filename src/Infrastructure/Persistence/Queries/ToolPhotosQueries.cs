@@ -23,5 +23,17 @@ namespace Infrastructure.Persistence.Queries
         {
             return await context.ToolPhotos.Where(tp => tp.ToolId == toolId).ToListAsync(cancellationToken);
         }
+
+        public async Task<Option<ToolPhoto>> GetByToolIdAndPhotoTypeIdAsync(ToolId toolId, PhotoTypeId photoTypeId, CancellationToken cancellationToken)
+        {
+            var entity = await context.ToolPhotos
+                .Where(tp => tp.ToolId == toolId && tp.PhotoTypeId == photoTypeId)
+                .OrderByDescending(tp => tp.UploadDate)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return entity is null
+                ? Option<ToolPhoto>.None
+                : Prelude.Some(entity);
+        }
     }
 }

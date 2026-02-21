@@ -35,4 +35,21 @@ namespace Api.DTOs
     public record ReturnToolAssignmentDto(
         Guid ReturnedLocationId,
         Guid ReturnedDetectedToolId);
+
+    public record CreateToolAssignmentsBatchItemDto(
+        Guid TakenDetectedToolId,
+        Guid ToolId,
+        Guid UserId,
+        Guid LocationId);
+
+    public record CreateToolAssignmentsBatchDto(
+        IReadOnlyList<CreateToolAssignmentsBatchItemDto> Items);
+
+    public record ReturnToolAssignmentsBatchItemDto(
+        Guid ToolAssignmentId,
+        Guid LocationId,
+        Guid ReturnedDetectedToolId);
+
+    public record ReturnToolAssignmentsBatchDto(
+        IReadOnlyList<ReturnToolAssignmentsBatchItemDto> Items);
 }

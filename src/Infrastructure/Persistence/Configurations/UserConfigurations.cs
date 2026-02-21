@@ -36,6 +36,10 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .HasDefaultValueSql("timezone('utc', now())")
             .IsRequired();
 
+        builder.Property(x => x.Latitude);
+
+        builder.Property(x => x.Longitude);
+
         builder.Property(x => x.RoleId)
             .HasConversion(x => x.Value, x => new RoleId(x))
             .IsRequired();

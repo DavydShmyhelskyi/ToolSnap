@@ -71,6 +71,49 @@ namespace Api.Controllers
                 error => error.ToObjectResult());
         }
 
+        [HttpPost("batch")]
+        [ProducesResponseType(typeof(IReadOnlyList<DetectedToolDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IReadOnlyList<DetectedToolDto>>> CreateBatch(
+            [FromBody] CreateDetectedToolsBatchDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Items is null || request.Items.Count == 0)
+            {
+                return BadRequest("Items collection must not be empty.");
+            }
+
+            var command = new CreateDetectedToolsCommand
+            {
+                Items = request.Items
+                    .Select(item => new CreateDetectedToolsCommandItem
+                    {
+                        PhotoSessionId = item.PhotoSessionId,
+                        ToolTypeId = item.ToolTypeId,
+                        BrandId = item.BrandId,
+                        ModelId = item.ModelId,
+                        SerialNumber = item.SerialNumber,
+                        Confidence = item.Confidence,
+                        RedFlagged = item.RedFlagged
+                    })
+                    .ToList()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<IReadOnlyList<DetectedToolDto>>>(
+                detectedTools =>
+                {
+                    var dtos = detectedTools
+                        .Select(DetectedToolDto.FromDomain)
+                        .ToList();
+
+                    // 201 без конкретного Location (бо це колекція)
+                    return StatusCode(StatusCodes.Status201Created, (IReadOnlyList<DetectedToolDto>)dtos);
+                },
+                error => error.ToObjectResult());
+        }
+
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

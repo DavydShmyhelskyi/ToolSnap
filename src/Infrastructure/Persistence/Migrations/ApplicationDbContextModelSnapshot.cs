@@ -248,10 +248,8 @@ namespace Infrastructure.Persistence.Migrations
                         .HasColumnName("id");
 
                     b.Property<DateTime?>("ReturnedAt")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("timestamp with time zone")
-                        .HasColumnName("returned_at")
-                        .HasDefaultValueSql("timezone('utc', now())");
+                        .HasColumnName("returned_at");
 
                     b.Property<Guid?>("ReturnedDetectedToolId")
                         .HasColumnType("uuid")
@@ -508,6 +506,14 @@ namespace Infrastructure.Persistence.Migrations
                     b.Property<bool>("IsActive")
                         .HasColumnType("boolean")
                         .HasColumnName("is_active");
+
+                    b.Property<double?>("Latitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("latitude");
+
+                    b.Property<double?>("Longitude")
+                        .HasColumnType("double precision")
+                        .HasColumnName("longitude");
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()

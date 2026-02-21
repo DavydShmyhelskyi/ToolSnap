@@ -1,5 +1,6 @@
 using System.Text;
 using Api.Modules;
+using Api.Services.GemeniAiService;
 using Application;
 using Application.Common.Settings;
 using Infrastructure;
@@ -39,6 +40,8 @@ builder.Services.AddAuthorization();
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpContextAccessor();
+builder.Services.AddHttpClient<GeminiService>();
 
 var app = builder.Build();
 

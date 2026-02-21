@@ -16,6 +16,7 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<ToolAssignment>> GetAllAsync(CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetByIdAsync(ToolAssignmentId toolId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolAssignment>> GetAllByUserAsync(UserId userId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<ToolAssignment>> GetNotReturnedByUserAsync(UserId userId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolAssignment>> GetAllByToolAsync(ToolId toolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByToolAsync(ToolId toolId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolAssignment>> GetAllByPhotoSessionAsync(PhotoSessionId locationId, CancellationToken cancellationToken);
@@ -23,5 +24,7 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<ToolAssignment>> GetByRedFlaggeReturnedDetectedToolAsync(DetectedToolId returnedDetectedToolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByRedFlaggedTakenDetectedToolAsync(DetectedToolId takenDetectedToolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByRedFlaggeReturnedDetectedToolAsync(DetectedToolId returnedDetectedToolId, CancellationToken cancellationToken);
+        Task<Option<ToolAssignment>> GetLastByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
+        Task<Option<ToolAssignment>> GetActiveByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
     }
 }

@@ -26,7 +26,7 @@ namespace Application.Entities.Users.Commands
 
             return entity.Match<Either<UserException, User>>(
                 u => repository.DeleteAsync(u, cancellationToken).Result,
-                () => new UserNotFoundException(id));
+                () => new UserNotFoundException());
         }
     }
 }

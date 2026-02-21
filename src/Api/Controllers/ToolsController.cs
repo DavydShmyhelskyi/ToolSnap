@@ -1,8 +1,10 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.Tools.Commands;
-using Api.Modules.Errors;
+using Domain.Models.ToolInfo;
+using Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -28,7 +30,22 @@ namespace Api.Controllers
 
             return Ok(result);
         }
+        [HttpGet("not-returned/user/{userId:guid}")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetNotReturnedByUser(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
 
+            var tools = await queries.GetNotReturnedToolsByUserAsync(domainUserId, cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
+        }
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -41,6 +58,61 @@ namespace Api.Controllers
             return entity.Match<ActionResult<ToolDto>>(
                 toolDto => Ok(toolDto),
                 () => NotFound());
+        }
+
+        // НОВИЙ ЕНДПОІНТ
+        // GET /tools/search?toolTypeId=...&brandId=...&modelId=...
+        [HttpGet("search")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetByTypeBrandModel(
+            [FromQuery] Guid toolTypeId,
+            [FromQuery] Guid? brandId,
+            [FromQuery] Guid? modelId,
+            CancellationToken cancellationToken)
+        {
+            var typeId = new ToolTypeId(toolTypeId);
+            BrandId? brand = brandId.HasValue ? new BrandId(brandId.Value) : null;
+            ModelId? model = modelId.HasValue ? new ModelId(modelId.Value) : null;
+
+            var tools = await queries.GetAllAvailableByTypeAndModelAsync(
+                typeId,
+                brand,
+                model,
+                cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
+        }
+
+        [HttpGet("not-returned/user/{userId:guid}/search")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetNotReturnedByUserAndTypeBrandModel(
+    Guid userId,
+    [FromQuery] Guid toolTypeId,
+    [FromQuery] Guid? brandId,
+    [FromQuery] Guid? modelId,
+    CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
+            var typeId = new ToolTypeId(toolTypeId);
+            BrandId? brand = brandId.HasValue ? new BrandId(brandId.Value) : null;
+            ModelId? model = modelId.HasValue ? new ModelId(modelId.Value) : null;
+
+            var tools = await queries.GetNotReturnedToolsByUserAndTypeAndModelAsync(
+                domainUserId,
+                typeId,
+                brand,
+                model,
+                cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
         }
 
         [HttpPost]

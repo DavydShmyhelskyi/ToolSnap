@@ -1,8 +1,10 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.ToolAssignments.Commands;
-using Api.Modules.Errors;
+using Domain.Models.Tools;
+using Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -67,6 +69,44 @@ namespace Api.Controllers
                     ToolAssignmentDto.FromDomain(toolAssignment)),
                 error => error.ToObjectResult());
         }
+        [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search-active")]
+        [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ToolAssignmentDto>> GetActiveByUserAndTool(
+    Guid userId,
+    Guid toolId,
+    CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
+            var domainToolId = new ToolId(toolId);
+
+            var entity = await queries.GetActiveByUserAndToolAsync(
+                domainUserId,
+                domainToolId,
+                cancellationToken);
+
+            return entity.Match<ActionResult<ToolAssignmentDto>>(
+                ta => Ok(ToolAssignmentDto.FromDomain(ta)),
+                () => NotFound("Active assignment not found for given user & tool"));
+        }
+
+        [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search")]
+        [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ToolAssignmentDto>> GetLastByUserAndTool(
+            Guid userId,
+            Guid toolId,
+            CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
+            var domainToolId = new ToolId(toolId);
+
+            var entity = await queries.GetLastByUserAndToolAsync(domainUserId, domainToolId, cancellationToken);
+
+            return entity.Match<ActionResult<ToolAssignmentDto>>(
+                ta => Ok(ToolAssignmentDto.FromDomain(ta)),
+                () => NotFound());
+        }
 
         [HttpDelete("{id:guid}")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
@@ -107,6 +147,83 @@ namespace Api.Controllers
 
             return result.Match<ActionResult<ToolAssignmentDto>>(
                 toolAssignment => Ok(ToolAssignmentDto.FromDomain(toolAssignment)),
+                error => error.ToObjectResult());
+        }
+
+
+        // --- 🔥 батч create ---
+        [HttpPost("batch")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> CreateBatch(
+            [FromBody] CreateToolAssignmentsBatchDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Items is null || request.Items.Count == 0)
+                return BadRequest("Items collection must not be empty.");
+
+            var command = new CreateToolAssignmentsCommand
+            {
+                Items = request.Items
+                    .Select(item => new CreateToolAssignmentsCommandItem
+                    {
+                        TakenDetectedToolId = item.TakenDetectedToolId,
+                        ToolId = item.ToolId,
+                        UserId = item.UserId,
+                        LocationId = item.LocationId
+                    })
+                    .ToList()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<IReadOnlyList<ToolAssignmentDto>>>(
+                assignments =>
+                {
+                    var dtos = assignments
+                        .Select(ToolAssignmentDto.FromDomain)
+                        .ToList();
+
+                    return StatusCode(StatusCodes.Status201Created, (IReadOnlyList<ToolAssignmentDto>)dtos);
+                },
+                error => error.ToObjectResult());
+        }
+
+        // --- 🔁 батч return ---
+        [HttpPost("batch/return")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> ReturnBatch(
+            [FromBody] ReturnToolAssignmentsBatchDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.Items is null || request.Items.Count == 0)
+                return BadRequest("Items collection must not be empty.");
+
+            var command = new ReturnToolAssignmentsCommand
+            {
+                Items = request.Items
+                    .Select(item => new ReturnToolAssignmentsCommandItem
+                    {
+                        ToolAssignmentId = item.ToolAssignmentId,
+                        LocationId = item.LocationId,
+                        ReturnedDetectedToolId = item.ReturnedDetectedToolId
+                    })
+                    .ToList()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<IReadOnlyList<ToolAssignmentDto>>>(
+                assignments =>
+                {
+                    var dtos = assignments
+                        .Select(ToolAssignmentDto.FromDomain)
+                        .ToList();
+
+                    return Ok((IReadOnlyList<ToolAssignmentDto>)dtos);
+                },
                 error => error.ToObjectResult());
         }
     }

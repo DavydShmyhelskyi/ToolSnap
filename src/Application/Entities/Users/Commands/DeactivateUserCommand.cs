@@ -26,7 +26,7 @@ namespace Application.Entities.Users.Commands
 
             return await entity.MatchAsync(
                 u => DeactivateUser(u, cancellationToken),
-                () => new UserNotFoundException(id));
+                () => new UserNotFoundException());
         }
 
         private async Task<Either<UserException, User>> DeactivateUser(

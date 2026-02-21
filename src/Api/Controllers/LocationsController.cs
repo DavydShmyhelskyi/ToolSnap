@@ -36,6 +36,34 @@ namespace Api.Controllers
 
             return Ok(result);
         }
+        [HttpGet("nearest")]
+        [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<LocationDto>> GetNearest(
+            [FromQuery] double latitude,
+            [FromQuery] double longitude,
+            CancellationToken cancellationToken)
+        {
+            const double radiusMeters = 50;
+
+            var locationOption = await queries.GetNearestAsync(
+                latitude,
+                longitude,
+                radiusMeters,
+                cancellationToken);
+
+            return locationOption.Match<ActionResult<LocationDto>>(
+                location => Ok(new LocationDto(
+                    location.Id.Value,
+                    location.Name,
+                    location.LocationTypeId.Value,
+                    location.Address,
+                    location.Latitude,
+                    location.Longitude,
+                    location.IsActive,
+                    location.CreatedAt)),
+                () => NotFound());
+        }
 
         [HttpGet("{id:guid}")]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
