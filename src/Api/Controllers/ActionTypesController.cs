@@ -1,15 +1,17 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.ActionTypes.Commands;
-using Api.Modules.Errors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("action-types")]
+    [Authorize]
     public class ActionTypesController(
         IActionTypeQueries queries,
         IActionTypeControllerService service,

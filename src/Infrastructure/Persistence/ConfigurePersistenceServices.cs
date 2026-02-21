@@ -1,6 +1,8 @@
 using Application.Common.Interfaces;
+using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Infrastructure.Authentication;
 using Infrastructure.Persistence.Queries;
 using Infrastructure.Persistence.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -33,6 +35,8 @@ public static class ConfigurePersistenceServices
 
     private static void AddRepositories(this IServiceCollection services)
     {
+        //Auth jwt
+        services.AddScoped<IJwtTokenGenerator, JwtTokenGenerator>();
         // Locations
         services.AddScoped<LocationsRepository>();
         services.AddScoped<ILocationRepository>(provider => provider.GetRequiredService<LocationsRepository>());

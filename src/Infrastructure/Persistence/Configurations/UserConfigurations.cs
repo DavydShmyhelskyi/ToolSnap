@@ -1,5 +1,4 @@
 ﻿using Domain.Models.Roles;
-using Domain.Models.Roles;
 using Domain.Models.Users;
 using Infrastructure.Persistence.Converters;
 using Microsoft.EntityFrameworkCore;

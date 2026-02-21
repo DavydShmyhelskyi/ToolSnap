@@ -12,7 +12,8 @@ namespace Api.Modules
         {
             services.AddControllers(options =>
             {
-                options.Filters.Add<ValidationFilter>();
+               options.Filters.Add<ValidationFilter>();
+               options.Filters.Add<ValidationExceptionFilter>();
             });
             services.AddCors();
             services.AddRequestValidators();
