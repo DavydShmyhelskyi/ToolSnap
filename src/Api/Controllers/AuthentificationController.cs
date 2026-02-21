@@ -9,7 +9,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("auth")]
-    public class AuthController(ISender sender) : ControllerBase
+    public class AuthentificationController(ISender sender) : ControllerBase
     {
         /// <summary>
         /// Register a new user
