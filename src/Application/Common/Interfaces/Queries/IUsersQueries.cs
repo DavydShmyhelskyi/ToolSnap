@@ -11,5 +11,6 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<User>> GetAllByRoleAsync(RoleId roleId, CancellationToken cancellationToken);
         Task<Option<User>> GetByNameAsync(string name, CancellationToken cancellationToken);
         Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken);
+        Task<User?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken);
     }
 }

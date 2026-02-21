@@ -11,6 +11,7 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
     public void Configure(EntityTypeBuilder<User> builder)
     {
         builder.HasKey(x => x.Id);
+        
         builder.Property(x => x.Id)
             .HasConversion(x => x.Value, x => new UserId(x));
 
@@ -23,7 +24,14 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .IsRequired();
 
         builder.Property(x => x.PasswordHash)
+            .HasColumnType("varchar(500)")
             .IsRequired();
+
+        builder.Property(x => x.RefreshToken)
+            .HasColumnType("varchar(500)");
+
+        builder.Property(x => x.RefreshTokenExpiryTime)
+            .HasConversion(new DateTimeUtcConverter());
 
         builder.Property(x => x.ConfirmedEmail)
             .IsRequired();
@@ -48,5 +56,8 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
             .WithMany(x => x.Users)
             .HasForeignKey(x => x.RoleId)
             .OnDelete(DeleteBehavior.Restrict);
+
+        // Unique constraint for Email
+        builder.HasIndex(x => x.Email).IsUnique();
     }
 }

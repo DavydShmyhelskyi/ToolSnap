@@ -6,6 +6,7 @@ using Application.Entities.Tools.Commands;
 using Domain.Models.ToolInfo;
 using Domain.Models.Users;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -18,6 +19,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetTools(
             CancellationToken cancellationToken)
@@ -47,6 +49,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolDto>> GetById(
@@ -116,6 +119,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ToolDto>> Create(
@@ -142,6 +146,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -166,6 +171,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -185,6 +191,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/change-status")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

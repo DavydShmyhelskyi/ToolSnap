@@ -15,6 +15,8 @@ namespace Domain.Models.Users
         public DateTime CreatedAt { get; }
         public double? Latitude { get; private set; }
         public double? Longitude { get; private set; }
+        public string? RefreshToken { get; private set; }
+        public DateTime? RefreshTokenExpiryTime { get; private set; }
 
         // navigation properties
         public Role? Role { get; private set; }
@@ -64,13 +66,35 @@ namespace Domain.Models.Users
         }
 
         public void ConfirmEmail() => ConfirmedEmail = true;
-        public void ChangePassword(string newPassword)
-            => PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+        public void ChangePassword(string newPassword) {
+            PasswordHash = BCrypt.Net.BCrypt.HashPassword(newPassword);
+            RevokeRefreshToken();
+        }
 
         public bool VerifyPassword(string password)
             => BCrypt.Net.BCrypt.Verify(password, PasswordHash);
 
+
         public void Activate() => IsActive = true;
         public void Deactivate() => IsActive = false;
+
+        public void SetRefreshToken(string refreshToken, DateTime expiryTime)
+        {
+            RefreshToken = refreshToken;
+            RefreshTokenExpiryTime = expiryTime;
+        }
+
+        public void RevokeRefreshToken()
+        {
+            RefreshToken = null;
+            RefreshTokenExpiryTime = null;
+        }
+
+        public bool IsRefreshTokenValid(string refreshToken)
+        {
+            return RefreshToken == refreshToken
+                   && RefreshTokenExpiryTime.HasValue
+                   && RefreshTokenExpiryTime > DateTime.UtcNow;
+        }
     }
 }

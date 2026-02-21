@@ -50,11 +50,11 @@ namespace Infrastructure.Persistence.Queries
             
             return user == null ? Option<User>.None : Option<User>.Some(user);
         }
-        public async Task<Option<User>> GetByEmailAsync(string email, CancellationToken cancellationToken)
-        {
-            var user = await context.Users.FirstOrDefaultAsync(u => u.Email == email, cancellationToken);
-            return user != null ? Option<User>.Some(user) : Option<User>.None;
-        }
 
+        public async Task<User?> GetByRefreshTokenAsync(string refreshToken, CancellationToken cancellationToken)
+        {
+            return await context.Users
+                .FirstOrDefaultAsync(u => u.RefreshToken == refreshToken, cancellationToken);
+        }
     }
 }

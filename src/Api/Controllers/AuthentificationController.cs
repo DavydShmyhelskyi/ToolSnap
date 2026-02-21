@@ -44,7 +44,8 @@ namespace Api.Controllers
                         authResult.User.Role?.Title ?? "User",
                         authResult.User.IsActive,
                         authResult.User.ConfirmedEmail,
-                        authResult.Token)),
+                        authResult.AccessToken,
+                        authResult.RefreshToken)),
                 error => error.ToObjectResult());
         }
 
@@ -76,7 +77,62 @@ namespace Api.Controllers
                     authResult.User.Role?.Title ?? "User",
                     authResult.User.IsActive,
                     authResult.User.ConfirmedEmail,
-                    authResult.Token)),
+                    authResult.AccessToken,
+                    authResult.RefreshToken)),
+                error => error.ToObjectResult());
+        }
+
+        /// <summary>
+        /// Refresh access token using refresh token
+        /// </summary>
+        [HttpPost("refresh")]
+        [AllowAnonymous]
+        [ProducesResponseType(typeof(AuthenticationResponseDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<ActionResult<AuthenticationResponseDto>> Refresh(
+            [FromBody] RefreshTokenDto request,
+            CancellationToken cancellationToken)
+        {
+            var command = new RefreshTokenCommand
+            {
+                RefreshToken = request.RefreshToken
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<AuthenticationResponseDto>>(
+                authResult => Ok(new AuthenticationResponseDto(
+                    authResult.User.Id.Value,
+                    authResult.User.FullName,
+                    authResult.User.Email,
+                    authResult.User.Role?.Title ?? "User",
+                    authResult.User.IsActive,
+                    authResult.User.ConfirmedEmail,
+                    authResult.AccessToken,
+                    authResult.RefreshToken)),
+                error => error.ToObjectResult());
+        }
+
+        /// <summary>
+        /// Revoke refresh token (logout)
+        /// </summary>
+        [HttpPost("revoke")]
+        [Authorize]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status401Unauthorized)]
+        public async Task<IActionResult> Revoke(
+            [FromBody] RefreshTokenDto request,
+            CancellationToken cancellationToken)
+        {
+            var command = new RevokeTokenCommand
+            {
+                RefreshToken = request.RefreshToken
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<IActionResult>(
+                _ => NoContent(),
                 error => error.ToObjectResult());
         }
 
@@ -85,11 +141,10 @@ namespace Api.Controllers
         /// </summary>
         [HttpGet("profile")]
         [Authorize]
-        [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(object), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status401Unauthorized)]
         public ActionResult<object> GetProfile()
         {
-            // Get user info from JWT claims
             var userId = User.FindFirst(System.Security.Claims.ClaimTypes.NameIdentifier)?.Value;
             var email = User.FindFirst(System.Security.Claims.ClaimTypes.Email)?.Value;
             var fullName = User.FindFirst(System.Security.Claims.ClaimTypes.Name)?.Value;

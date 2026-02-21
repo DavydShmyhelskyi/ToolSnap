@@ -4,5 +4,6 @@ namespace Application.Common.Interfaces.Authentication;
 
 public interface IJwtTokenGenerator
 {
-    string GenerateToken(User user, string roleName);
+    string GenerateAccessToken(User user, string roleName);
+    string GenerateRefreshToken();
 }

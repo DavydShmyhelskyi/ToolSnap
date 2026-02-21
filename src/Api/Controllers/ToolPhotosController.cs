@@ -1,9 +1,10 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.ToolPhotos.Commands;
-using Api.Modules.Errors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -16,6 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolPhotoDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolPhotoDto>>> GetToolPhotos(
             CancellationToken cancellationToken)
@@ -30,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolPhotoDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolPhotoDto>> GetById(
@@ -44,6 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ToolPhotoDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -73,6 +77,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

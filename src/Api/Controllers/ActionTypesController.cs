@@ -11,13 +11,13 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("action-types")]
-    [Authorize]
     public class ActionTypesController(
         IActionTypeQueries queries,
         IActionTypeControllerService service,
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ActionTypeDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ActionTypeDto>>> GetActionTypes(
             CancellationToken cancellationToken)
@@ -33,6 +33,7 @@ namespace Api.Controllers
 
 
         [HttpGet("by-title/{title}")]
+        [Authorize]
         [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ActionTypeDto>> GetByTitle(
@@ -49,6 +50,7 @@ namespace Api.Controllers
 
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ActionTypeDto>> GetById(
@@ -63,6 +65,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ActionTypeDto>> Create(
@@ -85,6 +88,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ActionTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -107,6 +111,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

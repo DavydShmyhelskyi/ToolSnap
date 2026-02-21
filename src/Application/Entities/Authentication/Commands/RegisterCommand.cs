@@ -1,6 +1,7 @@
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
+using Application.Common.Settings;
 using Application.Entities.Authentication.Exceptions;
 using Domain.Models.Roles;
 using Domain.Models.Users;
@@ -14,14 +15,15 @@ namespace Application.Entities.Authentication.Commands
         public required string FullName { get; init; }
         public required string Email { get; init; }
         public required string Password { get; init; }
-        public Guid? RoleId { get; init; } // Optional, defaults to "User" role
+        public Guid? RoleId { get; init; }
     }
 
     public class RegisterCommandHandler(
         IUsersRepository usersRepository,
         IUsersQueries usersQueries,
         IRolesQueries rolesQueries,
-        IJwtTokenGenerator jwtTokenGenerator)
+        IJwtTokenGenerator jwtTokenGenerator,
+        JwtSettings jwtSettings)
         : IRequestHandler<RegisterCommand, Either<AuthenticationException, AuthenticationResult>>
     {
         public async Task<Either<AuthenticationException, AuthenticationResult>> Handle(
@@ -34,7 +36,7 @@ namespace Application.Entities.Authentication.Commands
             if (existingUser.IsSome)
                 return new EmailAlreadyExistsException(request.Email);
 
-            // Get default "User" role if RoleId not provided
+            // Get default user role if RoleId not provided
             RoleId roleId;
             string roleName;
 
@@ -50,14 +52,14 @@ namespace Application.Entities.Authentication.Commands
             }
             else
             {
-                // Find default "User" role
+                // Find default user role
                 var defaultRole = await rolesQueries.GetByTitleAsync("user", cancellationToken);
                 
                 if (defaultRole.IsNone)
                     return new DefaultRoleNotFoundException();
                 
                 roleId = defaultRole.Match(r => r.Id, () => throw new InvalidOperationException());
-                roleName = "User";
+                roleName = "user";
             }
 
             try
@@ -72,10 +74,18 @@ namespace Application.Entities.Authentication.Commands
 
                 var createdUser = await usersRepository.AddAsync(newUser, cancellationToken);
 
-                // Generate JWT token
-                var token = jwtTokenGenerator.GenerateToken(createdUser, roleName);
+                // Generate tokens
+                var accessToken = jwtTokenGenerator.GenerateAccessToken(createdUser, roleName);
+                var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
+                
+                // Save refresh token to DB
+                createdUser.SetRefreshToken(
+                    refreshToken, 
+                    DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenExpirationDays));
+                
+                await usersRepository.UpdateAsync(createdUser, cancellationToken);
 
-                return new AuthenticationResult(createdUser, token);
+                return new AuthenticationResult(createdUser, accessToken, refreshToken);
             }
             catch (Exception ex)
             {

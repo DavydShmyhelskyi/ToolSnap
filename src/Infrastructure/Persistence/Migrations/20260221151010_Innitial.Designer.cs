@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20260220163134_fixReturnedAtInToolAssignmentConfig")]
-    partial class fixReturnedAtInToolAssignmentConfig
+    [Migration("20260221151010_Innitial")]
+    partial class Innitial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -520,8 +520,16 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.Property<string>("PasswordHash")
                         .IsRequired()
-                        .HasColumnType("text")
+                        .HasColumnType("varchar(500)")
                         .HasColumnName("password_hash");
+
+                    b.Property<string>("RefreshToken")
+                        .HasColumnType("varchar(500)")
+                        .HasColumnName("refresh_token");
+
+                    b.Property<DateTime?>("RefreshTokenExpiryTime")
+                        .HasColumnType("timestamp with time zone")
+                        .HasColumnName("refresh_token_expiry_time");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid")
@@ -529,6 +537,10 @@ namespace Infrastructure.Persistence.Migrations
 
                     b.HasKey("Id")
                         .HasName("pk_users");
+
+                    b.HasIndex("Email")
+                        .IsUnique()
+                        .HasDatabaseName("ix_users_email");
 
                     b.HasIndex("RoleId")
                         .HasDatabaseName("ix_users_role_id");

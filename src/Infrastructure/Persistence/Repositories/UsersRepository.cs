@@ -22,17 +22,28 @@ namespace Infrastructure.Persistence.Repositories
 
         public async Task<User> UpdateAsync(User entity, CancellationToken cancellationToken)
         {
-            context.Users.Update(entity);
+            var local = context.Set<User>()
+                .Local
+                .FirstOrDefault(e => e.Id == entity.Id);
+            
+            if (local != null)
+            {
+                context.Entry(local).State = EntityState.Detached;
+            }
+
+            context.Entry(entity).State = EntityState.Modified;
+            
+            if (entity.Role != null)
+            {
+                context.Entry(entity.Role).State = EntityState.Unchanged;
+            }
+
             await context.SaveChangesAsync(cancellationToken);
             return entity;
         }
-        public async Task UpdateLocationAsync(User user, CancellationToken cancellationToken)
+
+        public async Task SaveChangesAsync(CancellationToken cancellationToken)
         {
-            context.Users.Attach(user);
-
-            context.Entry(user).Property(x => x.Latitude).IsModified = true;
-            context.Entry(user).Property(x => x.Longitude).IsModified = true;
-
             await context.SaveChangesAsync(cancellationToken);
         }
     }

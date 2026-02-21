@@ -3,48 +3,43 @@ using Application.Common.Interfaces.Queries;
 using Application.Common.Interfaces.Repositories;
 using Application.Common.Settings;
 using Application.Entities.Authentication.Exceptions;
-using Domain.Models.Users;
 using LanguageExt;
 using MediatR;
 
 namespace Application.Entities.Authentication.Commands
 {
-    public record LoginCommand : IRequest<Either<AuthenticationException, AuthenticationResult>>
+    public record RefreshTokenCommand : IRequest<Either<AuthenticationException, AuthenticationResult>>
     {
-        public required string Email { get; init; }
-        public required string Password { get; init; }
+        public required string RefreshToken { get; init; }
     }
 
-    public record AuthenticationResult(
-        User User,
-        string AccessToken,
-        string RefreshToken);
-
-    public class LoginCommandHandler(
+    public class RefreshTokenCommandHandler(
         IUsersQueries usersQueries,
         IUsersRepository usersRepository,
         IRolesQueries rolesQueries,
         IJwtTokenGenerator jwtTokenGenerator,
         JwtSettings jwtSettings)
-        : IRequestHandler<LoginCommand, Either<AuthenticationException, AuthenticationResult>>
+        : IRequestHandler<RefreshTokenCommand, Either<AuthenticationException, AuthenticationResult>>
     {
         public async Task<Either<AuthenticationException, AuthenticationResult>> Handle(
-            LoginCommand request,
+            RefreshTokenCommand request,
             CancellationToken cancellationToken)
         {
-            var userOption = await usersQueries.GetByEmailAsync(request.Email, cancellationToken);
+            // Find user by refresh token (with tracking, without includes)
+            var user = await usersQueries.GetByRefreshTokenAsync(request.RefreshToken, cancellationToken);
 
-            if (userOption.IsNone)
-                return new InvalidCredentialsException();
+            if (user == null)
+                return new InvalidRefreshTokenException();
 
-            var user = userOption.Match(u => u, () => throw new InvalidOperationException());
+            // Validate refresh token
+            if (!user.IsRefreshTokenValid(request.RefreshToken))
+                return new RefreshTokenExpiredException();
 
-            if (!user.VerifyPassword(request.Password))
-                return new InvalidCredentialsException();
-
+            // Check if user is active
             if (!user.IsActive)
                 return new UserNotActiveException(user.Id);
 
+            // Get role name
             var roleOption = await rolesQueries.GetByIdAsync(user.RoleId, cancellationToken);
 
             if (roleOption.IsNone)
@@ -52,16 +47,19 @@ namespace Application.Entities.Authentication.Commands
 
             var roleName = roleOption.Match(r => r.Title, () => "User");
 
-            var accessToken = jwtTokenGenerator.GenerateAccessToken(user, roleName);
-            var refreshToken = jwtTokenGenerator.GenerateRefreshToken();
+            // Generate new tokens
+            var newAccessToken = jwtTokenGenerator.GenerateAccessToken(user, roleName);
+            var newRefreshToken = jwtTokenGenerator.GenerateRefreshToken();
 
+            // Update refresh token (token rotation)
             user.SetRefreshToken(
-                refreshToken,
+                newRefreshToken,
                 DateTime.UtcNow.AddDays(jwtSettings.RefreshTokenExpirationDays));
 
+            // Save changes (user already tracked)
             await usersRepository.SaveChangesAsync(cancellationToken);
 
-            return new AuthenticationResult(user, accessToken, refreshToken);
+            return new AuthenticationResult(user, newAccessToken, newRefreshToken);
         }
     }
 }

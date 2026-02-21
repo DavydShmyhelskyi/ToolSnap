@@ -10,6 +10,9 @@ public record RegisterDto(
     string Password,
     Guid? RoleId = null);
 
+public record RefreshTokenDto(
+    string RefreshToken);
+
 public record AuthenticationResponseDto(
     Guid Id,
     string FullName,
@@ -17,4 +20,5 @@ public record AuthenticationResponseDto(
     string Role,
     bool IsActive,
     bool EmailConfirmed,
-    string Token);
+    string AccessToken,
+    string RefreshToken);

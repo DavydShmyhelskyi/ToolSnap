@@ -1,15 +1,17 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.Roles.Commands;
-using Api.Modules.Errors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
 {
     [ApiController]
     [Route("roles")]
+    [Authorize(Roles = "admin")]
     public class RolesController(
         IRolesQueries queries,
         IRoleControllerService service,

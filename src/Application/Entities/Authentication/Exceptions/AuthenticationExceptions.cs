@@ -21,6 +21,12 @@ namespace Application.Entities.Authentication.Exceptions
     public class DefaultRoleNotFoundException()
         : AuthenticationException("Default 'User' role not found in the system.");
 
+    public class InvalidRefreshTokenException()
+        : AuthenticationException("Invalid refresh token.");
+
+    public class RefreshTokenExpiredException()
+        : AuthenticationException("Refresh token has expired.");
+
     public class UnhandledAuthenticationException(Exception? innerException = null)
         : AuthenticationException("An unexpected error occurred during authentication.", innerException);
 }

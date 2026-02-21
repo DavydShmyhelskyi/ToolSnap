@@ -1,9 +1,10 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.ToolStatuses.Commands;
-using Api.Modules.Errors;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -16,6 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolStatusDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolStatusDto>>> GetToolStatuses(
             CancellationToken cancellationToken)
@@ -30,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolStatusDto>> GetById(
@@ -44,6 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolStatusDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ToolStatusDto>> Create(
@@ -66,6 +70,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolStatusDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,6 +93,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

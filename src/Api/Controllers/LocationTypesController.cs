@@ -5,6 +5,7 @@ using Application.Entities.LocationTypes.Commands;
 using Api.Modules.Errors;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Api.Controllers
 {
@@ -16,6 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<LocationTypeDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<LocationTypeDto>>> GetLocationTypes(
             CancellationToken cancellationToken)
@@ -30,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(LocationTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LocationTypeDto>> GetById(
@@ -44,6 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationTypeDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<LocationTypeDto>> Create(
@@ -66,6 +70,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationTypeDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -88,6 +93,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

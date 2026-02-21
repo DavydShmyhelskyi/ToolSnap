@@ -40,7 +40,7 @@ namespace Application.Entities.Users.Commands
                 if (!user.IsActive)
                     return new InactiveUserException(user.Id);
                 user.UpdateLocation(request.Longitude, request.Latitude);
-                await usersRepository.UpdateLocationAsync(user, cancellationToken);
+                await usersRepository.UpdateAsync(user, cancellationToken);
 
                 return user;
             }

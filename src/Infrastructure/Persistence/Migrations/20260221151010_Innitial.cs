@@ -6,7 +6,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
-    public partial class Initial : Migration
+    public partial class Innitial : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -162,10 +162,12 @@ namespace Infrastructure.Persistence.Migrations
                     confirmed_email = table.Column<bool>(type: "boolean", nullable: false),
                     role_id = table.Column<Guid>(type: "uuid", nullable: false),
                     is_active = table.Column<bool>(type: "boolean", nullable: false),
-                    password_hash = table.Column<string>(type: "text", nullable: false),
+                    password_hash = table.Column<string>(type: "varchar(500)", nullable: false),
                     created_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
                     latitude = table.Column<double>(type: "double precision", nullable: true),
-                    longitude = table.Column<double>(type: "double precision", nullable: true)
+                    longitude = table.Column<double>(type: "double precision", nullable: true),
+                    refresh_token = table.Column<string>(type: "varchar(500)", nullable: true),
+                    refresh_token_expiry_time = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -321,7 +323,7 @@ namespace Infrastructure.Persistence.Migrations
                     taken_location_id = table.Column<Guid>(type: "uuid", nullable: false),
                     returned_location_id = table.Column<Guid>(type: "uuid", nullable: true),
                     taken_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: false, defaultValueSql: "timezone('utc', now())"),
-                    returned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true, defaultValueSql: "timezone('utc', now())")
+                    returned_at = table.Column<DateTime>(type: "timestamp with time zone", nullable: true)
                 },
                 constraints: table =>
                 {
@@ -463,6 +465,12 @@ namespace Infrastructure.Persistence.Migrations
                 name: "ix_tools_tool_type_id",
                 table: "tools",
                 column: "tool_type_id");
+
+            migrationBuilder.CreateIndex(
+                name: "ix_users_email",
+                table: "users",
+                column: "email",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "ix_users_role_id",

@@ -1,5 +1,6 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
+using System.Security.Cryptography;
 using System.Text;
 using Application.Common.Interfaces.Authentication;
 using Application.Common.Settings;
@@ -17,7 +18,7 @@ public class JwtTokenGenerator : IJwtTokenGenerator
         _jwtSettings = jwtSettings;
     }
 
-    public string GenerateToken(User user, string roleName)
+    public string GenerateAccessToken(User user, string roleName)
     {
         // Create signing credentials
         var signingKey = new SymmetricSecurityKey(
@@ -50,5 +51,13 @@ public class JwtTokenGenerator : IJwtTokenGenerator
             signingCredentials: signingCredentials);
 
         return new JwtSecurityTokenHandler().WriteToken(securityToken);
+    }
+
+    public string GenerateRefreshToken()
+    {
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }
