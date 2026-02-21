@@ -24,5 +24,7 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<ToolAssignment>> GetByRedFlaggeReturnedDetectedToolAsync(DetectedToolId returnedDetectedToolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByRedFlaggedTakenDetectedToolAsync(DetectedToolId takenDetectedToolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByRedFlaggeReturnedDetectedToolAsync(DetectedToolId returnedDetectedToolId, CancellationToken cancellationToken);
+        Task<Option<ToolAssignment>> GetLastByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
+        Task<Option<ToolAssignment>> GetActiveByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
     }
 }

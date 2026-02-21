@@ -62,11 +62,76 @@ namespace Infrastructure.Persistence.Queries
             CancellationToken cancellationToken)
         {
             return await context.ToolAssignments
-                .Where(ta => ta.UserId == userId
-                          || ta.ReturnedAt == null
-                          || ta.ReturnedLocationId == null
-                          || ta.ReturnedDetectedToolId == null)
+                .Where(ta =>
+                    ta.UserId == userId &&
+                    ta.ReturnedAt == null &&
+                    ta.ReturnedLocationId == null &&
+                    ta.ReturnedDetectedToolId == null)
                 .Include(ta => ta.Tool)
+                .Select(ta => ta.Tool!)
+                .Distinct()
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Tool>> GetAllAvailableByTypeAndModelAsync(
+           ToolTypeId toolTypeId,
+           BrandId? brandId,
+           ModelId? modelId,
+           CancellationToken cancellationToken)
+        {
+            var query = context.Tools
+                .AsQueryable()
+                .Where(t => t.ToolTypeId == toolTypeId);
+
+            if (brandId is not null)
+            {
+                query = query.Where(t => t.BrandId == brandId);
+            }
+
+            if (modelId is not null)
+            {
+                query = query.Where(t => t.ModelId == modelId);
+            }
+
+            // ❗ ВАЖЛИВО: виключаємо інструменти, які мають активне призначення
+            query = query.Where(t =>
+                !context.ToolAssignments.Any(ta =>
+                    ta.ToolId == t.Id &&
+                    ta.ReturnedAt == null &&
+                    ta.ReturnedLocationId == null &&
+                    ta.ReturnedDetectedToolId == null));
+
+            return await query.ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<Tool>> GetNotReturnedToolsByUserAndTypeAndModelAsync(
+            UserId userId,
+            ToolTypeId toolTypeId,
+            BrandId? brandId,
+            ModelId? modelId,
+            CancellationToken cancellationToken)
+        {
+            var query = context.ToolAssignments
+                .Include(ta => ta.Tool)
+                .Where(ta =>
+                    ta.UserId == userId &&
+                    ta.ReturnedAt == null &&
+                    ta.ReturnedLocationId == null &&
+                    ta.ReturnedDetectedToolId == null &&
+                    ta.Tool != null &&
+                    ta.Tool.ToolTypeId == toolTypeId);
+
+            if (brandId is not null)
+            {
+                query = query.Where(ta => ta.Tool!.BrandId == brandId);
+            }
+
+            if (modelId is not null)
+            {
+                query = query.Where(ta => ta.Tool!.ModelId == modelId);
+            }
+
+            return await query
                 .Select(ta => ta.Tool!)
                 .Distinct()
                 .ToListAsync(cancellationToken);

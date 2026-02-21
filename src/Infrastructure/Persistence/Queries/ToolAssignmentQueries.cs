@@ -52,7 +52,39 @@ namespace Infrastructure.Persistence.Queries
                          dt.Id == ta.ReturnedDetectedToolId)))
                 .ToListAsync(cancellationToken);
         }
+        public async Task<Option<ToolAssignment>> GetLastByUserAndToolAsync(
+            UserId userId,
+            ToolId toolId,
+            CancellationToken cancellationToken)
+        {
+            var toolAssignment = await context.ToolAssignments
+                .Where(ta => ta.UserId == userId && ta.ToolId == toolId)
+                .OrderByDescending(ta => ta.Id)
+                .FirstOrDefaultAsync(cancellationToken);
 
+            return toolAssignment != null
+                ? Option<ToolAssignment>.Some(toolAssignment)
+                : Option<ToolAssignment>.None;
+        }
+        public async Task<Option<ToolAssignment>> GetActiveByUserAndToolAsync(
+    UserId userId,
+    ToolId toolId,
+    CancellationToken cancellationToken)
+        {
+            var toolAssignment = await context.ToolAssignments
+                .Where(ta =>
+                    ta.UserId == userId &&
+                    ta.ToolId == toolId &&
+                    ta.ReturnedAt == null &&
+                    ta.ReturnedLocationId == null &&
+                    ta.ReturnedDetectedToolId == null)
+                .OrderByDescending(ta => ta.Id)
+                .FirstOrDefaultAsync(cancellationToken);
+
+            return toolAssignment != null
+                ? Option<ToolAssignment>.Some(toolAssignment)
+                : Option<ToolAssignment>.None;
+        }
 
         public async Task<IReadOnlyList<ToolAssignment>> GetByRedFlaggedTakenDetectedToolAsync(DetectedToolId takenDetectedToolId, CancellationToken cancellationToken)
         {

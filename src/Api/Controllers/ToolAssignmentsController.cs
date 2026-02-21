@@ -1,8 +1,10 @@
 using Api.DTOs;
+using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.ToolAssignments.Commands;
-using Api.Modules.Errors;
+using Domain.Models.Tools;
+using Domain.Models.Users;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -66,6 +68,44 @@ namespace Api.Controllers
                     new { id = toolAssignment.Id.Value },
                     ToolAssignmentDto.FromDomain(toolAssignment)),
                 error => error.ToObjectResult());
+        }
+        [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search-active")]
+        [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ToolAssignmentDto>> GetActiveByUserAndTool(
+    Guid userId,
+    Guid toolId,
+    CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
+            var domainToolId = new ToolId(toolId);
+
+            var entity = await queries.GetActiveByUserAndToolAsync(
+                domainUserId,
+                domainToolId,
+                cancellationToken);
+
+            return entity.Match<ActionResult<ToolAssignmentDto>>(
+                ta => Ok(ToolAssignmentDto.FromDomain(ta)),
+                () => NotFound("Active assignment not found for given user & tool"));
+        }
+
+        [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search")]
+        [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<ToolAssignmentDto>> GetLastByUserAndTool(
+            Guid userId,
+            Guid toolId,
+            CancellationToken cancellationToken)
+        {
+            var domainUserId = new UserId(userId);
+            var domainToolId = new ToolId(toolId);
+
+            var entity = await queries.GetLastByUserAndToolAsync(domainUserId, domainToolId, cancellationToken);
+
+            return entity.Match<ActionResult<ToolAssignmentDto>>(
+                ta => Ok(ToolAssignmentDto.FromDomain(ta)),
+                () => NotFound());
         }
 
         [HttpDelete("{id:guid}")]
