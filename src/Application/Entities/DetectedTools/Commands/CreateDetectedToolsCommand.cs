@@ -40,12 +40,6 @@ namespace Application.Entities.DetectedTools.Commands
             CreateDetectedToolsCommand request,
             CancellationToken cancellationToken)
         {
-            if (request.Items is null || request.Items.Count == 0)
-            {
-                return new UnhandledDetectedToolException(
-                    DetectedToolId.Empty(),
-                    new ArgumentException("Detected tools collection is empty.", nameof(request.Items)));
-            }
 
             var created = new List<DetectedTool>(request.Items.Count);
 

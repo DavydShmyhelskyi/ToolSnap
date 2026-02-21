@@ -34,12 +34,12 @@ namespace Application.Entities.ToolAssignments.Commands
             ReturnToolAssignmentsCommand request,
             CancellationToken cancellationToken)
         {
-            if (request.Items is null || request.Items.Count == 0)
+            /*if (request.Items is null || request.Items.Count == 0)
             {
                 return new UnhandledToolAssignmentException(
                     ToolAssignmentId.Empty(),
                     new ArgumentException("Tool assignments collection is empty.", nameof(request.Items)));
-            }
+            }*/
 
             var toUpdate = new List<ToolAssignment>(request.Items.Count);
 
