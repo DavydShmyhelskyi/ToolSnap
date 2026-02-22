@@ -17,7 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<UserDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<UserDto>>> GetUsers(
             CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize]
+      //  [Authorize]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> GetById(
@@ -47,7 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+      //  [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<UserDto>> Create(
@@ -74,7 +74,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize]
+       // [Authorize]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -99,7 +99,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -119,7 +119,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/confirm-email")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> ConfirmEmail(
@@ -139,7 +139,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/activate")]
-        [Authorize(Roles = "admin")]
+      //  [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> Activate(
@@ -159,7 +159,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/deactivate")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<UserDto>> Deactivate(
@@ -179,7 +179,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/change-password")]
-        [Authorize]
+       // [Authorize]
         [ProducesResponseType(typeof(UserDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

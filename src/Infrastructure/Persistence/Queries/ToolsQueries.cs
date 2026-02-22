@@ -136,5 +136,21 @@ namespace Infrastructure.Persistence.Queries
                 .Distinct()
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<Tool>> GetAnyToolsByTypeAndBrandAsync(
+    ToolTypeId? toolTypeId,
+    BrandId? brandId,
+    CancellationToken cancellationToken)
+        {
+            var query = context.Tools.AsQueryable();
+
+            if (toolTypeId is not null)
+                query = query.Where(t => t.ToolTypeId == toolTypeId);
+
+            if (brandId is not null)
+                query = query.Where(t => t.BrandId == brandId);
+
+            return await query.ToListAsync(cancellationToken);
+        }
     }
 }

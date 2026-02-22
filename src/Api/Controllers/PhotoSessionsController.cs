@@ -17,7 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<PhotoSessionDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<PhotoSessionDto>>> GetPhotoSessions(
             CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(PhotoSessionDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PhotoSessionDto>> GetById(
@@ -47,7 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize]
+       // [Authorize]
         [ProducesResponseType(typeof(PhotoSessionDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<PhotoSessionDto>> Create(
@@ -72,7 +72,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

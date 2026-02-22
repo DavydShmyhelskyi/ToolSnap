@@ -20,7 +20,7 @@ namespace Api.Controllers
         GeminiService geminiService) : ControllerBase
     {
         [HttpGet]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<PhotoForDetectionDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<PhotoForDetectionDto>>> GetPhotosForDetection(
             CancellationToken cancellationToken)
@@ -35,7 +35,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(PhotoForDetectionDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<PhotoForDetectionDto>> GetById(
@@ -143,7 +143,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(

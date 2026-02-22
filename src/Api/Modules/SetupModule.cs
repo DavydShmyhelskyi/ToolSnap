@@ -1,8 +1,10 @@
 ﻿using Api.Filters;
-using Application.Common.Settings;
-using FluentValidation;
 using Api.Services.Abstract;
 using Api.Services.Implementation;
+using Application.Common.Interfaces.Services;
+using Application.Common.Settings;
+using Application.Services;
+using FluentValidation;
 
 namespace Api.Modules
 {
@@ -68,6 +70,7 @@ namespace Api.Modules
             services.AddScoped<IToolStatusControllerService, ToolStatusControllerService>();
             services.AddScoped<IToolTypeControllerService, ToolTypeControllerService>();
             services.AddScoped<IUserControllerService, UserControllerService>();
+            services.AddScoped<IToolWithAssignmentService, ToolWithAssignmentService>();
         }
     }
 }

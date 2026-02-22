@@ -11,7 +11,7 @@ namespace Api.Controllers
 {
     [ApiController]
     [Route("roles")]
-    [Authorize(Roles = "admin")]
+    //[Authorize(Roles = "admin")]
     public class RolesController(
         IRolesQueries queries,
         IRoleControllerService service,

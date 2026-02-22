@@ -3,6 +3,7 @@ using Api.Modules.Errors;
 using Api.Services.Abstract;
 using Application.Common.Interfaces.Queries;
 using Application.Entities.Tools.Commands;
+using Application.Entities.Tools.Exceptions;
 using Domain.Models.ToolInfo;
 using Domain.Models.Users;
 using MediatR;
@@ -19,7 +20,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-        [Authorize]
+       // [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetTools(
             CancellationToken cancellationToken)
@@ -49,7 +50,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet("{id:guid}")]
-        [Authorize]
+        //[Authorize]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolDto>> GetById(
@@ -63,9 +64,8 @@ namespace Api.Controllers
                 () => NotFound());
         }
 
-        // НОВИЙ ЕНДПОІНТ
         // GET /tools/search?toolTypeId=...&brandId=...&modelId=...
-        [HttpGet("search")]
+        [HttpGet("search-available")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetByTypeBrandModel(
             [FromQuery] Guid toolTypeId,
@@ -119,7 +119,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ToolDto>> Create(
@@ -146,7 +146,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -171,7 +171,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -189,9 +189,61 @@ namespace Api.Controllers
                 _ => NoContent(),
                 error => error.ToObjectResult());
         }
+        [HttpPost("with-assignment")]
+        // [Authorize]
+        [Consumes("multipart/form-data")]
+        [ProducesResponseType(typeof(ToolDto), StatusCodes.Status201Created)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        public async Task<ActionResult<ToolDto>> CreateWithAssignment(
+            [FromForm] CreateToolWithAssignmentDto request,
+            CancellationToken cancellationToken)
+        {
+            if (request.File is null || request.File.Length == 0)
+                return BadRequest("File is required.");
+
+            var command = new CreateToolWithAssignmentCommand
+            {
+                UserId = request.UserId,
+                ActionTypeId = request.ActionTypeId,
+                PhotoTypeId = request.PhotoTypeId,
+                LocationId = request.LocationId,
+
+                ToolTypeId = request.ToolTypeId,
+                ToolStatusId = request.ToolStatusId,
+                BrandId = request.BrandId,
+                ModelId = request.ModelId,
+                SerialNumber = request.SerialNumber,
+
+                OriginalName = request.File.FileName,
+                FileStream = request.File.OpenReadStream()
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<ToolDto>>(
+                tool => CreatedAtAction(
+                    nameof(GetById),
+                    new { id = tool.Id.Value },
+                    ToolDto.FromDomain(tool)),
+                error =>
+                {
+                    // Якщо команда повертає ToolException – використовуємо твою фабрику помилок
+                    if (error is ToolException te)
+                        return te.ToObjectResult();
+
+                    // Якщо все-таки якийсь інший Exception – віддаємо 500
+                    return StatusCode(
+                        StatusCodes.Status500InternalServerError,
+                        new
+                        {
+                            message = "Unexpected error while creating tool with assignment.",
+                            detail = error.Message
+                        });
+                });
+        }
 
         [HttpPatch("{id:guid}/change-status")]
-        [Authorize(Roles = "admin")]
+        //[Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -211,6 +263,43 @@ namespace Api.Controllers
             return result.Match<ActionResult<ToolDto>>(
                 tool => Ok(ToolDto.FromDomain(tool)),
                 error => error.ToObjectResult());
+        }
+
+        // GET /tools/search-any?toolTypeId=...&brandId=...
+        [HttpGet("search-any")]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolDto>>> SearchAnyTools(
+            [FromQuery] Guid? toolTypeId,
+            [FromQuery] Guid? brandId,
+            CancellationToken cancellationToken)
+        {
+            // Якщо жодного фільтра немає — повертаємо всі
+            if (toolTypeId is null && brandId is null)
+            {
+                var allTools = await queries.GetAllAsync(cancellationToken);
+
+                var allResult = allTools
+                    .Select(ToolDto.FromDomain)
+                    .ToList();
+
+                return Ok(allResult);
+            }
+
+            // Перетворюємо в domain-типи при наявності
+            ToolTypeId? type = toolTypeId is not null ? new ToolTypeId(toolTypeId.Value) : null;
+            BrandId? brand = brandId is not null ? new BrandId(brandId.Value) : null;
+
+            // Викликаємо твій новий запит
+            var tools = await queries.GetAnyToolsByTypeAndBrandAsync(
+                type,
+                brand,
+                cancellationToken);
+
+            var result = tools
+                .Select(ToolDto.FromDomain)
+                .ToList();
+
+            return Ok(result);
         }
     }
 }

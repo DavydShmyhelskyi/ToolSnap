@@ -36,4 +36,21 @@ namespace Api.DTOs
 
     public record ChangeToolStatusDto(
         Guid ToolStatusId);
+    public class CreateToolWithAssignmentDto
+    {
+        // Основні дані
+        public Guid UserId { get; set; }
+        public Guid ActionTypeId { get; set; }
+        public Guid PhotoTypeId { get; set; }
+        public Guid LocationId { get; set; }
+
+        public Guid ToolTypeId { get; set; }
+        public Guid ToolStatusId { get; set; }
+        public Guid? BrandId { get; set; }
+        public Guid? ModelId { get; set; }
+        public string? SerialNumber { get; set; }
+
+        // Фото
+        public IFormFile File { get; set; } = default!;
+    }
 }

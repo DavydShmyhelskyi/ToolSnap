@@ -17,5 +17,6 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<Tool>> GetNotReturnedToolsByUserAsync(UserId userId, CancellationToken cancellationToken);
         Task<IReadOnlyList<Tool>> GetAllAvailableByTypeAndModelAsync(ToolTypeId toolTypeId, BrandId? brandId, ModelId? modelId, CancellationToken cancellationToken);
         Task<IReadOnlyList<Tool>> GetNotReturnedToolsByUserAndTypeAndModelAsync(UserId userId, ToolTypeId toolTypeId, BrandId? brandId, ModelId? modelId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<Tool>> GetAnyToolsByTypeAndBrandAsync(ToolTypeId toolTypeId, BrandId? brandId, CancellationToken cancellationToken);
     }
 }
