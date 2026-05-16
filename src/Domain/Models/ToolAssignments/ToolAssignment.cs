@@ -49,5 +49,10 @@ namespace Domain.Models.ToolAssignments
             ReturnedDetectedToolId = returnedDetectedToolId;
             ReturnedAt = DateTime.UtcNow;
         }
+
+        public void Transfer(UserId newUserId)
+        {
+            UserId = newUserId;
+        }
     }
 }

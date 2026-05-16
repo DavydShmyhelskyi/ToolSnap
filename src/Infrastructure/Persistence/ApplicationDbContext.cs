@@ -5,6 +5,7 @@ using Domain.Models.PhotoSessions;
 using Domain.Models.Roles;
 using Domain.Models.ToolAssignments;
 using Domain.Models.Tools;
+using Domain.Models.ToolTransfers;
 using Domain.Models.Users;
 using Domain.Models.ToolPhotos;
 using Domain.Models.ToolInfo;
@@ -34,6 +35,7 @@ public class ApplicationDbContext(DbContextOptions<ApplicationDbContext> options
     public DbSet<PhotoSession> PhotoSessions { get; set; }
     public DbSet<PhotoForDetection> PhotosForDetection { get; set; }
     public DbSet<DetectedTool> DetectedTools { get; set; }
+    public DbSet<ToolTransfer> ToolTransfers { get; set; }
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {

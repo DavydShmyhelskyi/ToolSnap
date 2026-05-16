@@ -71,6 +71,7 @@ namespace Api.Modules
             services.AddScoped<IToolTypeControllerService, ToolTypeControllerService>();
             services.AddScoped<IUserControllerService, UserControllerService>();
             services.AddScoped<IToolWithAssignmentService, ToolWithAssignmentService>();
+            services.AddScoped<IToolTransferControllerService, ToolTransferControllerService>();
         }
     }
 }
