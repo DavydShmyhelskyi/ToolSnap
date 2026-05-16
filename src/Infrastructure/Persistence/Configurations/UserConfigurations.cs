@@ -30,6 +30,9 @@ public class UserConfiguration : IEntityTypeConfiguration<User>
         builder.Property(x => x.RefreshToken)
             .HasColumnType("varchar(500)");
 
+        builder.Property(x => x.FcmToken)
+            .HasColumnType("varchar(500)");
+
         builder.Property(x => x.RefreshTokenExpiryTime)
             .HasConversion(new DateTimeUtcConverter());
 

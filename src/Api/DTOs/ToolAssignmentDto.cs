@@ -11,7 +11,9 @@ namespace Api.DTOs
         Guid TakenLocationId,
         Guid? ReturnedLocationId,
         DateTime TakenAt,
-        DateTime? ReturnedAt)
+        DateTime? ReturnedAt,
+        DateTime? DueAt,
+        bool IsOverdue)
     {
         public static ToolAssignmentDto FromDomain(ToolAssignment toolAssignment) =>
             new(
@@ -23,14 +25,17 @@ namespace Api.DTOs
                 toolAssignment.TakenLocationId.Value,
                 toolAssignment.ReturnedLocationId?.Value,
                 toolAssignment.TakenAt,
-                toolAssignment.ReturnedAt);
+                toolAssignment.ReturnedAt,
+                toolAssignment.DueAt,
+                toolAssignment.IsOverdue);
     }
 
     public record CreateToolAssignmentDto(
         Guid TakenDetectedToolId,
         Guid ToolId,
         Guid UserId,
-        Guid TakenLocationId);
+        Guid TakenLocationId,
+        DateTime? DueAt = null);
 
     public record ReturnToolAssignmentDto(
         Guid ReturnedLocationId,
@@ -40,7 +45,8 @@ namespace Api.DTOs
         Guid TakenDetectedToolId,
         Guid ToolId,
         Guid UserId,
-        Guid LocationId);
+        Guid LocationId,
+        DateTime? DueAt = null);
 
     public record CreateToolAssignmentsBatchDto(
         IReadOnlyList<CreateToolAssignmentsBatchItemDto> Items);
@@ -52,4 +58,6 @@ namespace Api.DTOs
 
     public record ReturnToolAssignmentsBatchDto(
         IReadOnlyList<ReturnToolAssignmentsBatchItemDto> Items);
+
+    public record SetToolAssignmentDueDto(DateTime? DueAt);
 }

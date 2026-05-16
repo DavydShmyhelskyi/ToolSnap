@@ -35,4 +35,7 @@ namespace Application.Entities.ToolAssignments.Exceptions
 
     public class UserNotFoundForToolAssignmentException(UserId userId)
         : ToolAssignmentException(ToolAssignmentId.Empty(), $"User with id '{userId}' was not found.");
+
+    public class ToolAssignmentDueDateInPastException(ToolAssignmentId id)
+        : ToolAssignmentException(id, $"The due date for tool assignment '{id}' must be in the future.");
 }

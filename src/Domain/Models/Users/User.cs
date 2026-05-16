@@ -17,6 +17,7 @@ namespace Domain.Models.Users
         public double? Longitude { get; private set; }
         public string? RefreshToken { get; private set; }
         public DateTime? RefreshTokenExpiryTime { get; private set; }
+        public string? FcmToken { get; private set; }
 
         // navigation properties
         public Role? Role { get; private set; }
@@ -83,6 +84,8 @@ namespace Domain.Models.Users
             RefreshToken = refreshToken;
             RefreshTokenExpiryTime = expiryTime;
         }
+
+        public void SetFcmToken(string? token) => FcmToken = token;
 
         public void RevokeRefreshToken()
         {

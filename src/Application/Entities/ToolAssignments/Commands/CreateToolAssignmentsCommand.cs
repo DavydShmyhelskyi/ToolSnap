@@ -20,6 +20,7 @@ namespace Application.Entities.ToolAssignments.Commands
         public required Guid ToolId { get; init; }
         public required Guid UserId { get; init; }
         public required Guid LocationId { get; init; }
+        public DateTime? DueAt { get; init; }
     }
 
     public record CreateToolAssignmentsCommand
@@ -71,7 +72,7 @@ namespace Application.Entities.ToolAssignments.Commands
                 var tool = toolOpt.Match(t => t, () => null!);
                 toolPrices[item.ToolId] = tool.Price;
 
-                created.Add(ToolAssignment.New(takenDetectedToolId, toolId, userId, locationId, DateTime.UtcNow));
+                created.Add(ToolAssignment.New(takenDetectedToolId, toolId, userId, locationId, DateTime.UtcNow, item.DueAt));
             }
 
             using var transaction = await dbContext.BeginTransactionAsync(cancellationToken);

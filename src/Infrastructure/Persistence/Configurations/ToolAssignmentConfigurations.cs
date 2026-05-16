@@ -69,5 +69,12 @@ public class ToolAssignmentConfiguration : IEntityTypeConfiguration<ToolAssignme
             .IsRequired();
         builder.Property(x => x.ReturnedAt)
             .HasConversion(new DateTimeUtcConverter());
+
+        builder.Property(x => x.DueAt)
+            .HasConversion(new DateTimeUtcConverter());
+        builder.Property(x => x.ReminderSentAt)
+            .HasConversion(new DateTimeUtcConverter());
+
+        builder.Ignore(x => x.IsOverdue);
     }
 }

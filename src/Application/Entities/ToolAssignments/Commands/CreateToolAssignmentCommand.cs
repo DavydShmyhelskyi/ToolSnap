@@ -19,6 +19,7 @@ namespace Application.Entities.ToolAssignments.Commands
         public required Guid ToolId { get; init; }
         public required Guid UserId { get; init; }
         public required Guid LocationId { get; init; }
+        public DateTime? DueAt { get; init; }
     }
 
     public class CreateToolAssignmentCommandHandler(
@@ -76,7 +77,8 @@ namespace Application.Entities.ToolAssignments.Commands
                     new ToolId(request.ToolId),
                     new UserId(request.UserId),
                     new LocationId(request.LocationId),
-                    now);
+                    now,
+                    request.DueAt);
 
                 var result = await repository.AddAsync(newAssignment, cancellationToken);
 

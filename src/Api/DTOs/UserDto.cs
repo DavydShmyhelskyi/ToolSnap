@@ -41,4 +41,6 @@ namespace Api.DTOs
     public record ChangePasswordDto(
         string CurrentPassword,
         string NewPassword);
+
+    public record SetUserFcmTokenDto(string? FcmToken);
 }

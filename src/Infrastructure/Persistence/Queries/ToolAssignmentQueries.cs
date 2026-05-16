@@ -118,5 +118,29 @@ namespace Infrastructure.Persistence.Queries
         {
             return await context.ToolAssignments.Where(ta => ta.UserId == userId && ta.ReturnedAt == null && ta.ReturnedLocationId == null).ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<ToolAssignment>> GetAllOverdueAsync(CancellationToken cancellationToken)
+        {
+            var now = DateTime.UtcNow;
+            return await context.ToolAssignments
+                .Where(ta => ta.DueAt != null && ta.DueAt < now && ta.ReturnedAt == null)
+                .OrderBy(ta => ta.DueAt)
+                .ToListAsync(cancellationToken);
+        }
+
+        public async Task<IReadOnlyList<ToolAssignment>> GetDueSoonWithoutReminderAsync(
+            DateTime threshold,
+            CancellationToken cancellationToken)
+        {
+            var now = DateTime.UtcNow;
+            return await context.ToolAssignments
+                .Where(ta =>
+                    ta.DueAt != null &&
+                    ta.DueAt > now &&
+                    ta.DueAt <= threshold &&
+                    ta.ReminderSentAt == null &&
+                    ta.ReturnedAt == null)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

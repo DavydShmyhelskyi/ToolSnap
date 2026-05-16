@@ -26,5 +26,7 @@ namespace Application.Common.Interfaces.Queries
         Task<Option<ToolAssignment>> GetLastByRedFlaggeReturnedDetectedToolAsync(DetectedToolId returnedDetectedToolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetLastByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
         Task<Option<ToolAssignment>> GetActiveByUserAndToolAsync(UserId userId, ToolId toolId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<ToolAssignment>> GetAllOverdueAsync(CancellationToken cancellationToken);
+        Task<IReadOnlyList<ToolAssignment>> GetDueSoonWithoutReminderAsync(DateTime threshold, CancellationToken cancellationToken);
     }
 }

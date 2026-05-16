@@ -9,7 +9,8 @@
       "Bash(git commit -m ' *)",
       "Bash(dir \"D:\\\\Study\\\\ToolSnap\\\\ToolSnap\\\\.claude\\\\worktrees\\\\agitated-meitner-3bd4b3\\\\src\\\\Domain\\\\Models\" /b)",
       "PowerShell(git -C \"D:\\\\Study\\\\ToolSnap\\\\ToolSnap\" diff HEAD -- src/Domain/Models/Tools/Tool.cs)",
-      "PowerShell(head -80)"
+      "PowerShell(head -80)",
+      "Bash(grep -E \"\\\\.\\(cs\\)$\")"
     ]
   }
 }

@@ -201,5 +201,26 @@ namespace Api.Controllers
                 user => Ok(UserDto.FromDomain(user)),
                 error => error.ToObjectResult());
         }
+
+        [HttpPatch("{id:guid}/fcm-token")]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<IActionResult> SetFcmToken(
+            Guid id,
+            [FromBody] SetUserFcmTokenDto request,
+            CancellationToken cancellationToken)
+        {
+            var command = new SetUserFcmTokenCommand
+            {
+                UserId = id,
+                FcmToken = request.FcmToken
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<IActionResult>(
+                _ => NoContent(),
+                error => error.ToObjectResult());
+        }
     }
 }

@@ -61,7 +61,8 @@ namespace Api.Controllers
                 TakenDetectedToolId = request.TakenDetectedToolId,
                 ToolId = request.ToolId,
                 UserId = request.UserId,
-                LocationId = request.TakenLocationId
+                LocationId = request.TakenLocationId,
+                DueAt = request.DueAt
             };
 
             var result = await sender.Send(command, cancellationToken);
@@ -176,7 +177,8 @@ namespace Api.Controllers
                         TakenDetectedToolId = item.TakenDetectedToolId,
                         ToolId = item.ToolId,
                         UserId = item.UserId,
-                        LocationId = item.LocationId
+                        LocationId = item.LocationId,
+                        DueAt = item.DueAt
                     })
                     .ToList()
             };
@@ -192,6 +194,29 @@ namespace Api.Controllers
 
                     return StatusCode(StatusCodes.Status201Created, (IReadOnlyList<ToolAssignmentDto>)dtos);
                 },
+                error => error.ToObjectResult());
+        }
+
+        [HttpPatch("{id:guid}/due")]
+        [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status409Conflict)]
+        public async Task<ActionResult<ToolAssignmentDto>> SetDue(
+            Guid id,
+            [FromBody] SetToolAssignmentDueDto request,
+            CancellationToken cancellationToken)
+        {
+            var command = new SetToolAssignmentDueCommand
+            {
+                ToolAssignmentId = id,
+                DueAt = request.DueAt
+            };
+
+            var result = await sender.Send(command, cancellationToken);
+
+            return result.Match<ActionResult<ToolAssignmentDto>>(
+                toolAssignment => Ok(ToolAssignmentDto.FromDomain(toolAssignment)),
                 error => error.ToObjectResult());
         }
 

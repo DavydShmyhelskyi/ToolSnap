@@ -144,5 +144,9 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IToolLiabilityRepository>(provider => provider.GetRequiredService<ToolLiabilityRepository>());
         services.AddScoped<ToolLiabilityQueries>();
         services.AddScoped<IToolLiabilityQueries>(provider => provider.GetRequiredService<ToolLiabilityQueries>());
+
+        // Overdue report
+        services.AddScoped<OverdueReportQueries>();
+        services.AddScoped<IOverdueReportQueries>(provider => provider.GetRequiredService<OverdueReportQueries>());
     }
 }

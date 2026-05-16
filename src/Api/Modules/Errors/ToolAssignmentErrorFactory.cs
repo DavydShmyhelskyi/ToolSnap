@@ -13,6 +13,7 @@ public static class ToolAssignmentErrorFactory
                 ToolAssignmentAlreadyExistsException => StatusCodes.Status409Conflict,
                 ToolAssignmentNotFoundException => StatusCodes.Status404NotFound,
                 ToolAssignmentAlreadyReturnedException => StatusCodes.Status409Conflict,
+                ToolAssignmentDueDateInPastException => StatusCodes.Status400BadRequest,
                 DetectedToolNotFoundForToolAssignmentException => StatusCodes.Status404NotFound,
                 ToolNotFoundForToolAssignmentException => StatusCodes.Status404NotFound,
                 UserNotFoundForToolAssignmentException => StatusCodes.Status404NotFound,
