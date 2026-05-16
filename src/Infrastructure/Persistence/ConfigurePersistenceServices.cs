@@ -138,5 +138,11 @@ public static class ConfigurePersistenceServices
         services.AddScoped<IToolTransferRepository>(provider => provider.GetRequiredService<ToolTransferRepository>());
         services.AddScoped<ToolTransferQueries>();
         services.AddScoped<IToolTransferQueries>(provider => provider.GetRequiredService<ToolTransferQueries>());
+
+        // ToolLiabilities
+        services.AddScoped<ToolLiabilityRepository>();
+        services.AddScoped<IToolLiabilityRepository>(provider => provider.GetRequiredService<ToolLiabilityRepository>());
+        services.AddScoped<ToolLiabilityQueries>();
+        services.AddScoped<IToolLiabilityQueries>(provider => provider.GetRequiredService<ToolLiabilityQueries>());
     }
 }

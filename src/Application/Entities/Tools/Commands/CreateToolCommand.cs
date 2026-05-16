@@ -15,6 +15,7 @@ namespace Application.Entities.Tools.Commands
         public Guid? ModelId { get; init; }
         public required Guid ToolStatusId { get; init; }
         public string? SerialNumber { get; init; }
+        public decimal Price { get; init; } = 0;
     }
 
     public class CreateToolCommandHandler(
@@ -32,17 +33,14 @@ namespace Application.Entities.Tools.Commands
             var toolTypeId = new ToolTypeId(request.ToolTypeId);
             var toolStatusId = new ToolStatusId(request.ToolStatusId);
 
-            // Перевірка існування ToolType
             var toolType = await toolTypeQueries.GetByIdAsync(toolTypeId, cancellationToken);
             if (toolType.IsNone)
                 return new ToolTypeNotFoundForToolException(toolTypeId);
 
-            // Перевірка існування ToolStatus
             var toolStatus = await toolStatusQueries.GetByIdAsync(toolStatusId, cancellationToken);
             if (toolStatus.IsNone)
                 return new ToolStatusNotFoundForToolException(toolStatusId);
 
-            // Перевірка існування Brand (якщо вказано)
             if (request.BrandId.HasValue)
             {
                 var brandId = new BrandId(request.BrandId.Value);
@@ -51,7 +49,6 @@ namespace Application.Entities.Tools.Commands
                     return new BrandNotFoundForToolException(brandId);
             }
 
-            // Перевірка існування Model (якщо вказано)
             if (request.ModelId.HasValue)
             {
                 var modelId = new ModelId(request.ModelId.Value);
@@ -79,7 +76,8 @@ namespace Application.Entities.Tools.Commands
                     brandId,
                     modelId,
                     toolStatusId,
-                    request.SerialNumber);
+                    request.SerialNumber,
+                    request.Price);
 
                 var result = await repository.AddAsync(newTool, cancellationToken);
                 return result;

@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem -Path \"D:\\\\Study\\\\ToolSnap\\\\ToolSnap\\\\.claude\\\\worktrees\\\\agitated-meitner-3bd4b3\" -Recurse -File -Filter \"*.sln\")",
+      "Bash(Select-Object -ExpandProperty FullName)",
+      "Bash(dotnet build *)",
+      "Bash(dotnet ef *)",
+      "Bash(git add *)",
+      "Bash(git commit -m ' *)",
+      "Bash(dir \"D:\\\\Study\\\\ToolSnap\\\\ToolSnap\\\\.claude\\\\worktrees\\\\agitated-meitner-3bd4b3\\\\src\\\\Domain\\\\Models\" /b)",
+      "PowerShell(git -C \"D:\\\\Study\\\\ToolSnap\\\\ToolSnap\" diff HEAD -- src/Domain/Models/Tools/Tool.cs)",
+      "PowerShell(head -80)"
+    ]
+  }
+}

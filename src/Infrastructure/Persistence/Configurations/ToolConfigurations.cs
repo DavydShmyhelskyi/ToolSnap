@@ -47,6 +47,11 @@ public class ToolConfiguration : IEntityTypeConfiguration<Tool>
             .HasForeignKey(x => x.ToolStatusId)
             .OnDelete(DeleteBehavior.Restrict);
 
+        builder.Property(x => x.Price)
+            .HasColumnType("numeric(18,2)")
+            .HasDefaultValue(0m)
+            .IsRequired();
+
         builder.Property(x => x.CreatedAt)
             .HasConversion(new DateTimeUtcConverter())
             .HasDefaultValueSql("timezone('utc', now())")

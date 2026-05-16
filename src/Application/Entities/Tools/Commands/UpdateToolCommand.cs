@@ -14,6 +14,7 @@ namespace Application.Entities.Tools.Commands
         public Guid? BrandId { get; init; }
         public Guid? ModelId { get; init; }
         public string? SerialNumber { get; init; }
+        public decimal Price { get; init; } = 0;
     }
 
     public class UpdateToolCommandHandler(
@@ -29,12 +30,10 @@ namespace Application.Entities.Tools.Commands
         {
             var toolId = new ToolId(request.ToolId);
 
-            // Перевірка існування Tool
             var tool = await toolsQueries.GetByIdAsync(toolId, cancellationToken);
             if (tool.IsNone)
                 return new ToolNotFoundException(toolId);
 
-            // Перевірка існування Brand (якщо вказано)
             if (request.BrandId.HasValue)
             {
                 var brandId = new BrandId(request.BrandId.Value);
@@ -43,7 +42,6 @@ namespace Application.Entities.Tools.Commands
                     return new BrandNotFoundForToolException(brandId);
             }
 
-            // Перевірка існування Model (якщо вказано)
             if (request.ModelId.HasValue)
             {
                 var modelId = new ModelId(request.ModelId.Value);
@@ -67,7 +65,7 @@ namespace Application.Entities.Tools.Commands
                 var brandId = request.BrandId.HasValue ? new BrandId(request.BrandId.Value) : null;
                 var modelId = request.ModelId.HasValue ? new ModelId(request.ModelId.Value) : null;
 
-                entity.Update(brandId, modelId, request.SerialNumber);
+                entity.Update(brandId, modelId, request.SerialNumber, request.Price);
                 return await repository.UpdateAsync(entity, cancellationToken);
             }
             catch (Exception ex)

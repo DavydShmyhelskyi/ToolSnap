@@ -32,6 +32,10 @@ namespace Api.Modules.Validators
             RuleFor(x => x.SerialNumber)
                 .MaximumLength(200)
                 .WithMessage("SerialNumber must not exceed 200 characters.");
+
+            RuleFor(x => x.Price)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Price must be zero or positive.");
         }
     }
 
@@ -56,6 +60,10 @@ namespace Api.Modules.Validators
             RuleFor(x => x.SerialNumber)
                 .MaximumLength(200)
                 .WithMessage("SerialNumber must not exceed 200 characters.");
+
+            RuleFor(x => x.Price)
+                .GreaterThanOrEqualTo(0)
+                .WithMessage("Price must be zero or positive.");
         }
     }
 

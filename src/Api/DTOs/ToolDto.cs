@@ -9,6 +9,7 @@ namespace Api.DTOs
         Guid? ModelId,
         string? SerialNumber,
         Guid ToolStatusId,
+        decimal Price,
         DateTimeOffset CreatedAt)
     {
         public static ToolDto FromDomain(Tool tool) =>
@@ -19,6 +20,7 @@ namespace Api.DTOs
                 tool.ModelId?.Value,
                 tool.SerialNumber,
                 tool.ToolStatusId.Value,
+                tool.Price,
                 tool.CreatedAt);
     }
 
@@ -27,18 +29,20 @@ namespace Api.DTOs
         Guid? BrandId,
         Guid? ModelId,
         Guid ToolStatusId,
-        string? SerialNumber);
+        string? SerialNumber,
+        decimal Price = 0);
 
     public record UpdateToolDto(
         Guid? BrandId,
         Guid? ModelId,
-        string? SerialNumber);
+        string? SerialNumber,
+        decimal Price = 0);
 
     public record ChangeToolStatusDto(
         Guid ToolStatusId);
+
     public class CreateToolWithAssignmentDto
     {
-        // Основні дані
         public Guid UserId { get; set; }
         public Guid ActionTypeId { get; set; }
         public Guid PhotoTypeId { get; set; }
@@ -49,8 +53,8 @@ namespace Api.DTOs
         public Guid? BrandId { get; set; }
         public Guid? ModelId { get; set; }
         public string? SerialNumber { get; set; }
+        public decimal Price { get; set; } = 0;
 
-        // Фото
         public IFormFile File { get; set; } = default!;
     }
 }

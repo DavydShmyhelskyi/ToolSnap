@@ -1,4 +1,4 @@
-﻿using Domain.Models.ToolAssignments;
+using Domain.Models.ToolAssignments;
 using Domain.Models.ToolInfo;
 using Domain.Models.ToolPhotos;
 
@@ -12,6 +12,7 @@ namespace Domain.Models.Tools
         public ModelId? ModelId { get; private set; }
         public string? SerialNumber { get; private set; }
         public ToolStatusId ToolStatusId { get; private set; }
+        public decimal Price { get; private set; }
         public DateTime CreatedAt { get; }
 
         // navigation properties
@@ -21,6 +22,7 @@ namespace Domain.Models.Tools
         public Brand? Brand { get; private set; }
         public Model? Model { get; private set; }
         public IEnumerable<ToolAssignment> ToolAssignments { get; private set; } = new List<ToolAssignment>();
+
         private Tool(
             ToolId id,
             ToolTypeId toolTypeId,
@@ -28,6 +30,7 @@ namespace Domain.Models.Tools
             ModelId? modelId,
             string? serialNumber,
             ToolStatusId toolStatusId,
+            decimal price,
             DateTime createdAt)
         {
             Id = id;
@@ -36,6 +39,7 @@ namespace Domain.Models.Tools
             ModelId = modelId;
             SerialNumber = serialNumber;
             ToolStatusId = toolStatusId;
+            Price = price;
             CreatedAt = createdAt;
         }
 
@@ -44,7 +48,8 @@ namespace Domain.Models.Tools
             BrandId? brandId,
             ModelId? modelId,
             ToolStatusId toolStatusId,
-            string? serialNumber = null)
+            string? serialNumber = null,
+            decimal price = 0)
         {
             return new Tool(
                 ToolId.New(),
@@ -53,18 +58,20 @@ namespace Domain.Models.Tools
                 modelId,
                 serialNumber,
                 toolStatusId,
-                DateTime.UtcNow
-            );
+                price,
+                DateTime.UtcNow);
         }
 
         public void Update(
             BrandId? brandId,
             ModelId? modelId,
-            string? serialNumber)
+            string? serialNumber,
+            decimal price)
         {
             BrandId = brandId;
             ModelId = modelId;
             SerialNumber = serialNumber;
+            Price = price;
         }
 
         public void ChangeStatus(ToolStatusId toolStatusId)
