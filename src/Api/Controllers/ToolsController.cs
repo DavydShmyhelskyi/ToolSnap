@@ -20,7 +20,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-       // [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetTools(
             CancellationToken cancellationToken)
@@ -34,6 +34,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet("not-returned/user/{userId:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetNotReturnedByUser(
             Guid userId,
@@ -50,7 +51,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet("{id:guid}")]
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolDto>> GetById(
@@ -66,6 +67,7 @@ namespace Api.Controllers
 
         // GET /tools/search?toolTypeId=...&brandId=...&modelId=...
         [HttpGet("search-available")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetByTypeBrandModel(
             [FromQuery] Guid toolTypeId,
@@ -91,6 +93,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("not-returned/user/{userId:guid}/search")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> GetNotReturnedByUserAndTypeBrandModel(
     Guid userId,
@@ -119,7 +122,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ToolDto>> Create(
@@ -146,7 +149,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -171,7 +174,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -190,7 +193,7 @@ namespace Api.Controllers
                 error => error.ToObjectResult());
         }
         [HttpPost("with-assignment")]
-        // [Authorize]
+        [Authorize]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -243,7 +246,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/change-status")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(ToolDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -267,6 +270,7 @@ namespace Api.Controllers
 
         // GET /tools/search-any?toolTypeId=...&brandId=...
         [HttpGet("search-any")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolDto>>> SearchAnyTools(
             [FromQuery] Guid? toolTypeId,

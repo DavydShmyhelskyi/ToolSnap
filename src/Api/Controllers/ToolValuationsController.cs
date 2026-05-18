@@ -2,6 +2,7 @@ using Api.DTOs;
 using Application.Common.Interfaces.Queries;
 using Domain.Models.Tools;
 using Domain.Models.Users;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -11,6 +12,7 @@ namespace Api.Controllers
     public class ToolValuationsController(IToolLiabilityQueries queries) : ControllerBase
     {
         [HttpGet("inventory")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(InventoryStatsDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<InventoryStatsDto>> GetInventoryStats(CancellationToken cancellationToken)
         {
@@ -19,6 +21,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("worker/{userId:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(WorkerOnHandsStatsDto), StatusCodes.Status200OK)]
         public async Task<ActionResult<WorkerOnHandsStatsDto>> GetWorkerOnHandsStats(
             Guid userId,
@@ -29,6 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("liabilities")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolLiabilityDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolLiabilityDto>>> GetAll(CancellationToken cancellationToken)
         {
@@ -37,6 +41,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("liabilities/tool/{toolId:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolLiabilityDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolLiabilityDto>>> GetByTool(
             Guid toolId,
@@ -47,6 +52,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("liabilities/worker/{userId:guid}")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolLiabilityDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolLiabilityDto>>> GetByWorker(
             Guid userId,
@@ -57,6 +63,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("liabilities/worker/{userId:guid}/open")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolLiabilityDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolLiabilityDto>>> GetOpenByWorker(
             Guid userId,

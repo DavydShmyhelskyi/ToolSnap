@@ -53,5 +53,13 @@ namespace Infrastructure.Persistence.Queries
                 .OrderByDescending(t => t.InitiatedAt)
                 .ToListAsync(cancellationToken);
         }
+
+        public async Task<IReadOnlyList<ToolTransfer>> GetAllByToUserIdAsync(UserId userId, CancellationToken cancellationToken)
+        {
+            return await context.ToolTransfers
+                .Where(t => t.ToUserId == userId)
+                .OrderByDescending(t => t.InitiatedAt)
+                .ToListAsync(cancellationToken);
+        }
     }
 }

@@ -13,5 +13,6 @@ namespace Application.Common.Interfaces.Queries
         Task<IReadOnlyList<ToolTransfer>> GetAllByToolIdAsync(ToolId toolId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolTransfer>> GetAllByFromUserIdAsync(UserId userId, CancellationToken cancellationToken);
         Task<IReadOnlyList<ToolTransfer>> GetPendingByToUserIdAsync(UserId userId, CancellationToken cancellationToken);
+        Task<IReadOnlyList<ToolTransfer>> GetAllByToUserIdAsync(UserId userId, CancellationToken cancellationToken);
     }
 }

@@ -6,6 +6,7 @@ using Application.Entities.ToolTransfers.Commands;
 using Domain.Models.Tools;
 using Domain.Models.Users;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -18,6 +19,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetAll(
             CancellationToken cancellationToken)
@@ -27,6 +29,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolTransferDto>> GetById(
@@ -41,6 +44,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("tool/{toolId:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetByTool(
             Guid toolId,
@@ -51,6 +55,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("initiated-by/{userId:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetInitiatedByUser(
             Guid userId,
@@ -61,6 +66,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("pending/to/{userId:guid}")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetPendingForUser(
             Guid userId,
@@ -70,7 +76,19 @@ namespace Api.Controllers
             return Ok(transfers.Select(ToolTransferDto.FromDomain).ToList());
         }
 
+        [HttpGet("received-by/{userId:guid}")]
+        [Authorize]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetReceivedByUser(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            var transfers = await queries.GetAllByToUserIdAsync(new UserId(userId), cancellationToken);
+            return Ok(transfers.Select(ToolTransferDto.FromDomain).ToList());
+        }
+
         [HttpPost]
+        [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -97,6 +115,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/accept")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
@@ -121,6 +140,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/reject")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -144,6 +164,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/cancel")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status403Forbidden)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

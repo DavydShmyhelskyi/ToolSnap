@@ -2,6 +2,7 @@
 using Application.Entities.Users.Commands;
 using Application.Entities.Users.Exceptions;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 [ApiController]
@@ -9,6 +10,7 @@ using Microsoft.AspNetCore.Mvc;
 public class AuthController(ISender sender) : ControllerBase
 {
     [HttpPost("login")]
+    [AllowAnonymous]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     public async Task<ActionResult<UserDto>> Login(

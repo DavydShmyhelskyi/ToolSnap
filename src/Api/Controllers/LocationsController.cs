@@ -17,7 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-       // [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<LocationDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<LocationDto>>> GetLocations(
             CancellationToken cancellationToken)
@@ -39,6 +39,7 @@ namespace Api.Controllers
             return Ok(result);
         }
         [HttpGet("nearest")]
+        [Authorize]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LocationDto>> GetNearest(
@@ -68,7 +69,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-        //[Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LocationDto>> GetById(
@@ -83,7 +84,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<LocationDto>> Create(
@@ -111,7 +112,7 @@ namespace Api.Controllers
         }
 
         [HttpPut("{id:guid}")]
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -138,7 +139,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-        //[Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -158,7 +159,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/activate")]
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LocationDto>> Activate(
@@ -178,7 +179,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/deactivate")]
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(LocationDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<LocationDto>> Deactivate(
