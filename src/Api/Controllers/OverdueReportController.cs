@@ -1,5 +1,6 @@
 using Api.DTOs;
 using Application.Common.Interfaces.Queries;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Api.Controllers
@@ -9,6 +10,7 @@ namespace Api.Controllers
     public class OverdueReportController(IOverdueReportQueries queries) : ControllerBase
     {
         [HttpGet]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<WorkerOverdueReportDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<WorkerOverdueReportDto>>> Get(CancellationToken cancellationToken)
         {

@@ -19,7 +19,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-      //  [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> GetToolAssignments(
             CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-       // [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolAssignmentDto>> GetById(
@@ -49,7 +49,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-       // [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<ToolAssignmentDto>> Create(
@@ -75,6 +75,7 @@ namespace Api.Controllers
                 error => error.ToObjectResult());
         }
         [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search-active")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolAssignmentDto>> GetActiveByUserAndTool(
@@ -96,6 +97,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolAssignmentDto>> GetLastByUserAndTool(
@@ -114,7 +116,7 @@ namespace Api.Controllers
         }
 
         [HttpDelete("{id:guid}")]
-      //  [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(StatusCodes.Status204NoContent)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> Delete(
@@ -134,7 +136,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/return")]
-      //  [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -160,6 +162,7 @@ namespace Api.Controllers
 
         // --- 🔥 батч create ---
         [HttpPost("batch")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> CreateBatch(
@@ -198,6 +201,7 @@ namespace Api.Controllers
         }
 
         [HttpPatch("{id:guid}/due")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
@@ -222,6 +226,7 @@ namespace Api.Controllers
 
         // --- 🔁 батч return ---
         [HttpPost("batch/return")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]

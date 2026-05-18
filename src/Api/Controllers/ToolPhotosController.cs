@@ -17,7 +17,7 @@ namespace Api.Controllers
         ISender sender) : ControllerBase
     {
         [HttpGet]
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin")]
         [ProducesResponseType(typeof(IReadOnlyList<ToolPhotoDto>), StatusCodes.Status200OK)]
         public async Task<ActionResult<IReadOnlyList<ToolPhotoDto>>> GetToolPhotos(
             CancellationToken cancellationToken)
@@ -32,7 +32,7 @@ namespace Api.Controllers
         }
 
         [HttpGet("{id:guid}")]
-       // [Authorize]
+        [Authorize]
         [ProducesResponseType(typeof(ToolPhotoDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<ActionResult<ToolPhotoDto>> GetById(
@@ -47,7 +47,7 @@ namespace Api.Controllers
         }
 
         [HttpPost]
-       // [Authorize]
+        [Authorize]
         [Consumes("multipart/form-data")]
         [ProducesResponseType(typeof(ToolPhotoDto), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -98,6 +98,7 @@ namespace Api.Controllers
 
         // GET /tool-photos/file?toolId={guid}&photoTypeTitle={title}
         [HttpGet("file")]
+        [Authorize]
         [ProducesResponseType(typeof(ToolPhotoFileDto), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         public async Task<IActionResult> GetFileByToolAndType(
@@ -129,6 +130,7 @@ namespace Api.Controllers
 
         // GET /tool-photos/tool/{toolId}/files
         [HttpGet("tool/{toolId:guid}/files")]
+        [Authorize]
         [ProducesResponseType(typeof(IReadOnlyList<ToolPhotoFileDto>), StatusCodes.Status200OK)]
         public async Task<IActionResult> GetFilesByTool(
             Guid toolId,
