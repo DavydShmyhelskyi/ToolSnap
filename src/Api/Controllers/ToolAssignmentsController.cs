@@ -74,6 +74,17 @@ namespace Api.Controllers
                     ToolAssignmentDto.FromDomain(toolAssignment)),
                 error => error.ToObjectResult());
         }
+        [HttpGet("user/{userId:guid}")]
+        [Authorize]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolAssignmentDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolAssignmentDto>>> GetByUser(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            var assignments = await queries.GetAllByUserAsync(new UserId(userId), cancellationToken);
+            return Ok(assignments.Select(ToolAssignmentDto.FromDomain).ToList());
+        }
+
         [HttpGet("user/{userId:guid}/tool/{toolId:guid}/search-active")]
         [Authorize]
         [ProducesResponseType(typeof(ToolAssignmentDto), StatusCodes.Status200OK)]

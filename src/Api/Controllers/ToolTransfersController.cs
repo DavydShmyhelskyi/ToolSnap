@@ -76,6 +76,17 @@ namespace Api.Controllers
             return Ok(transfers.Select(ToolTransferDto.FromDomain).ToList());
         }
 
+        [HttpGet("received-by/{userId:guid}")]
+        [Authorize]
+        [ProducesResponseType(typeof(IReadOnlyList<ToolTransferDto>), StatusCodes.Status200OK)]
+        public async Task<ActionResult<IReadOnlyList<ToolTransferDto>>> GetReceivedByUser(
+            Guid userId,
+            CancellationToken cancellationToken)
+        {
+            var transfers = await queries.GetAllByToUserIdAsync(new UserId(userId), cancellationToken);
+            return Ok(transfers.Select(ToolTransferDto.FromDomain).ToList());
+        }
+
         [HttpPost]
         [Authorize]
         [ProducesResponseType(typeof(ToolTransferDto), StatusCodes.Status201Created)]
